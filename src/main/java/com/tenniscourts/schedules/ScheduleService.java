@@ -1,10 +1,11 @@
 package com.tenniscourts.schedules;
 
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
@@ -14,22 +15,30 @@ public class ScheduleService {
 
     private final ScheduleMapper scheduleMapper;
 
-    public ScheduleDTO addSchedule(Long tennisCourtId, CreateScheduleRequestDTO createScheduleRequestDTO) {
-        //TODO: implement addSchedule
-        return null;
-    }
+	public ScheduleDTO addSchedule(
+		final Long tennisCourtId,
+		final CreateScheduleRequestDTO createScheduleRequestDTO) {
+		LocalDateTime startDateTime = createScheduleRequestDTO.getStartDateTime();
+		ScheduleDTO scheduleDTO = new ScheduleDTO();
+		scheduleDTO.setStartDateTime(startDateTime);
+		scheduleDTO.setEndDateTime(startDateTime.plusHours(1L));
+		scheduleDTO.setTennisCourtId(tennisCourtId);
+		Schedule schedule = scheduleMapper.map(scheduleDTO);
+		Schedule savedSchedule = scheduleRepository.save(schedule);
+		return scheduleMapper.map(savedSchedule);
+	}
 
-    public List<ScheduleDTO> findSchedulesByDates(LocalDateTime startDate, LocalDateTime endDate) {
+    public List<ScheduleDTO> findSchedulesByDates(final LocalDateTime startDate, final LocalDateTime endDate) {
         //TODO: implement
         return null;
     }
 
-    public ScheduleDTO findSchedule(Long scheduleId) {
+    public ScheduleDTO findSchedule(final Long scheduleId) {
         //TODO: implement
         return null;
     }
 
-    public List<ScheduleDTO> findSchedulesByTennisCourtId(Long tennisCourtId) {
+    public List<ScheduleDTO> findSchedulesByTennisCourtId(final Long tennisCourtId) {
         return scheduleMapper.map(scheduleRepository.findByTennisCourt_IdOrderByStartDateTime(tennisCourtId));
     }
 }
