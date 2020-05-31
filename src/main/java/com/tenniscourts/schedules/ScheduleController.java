@@ -4,6 +4,8 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -35,6 +37,26 @@ public class ScheduleController extends BaseRestController {
 		URI response = locationByEntity(idSchedule);
 		return ResponseEntity.created(response).build();
     }
+
+	@RequestMapping("batch")
+	@PostMapping
+	//TODO: implement rest and swagger
+	public ResponseEntity<Collection<ScheduleDTO>> addScheduleTennisCourtBatch(
+		@Valid @RequestBody final CreateScheduleRequestBatchDTO request) {
+		LocalDateTime start = request.getStartDateTime();
+		List<ScheduleDTO> response = new ArrayList<>();
+		request.getTennisCourtId()
+			.stream()
+			.parallel()
+			.forEach(each ->{
+				CreateScheduleRequestDTO dto = new CreateScheduleRequestDTO();
+				dto.setStartDateTime(start);
+				dto.setTennisCourtId(each);
+				ScheduleDTO schedule = scheduleService.addSchedule(each, dto);
+				response.add(schedule);
+			});
+		return ResponseEntity.ok(response);
+	}
 
     //TODO: implement rest and swagger
     public ResponseEntity<List<ScheduleDTO>> findSchedulesByDates(final LocalDate startDate,

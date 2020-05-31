@@ -40,7 +40,7 @@ public class ScheduleControllerITTest {
 	}
 
 	@Test
-	public void test() throws Exception {
+	public void schedule() throws Exception {
 		//ARRANGE DB
 		save("tennis court 01");
 
@@ -56,6 +56,27 @@ public class ScheduleControllerITTest {
 		.andExpect(MockMvcResultMatchers.status().isCreated())
 		.andExpect(MockMvcResultMatchers.content().string(""))
 		.andExpect(MockMvcResultMatchers.redirectedUrl("http://localhost/schedule/2"))
+		.andDo(MockMvcResultHandlers.print());
+	}
+
+	@Test
+	public void scheduleBatch() throws Exception {
+		//ARRANGE DB
+		save("tennis court 01");
+		save("tennis court 02");
+
+		//ARRANGE DATA
+		String request = reader.read("IT/schedule/batch/post/example01.json");
+		String expectedResponse = reader.read("IT/schedule/batch/post/example01-response.json");
+
+		//ACT & ASSERT
+		mvc.perform(
+			MockMvcRequestBuilders.post("/schedule/batch")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(request)
+		)
+		.andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(MockMvcResultMatchers.content().json(expectedResponse, true))
 		.andDo(MockMvcResultHandlers.print());
 	}
 
