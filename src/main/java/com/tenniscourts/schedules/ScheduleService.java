@@ -15,6 +15,8 @@ public class ScheduleService {
 
     private final ScheduleMapper scheduleMapper;
 
+    private final TennisCourtScheduleService service;
+
 	public ScheduleDTO addSchedule(
 		final Long tennisCourtId,
 		final CreateScheduleRequestDTO createScheduleRequestDTO) {
@@ -23,9 +25,16 @@ public class ScheduleService {
 		scheduleDTO.setStartDateTime(startDateTime);
 		scheduleDTO.setEndDateTime(startDateTime.plusHours(1L));
 		scheduleDTO.setTennisCourtId(tennisCourtId);
+		scheduleDTO.setTennisCourt(service.findTennisCourt(tennisCourtId));
+		Schedule schedule = save(scheduleDTO);
+		scheduleDTO.setId(schedule.getId());
+		return scheduleDTO;
+	}
+
+	private Schedule save(
+		final ScheduleDTO scheduleDTO) {
 		Schedule schedule = scheduleMapper.map(scheduleDTO);
-		Schedule savedSchedule = scheduleRepository.save(schedule);
-		return scheduleMapper.map(savedSchedule);
+		return scheduleRepository.save(schedule);
 	}
 
     public List<ScheduleDTO> findSchedulesByDates(final LocalDateTime startDate, final LocalDateTime endDate) {

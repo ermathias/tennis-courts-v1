@@ -18,13 +18,15 @@ public class ScheduleServiceTest {
 	private ScheduleRepository repository;
 	@Mock
 	private ScheduleMapper mapper;
+	@Mock
+	private TennisCourtScheduleService tennisCourtScheduleService;
 	private ScheduleService service;
 
 	@Before
 	public void setUp()
 		throws Exception {
 		MockitoAnnotations.initMocks(this);
-		service = new ScheduleService(repository, mapper);
+		service = new ScheduleService(repository, mapper, tennisCourtScheduleService);
 	}
 
 	/**

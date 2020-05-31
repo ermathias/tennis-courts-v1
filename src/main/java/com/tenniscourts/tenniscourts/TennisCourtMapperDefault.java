@@ -10,14 +10,18 @@ public class TennisCourtMapperDefault
 	@Override
 	public TennisCourtDTO map(
 		final TennisCourt source) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		return TennisCourtDTO.builder()
+				.id(source.getId())
+				.name(source.getName())
+				.build();
 	}
 
 	@Override
 	public TennisCourt map(
 		final TennisCourtDTO source) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		TennisCourt result = new TennisCourt();
+		result.setId(source.getId());
+		result.setName(source.getName());
+		return result;
 	}
 }
