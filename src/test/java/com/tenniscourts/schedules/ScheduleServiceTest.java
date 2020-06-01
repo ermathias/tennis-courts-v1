@@ -10,6 +10,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import com.tenniscourts.guests.GuestMapper;
+
 public class ScheduleServiceTest {
 
 	private static final Long ANY_LONG = null;
@@ -17,7 +19,7 @@ public class ScheduleServiceTest {
 	@Mock
 	private ScheduleRepository repository;
 	@Mock
-	private ScheduleMapper mapper;
+	private GuestMapper mapper;
 	@Mock
 	private TennisCourtScheduleService tennisCourtScheduleService;
 	private ScheduleService service;

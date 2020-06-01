@@ -1,4 +1,1 @@
-[
-	{"id":2,"tennisCourt":{"id":2,"name":"tennis court 01"},"tennisCourtId":2,"startDateTime":"2000-01-01T00:00","endDateTime":"2000-01-01T01:00"},
-	{"id":3,"tennisCourt":{"id":1,"name":"Roland Garros - Court Philippe-Chatrier"},"tennisCourtId":1,"startDateTime":"2000-01-01T00:00","endDateTime":"2000-01-01T01:00"}
-]
+[{"id":2,"tennisCourt":{"id":2,"name":"tennis court 01"},"tennisCourtId":2,"startDateTime":"2000-01-01T00:00","endDateTime":"2000-01-01T01:00"},{"id":3,"tennisCourt":{"id":1,"name":"Roland Garros - Court Philippe-Chatrier"},"tennisCourtId":1,"startDateTime":"2000-01-01T00:00","endDateTime":"2000-01-01T01:00"}]

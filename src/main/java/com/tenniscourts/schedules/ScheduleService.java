@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.tenniscourts.guests.GuestMapper;
+
 import lombok.AllArgsConstructor;
 
 @Service
@@ -13,7 +15,7 @@ public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
 
-    private final ScheduleMapper scheduleMapper;
+    private final GuestMapper scheduleMapper;
 
     private final TennisCourtScheduleService service;
 
