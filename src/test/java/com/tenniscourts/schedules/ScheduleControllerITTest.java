@@ -56,7 +56,7 @@ public class ScheduleControllerITTest
 			.content(request)
 		)
 		.andExpect(MockMvcResultMatchers.status().isOk())
-		.andExpect(MockMvcResultMatchers.content().json(expectedResponse, true))
+		.andExpect(MockMvcResultMatchers.content().json(expectedResponse))
 		.andDo(MockMvcResultHandlers.print());
 	}
 

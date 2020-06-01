@@ -10,16 +10,21 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import com.tenniscourts.guests.GuestMapper;
+import com.tenniscourts.tenniscourts.TennisCourt;
+import com.tenniscourts.tenniscourts.TennisCourtDTO;
+import com.tenniscourts.tenniscourts.TennisCourtMapper;
 
 public class ScheduleServiceTest {
 
+	private static final LocalDateTime END_TIME = LocalDateTime.of(2010, 12, 31, 00, 59, 59, 999999999);
 	private static final Long ANY_LONG = null;
-	private static LocalDateTime NOW = LocalDateTime.of(2010, 12, 30, 23, 59, 59, 999999999);
+	private static LocalDateTime START_TIME = LocalDateTime.of(2010, 12, 30, 23, 59, 59, 999999999);
 	@Mock
 	private ScheduleRepository repository;
 	@Mock
-	private GuestMapper mapper;
+	private ScheduleMapper mapper;
+	@Mock
+	private TennisCourtMapper tennisCourtMapper;
 	@Mock
 	private TennisCourtScheduleService tennisCourtScheduleService;
 	private ScheduleService service;
@@ -28,7 +33,7 @@ public class ScheduleServiceTest {
 	public void setUp()
 		throws Exception {
 		MockitoAnnotations.initMocks(this);
-		service = new ScheduleService(repository, mapper, tennisCourtScheduleService);
+		service = new ScheduleService(repository, mapper, tennisCourtMapper, tennisCourtScheduleService);
 	}
 
 	/**
@@ -44,16 +49,20 @@ public class ScheduleServiceTest {
 	 */
 	@Test
 	public void addSchedule() {
-		ScheduleDTO expected = new ScheduleDTO();
-		expected.setTennisCourtId(0L);
-		expected.setStartDateTime(NOW);
-		expected.setEndDateTime(LocalDateTime.of(2010, 12, 31, 00, 59, 59, 999999999));
+		Schedule expectedSchedule = new Schedule();
+		expectedSchedule.setTennisCourt(new TennisCourt());
+		expectedSchedule.setStartDateTime(START_TIME);
+		expectedSchedule.setEndDateTime(END_TIME);
+
 		CreateScheduleRequestDTO request = new CreateScheduleRequestDTO();
-		request.setStartDateTime(NOW);
+		request.setStartDateTime(START_TIME);
 
 		Mockito
-			.when(mapper.map(ArgumentMatchers.any(ScheduleDTO.class)))
-			.thenReturn(new Schedule());
+			.when(tennisCourtScheduleService.findTennisCourt(ArgumentMatchers.anyLong()))
+			.thenReturn(new TennisCourtDTO());
+		Mockito
+			.when(tennisCourtMapper.map(ArgumentMatchers.any(TennisCourtDTO.class)))
+			.thenReturn(new TennisCourt());
 		Mockito
 			.when(repository.save(ArgumentMatchers.any(Schedule.class)))
 			.thenReturn(new Schedule());
@@ -63,8 +72,11 @@ public class ScheduleServiceTest {
 
 		ScheduleDTO result = service.addSchedule(0L, request);
 
-		Mockito.verify(mapper).map(ArgumentMatchers.eq(expected));
-		Mockito.verify(repository).save(ArgumentMatchers.eq(new Schedule()));
+
+		Mockito.verify(tennisCourtScheduleService).findTennisCourt(ArgumentMatchers.eq(0L));
+		Mockito.verify(tennisCourtMapper).map(ArgumentMatchers.eq(new TennisCourtDTO()));
+		Mockito.verify(repository).save(ArgumentMatchers.eq(expectedSchedule));
+		Mockito.verify(mapper).map(ArgumentMatchers.eq(new Schedule()));
 
 		Assert.assertEquals(new ScheduleDTO(), result);
 	}

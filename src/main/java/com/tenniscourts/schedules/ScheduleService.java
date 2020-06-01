@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.tenniscourts.guests.GuestMapper;
+import com.tenniscourts.tenniscourts.TennisCourt;
+import com.tenniscourts.tenniscourts.TennisCourtDTO;
+import com.tenniscourts.tenniscourts.TennisCourtMapper;
 
 import lombok.AllArgsConstructor;
 
@@ -15,28 +17,29 @@ public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
 
-    private final GuestMapper scheduleMapper;
+    private final ScheduleMapper scheduleMapper;
 
-    private final TennisCourtScheduleService service;
+	private final TennisCourtMapper tennisCourtMapper;
+
+    private final TennisCourtScheduleService tennisCourtScheduleService;
 
 	public ScheduleDTO addSchedule(
 		final Long tennisCourtId,
 		final CreateScheduleRequestDTO createScheduleRequestDTO) {
-		LocalDateTime startDateTime = createScheduleRequestDTO.getStartDateTime();
-		ScheduleDTO scheduleDTO = new ScheduleDTO();
-		scheduleDTO.setStartDateTime(startDateTime);
-		scheduleDTO.setEndDateTime(startDateTime.plusHours(1L));
-		scheduleDTO.setTennisCourtId(tennisCourtId);
-		scheduleDTO.setTennisCourt(service.findTennisCourt(tennisCourtId));
-		Schedule schedule = save(scheduleDTO);
-		scheduleDTO.setId(schedule.getId());
-		return scheduleDTO;
-	}
+		TennisCourtDTO tennisCourtDTO = tennisCourtScheduleService.findTennisCourt(tennisCourtId);
+		TennisCourt tennisCourt = tennisCourtMapper.map(tennisCourtDTO);
 
-	private Schedule save(
-		final ScheduleDTO scheduleDTO) {
-		Schedule schedule = scheduleMapper.map(scheduleDTO);
-		return scheduleRepository.save(schedule);
+		LocalDateTime startDateTime = createScheduleRequestDTO.getStartDateTime();
+		LocalDateTime endDateTime = startDateTime.plusHours(1L);
+
+		Schedule scheduleUnsaved = new Schedule();
+		scheduleUnsaved.setStartDateTime(startDateTime);
+		scheduleUnsaved.setEndDateTime(endDateTime);
+		scheduleUnsaved.setTennisCourt(tennisCourt);
+		scheduleUnsaved.setEndDateTime(endDateTime);
+		scheduleUnsaved.setTennisCourt(tennisCourt);
+		Schedule scheduleSaved = scheduleRepository.save(scheduleUnsaved);
+		return scheduleMapper.map(scheduleSaved);
 	}
 
     public List<ScheduleDTO> findSchedulesByDates(final LocalDateTime startDate, final LocalDateTime endDate) {

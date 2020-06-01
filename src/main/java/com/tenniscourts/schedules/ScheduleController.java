@@ -4,9 +4,9 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -23,12 +23,12 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping("schedule")
 @AllArgsConstructor
-public class ScheduleController extends BaseRestController {
+public class ScheduleController extends BaseRestController implements ScheduleControllerSwagger {
 
     private final ScheduleService scheduleService;
 
 	@PostMapping
-    //TODO: implement rest and swagger
+	@Override
 	public ResponseEntity<Void> addScheduleTennisCourt(
 		@Valid @RequestBody final CreateScheduleRequestDTO createScheduleRequestDTO) {
         Long idTennisCourt = createScheduleRequestDTO.getTennisCourtId();
@@ -38,23 +38,20 @@ public class ScheduleController extends BaseRestController {
 		return ResponseEntity.created(response).build();
     }
 
-	@RequestMapping("batch")
-	@PostMapping
-	//TODO: implement rest and swagger
+	@PostMapping("batch")
+	@Override
 	public ResponseEntity<Collection<ScheduleDTO>> addScheduleTennisCourtBatch(
 		@Valid @RequestBody final CreateScheduleRequestBatchDTO request) {
 		LocalDateTime start = request.getStartDateTime();
-		List<ScheduleDTO> response = new ArrayList<>();
-		request.getTennisCourtId()
-			.stream()
-			.parallel()
-			.forEach(each ->{
+		List<ScheduleDTO> response = request.getTennisCourtId()
+			.parallelStream()
+			.map(each -> {
 				CreateScheduleRequestDTO dto = new CreateScheduleRequestDTO();
 				dto.setStartDateTime(start);
 				dto.setTennisCourtId(each);
-				ScheduleDTO schedule = scheduleService.addSchedule(each, dto);
-				response.add(schedule);
-			});
+				return scheduleService.addSchedule(each, dto);
+			})
+			.collect(Collectors.toList());
 		return ResponseEntity.ok(response);
 	}
 
