@@ -30,7 +30,7 @@ public class Guest extends BaseEntity<Long> {
   @NotNull
   private String name;
 
-  public Guest(Optional<Guest> guest) {
-    super();
-  }
+//  public Guest(Optional<Guest> guest) {
+//    super();
+//  }
 }

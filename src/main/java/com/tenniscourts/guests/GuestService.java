@@ -16,8 +16,11 @@ public class GuestService {
     @Autowired
     public GuestRepository guestRepository;
 
-    public void addGuest(Guest guest) {
+    public Guest addGuest(GuestDTO guestDTO) {
+        Guest guest = new Guest();
+        guest.setName(guestDTO.getName());
         guestRepository.save(guest);
+        return guest;
     }
 
     public Optional<Guest> findGuestById(Long id) {

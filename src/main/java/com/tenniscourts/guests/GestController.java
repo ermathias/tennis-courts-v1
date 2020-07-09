@@ -14,8 +14,8 @@ public class GestController {
     private GuestService guestService;
 
     @PostMapping("/addGuest")
-    public ResponseEntity<Guest> addGuest(Guest guest) {
-        guestService.addGuest(guest);
+    public ResponseEntity<Guest> addGuest(@RequestBody GuestDTO guestDTO) {
+        Guest guest = guestService.addGuest(guestDTO);
         return ResponseEntity.ok(guest);
     }
 
