@@ -13,6 +13,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import java.util.Optional;
 
 @Entity
 @Table
@@ -29,4 +30,7 @@ public class Guest extends BaseEntity<Long> {
   @NotNull
   private String name;
 
+  public Guest(Optional<Guest> guest) {
+    super();
+  }
 }
