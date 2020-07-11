@@ -34,13 +34,16 @@ public class GuestController {
     }
 
     @GetMapping("/findGuestByName")
-    public ResponseEntity<Optional<Guest>> findGuestByName(String name) {
-        Optional<Guest> guest = guestService.findGuestByName(name);
+    public ResponseEntity<Guest> findGuestByName(String name) {
+        Guest guest = guestService.findGuestByName(name);
+        if (guest==null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(guest);
     }
 
     @DeleteMapping("/deleteGuestById")
-    public ResponseEntity<String> deleteGuestById(Long id) {
+    public ResponseEntity deleteGuestById(Long id) {
+        Guest guest = guestService.findGuestById(id);
+        if (guest==null) return ResponseEntity.notFound().build();
         guestService.deleteGuestById(id);
         return ResponseEntity.ok().build();
     }
@@ -49,7 +52,7 @@ public class GuestController {
     public ResponseEntity<Guest> upateGuestById(Long id, String name) {
         Guest guest = guestService.findGuestById(id);
         if (guest==null) return ResponseEntity.notFound().build();
-        guestService.updateGuest(guest, name);
+        guest = guestService.updateGuest(guest, name);
         return ResponseEntity.ok(guest);
     }
 }

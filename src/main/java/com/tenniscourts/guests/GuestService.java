@@ -39,8 +39,10 @@ public class GuestService {
     }
 
 
-    public Optional<Guest> findGuestByName(String name) {
-        Optional<Guest> guest = guestRepository.findByName(name);
+    public Guest findGuestByName(String name) {
+        Optional<Guest> guestOpt = guestRepository.findByName(name);
+        if (!guestOpt.isPresent()) return null;
+        Guest guest = guestOpt.get();
         return guest;
     }
 
