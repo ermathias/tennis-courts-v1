@@ -27,7 +27,9 @@ public class GuestService {
 
     public Guest findGuestById(Long id) {
         Optional<Guest> guestOpt = guestRepository.findById(id);
-        if (!guestOpt.isPresent()) return null;
+        if (guestOpt.isEmpty()) {
+            return null;
+        }
         Guest guest = guestOpt.get();
         return guest;
     }
@@ -52,7 +54,7 @@ public class GuestService {
 
     public Guest updateGuest(Guest guest, String name) {
         guest.setName(name);
-        guestRepository.save(guest);
+        guest = guestRepository.save(guest);
         return guest;
     }
 }
