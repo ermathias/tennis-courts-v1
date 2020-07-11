@@ -34,7 +34,6 @@ import static org.mockito.Mockito.when;
     @Mock
     GuestService guestService;
 
-
     @Test
     public void testAddGuest() {
         MockHttpServletRequest request = new MockHttpServletRequest();
@@ -56,7 +55,6 @@ import static org.mockito.Mockito.when;
         MockHttpServletRequest request = new MockHttpServletRequest();
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 
-
         Guest guest = new Guest();
         guest.setName("juliano");
         guest.setId(1L);
@@ -67,5 +65,17 @@ import static org.mockito.Mockito.when;
 
         Assert.assertEquals(guestById.getStatusCode(), HttpStatus.OK);
         Assert.assertEquals(guestById.getBody().getName(), "juliano");
+    }
+
+    @Test
+    public void testFindGuestByIdReturnNotFound() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+
+        when(guestService.findGuestById(any())).thenReturn(null);
+
+        ResponseEntity<Guest> guestById = guestController.findGuestById(9L);
+
+        Assert.assertEquals(guestById.getStatusCode(), HttpStatus.NOT_FOUND);
     }
 }

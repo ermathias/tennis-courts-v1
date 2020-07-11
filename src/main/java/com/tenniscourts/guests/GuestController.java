@@ -1,6 +1,7 @@
 package com.tenniscourts.guests;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,7 @@ public class GuestController {
     @GetMapping("/findGuestById")
     public ResponseEntity<Guest> findGuestById(Long id) {
         Guest guest = guestService.findGuestById(id);
+        if (guest==null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(guest);
     }
 
@@ -32,7 +34,7 @@ public class GuestController {
     }
 
     @GetMapping("/findGuestByName")
-    public ResponseEntity<Optional<Guest>> findGuestById(String name) {
+    public ResponseEntity<Optional<Guest>> findGuestByName(String name) {
         Optional<Guest> guest = guestService.findGuestByName(name);
         return ResponseEntity.ok(guest);
     }
