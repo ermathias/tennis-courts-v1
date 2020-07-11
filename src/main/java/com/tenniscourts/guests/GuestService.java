@@ -1,6 +1,7 @@
 package com.tenniscourts.guests;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@NoArgsConstructor
 public class GuestService {
 
     @Autowired
@@ -23,8 +25,10 @@ public class GuestService {
         return guest;
     }
 
-    public Optional<Guest> findGuestById(Long id) {
-        Optional<Guest> guest = guestRepository.findById(id);
+    public Guest findGuestById(Long id) {
+        Optional<Guest> guestOpt = guestRepository.findById(id);
+        if (!guestOpt.isPresent()) return null;
+        Guest guest = guestOpt.get();
         return guest;
     }
 

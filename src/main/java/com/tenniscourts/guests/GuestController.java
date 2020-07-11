@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-public class GestController {
+public class GuestController {
 
     @Autowired
     private GuestService guestService;
@@ -20,8 +20,8 @@ public class GestController {
     }
 
     @GetMapping("/findGuestById")
-    public ResponseEntity<Optional<Guest>> findGuestById(Long id) {
-        Optional<Guest> guest = guestService.findGuestById(id);
+    public ResponseEntity<Guest> findGuestById(Long id) {
+        Guest guest = guestService.findGuestById(id);
         return ResponseEntity.ok(guest);
     }
 
@@ -44,11 +44,10 @@ public class GestController {
     }
 
     @PutMapping("/updateGuestById")
-    public ResponseEntity<Optional<Guest>> upateGuestById(Long id, String name) {
-        Optional<Guest> guest = guestService.findGuestById(id);
-        if (!guest.isPresent()) return ResponseEntity.notFound().build();
-        Guest existingGuest = guest.get();
-        guestService.updateGuest(existingGuest, name);
+    public ResponseEntity<Guest> upateGuestById(Long id, String name) {
+        Guest guest = guestService.findGuestById(id);
+        if (guest==null) return ResponseEntity.notFound().build();
+        guestService.updateGuest(guest, name);
         return ResponseEntity.ok(guest);
     }
 }
