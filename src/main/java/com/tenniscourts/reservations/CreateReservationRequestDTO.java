@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 import javax.validation.constraints.NotNull;
 
 @AllArgsConstructor
@@ -22,5 +24,8 @@ public class CreateReservationRequestDTO {
 
     @NotNull
     private Long scheduleId;
+    
+    @NotNull
+    private BigDecimal value;
 
 }
