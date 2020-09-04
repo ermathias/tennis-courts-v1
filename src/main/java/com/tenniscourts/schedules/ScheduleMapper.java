@@ -8,6 +8,8 @@ import java.util.List;
 public interface ScheduleMapper {
 
     Schedule map(ScheduleDTO source);
+    
+    Schedule map(CreateScheduleRequestDTO source);
 
     ScheduleDTO map(Schedule source);
 
