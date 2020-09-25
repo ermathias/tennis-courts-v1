@@ -1,9 +1,12 @@
 package com.tenniscourts.exceptions;
 
+import java.util.function.Supplier;
+
 /**
  * The type Entity not found exception.
  */
-public class EntityNotFoundException extends RuntimeException {
+public class EntityNotFoundException extends RuntimeException 
+									 implements Supplier<EntityNotFoundException>{
   /**
    * Instantiates a new Entity not found exception.
    *
@@ -14,4 +17,9 @@ public class EntityNotFoundException extends RuntimeException {
     }
 
     private EntityNotFoundException(){}
+
+	@Override
+	public EntityNotFoundException get() {
+		return this;
+	}
 }
