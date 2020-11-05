@@ -30,14 +30,14 @@ public class TennisCourtController extends BaseRestController {
 
   @GetMapping( "/{id}" )
   @ApiOperation( "Find Tennis court by id" )
-  @ApiResponses( value = { @ApiResponse( code = 200, message = "Ok" ) } )
+  @ApiResponses( value = { @ApiResponse( code = 200, message = "Tennis court founded" ) } )
   public ResponseEntity< TennisCourtDTO > findTennisCourtById( @PathVariable( "id" ) Long tennisCourtId ) {
     return ResponseEntity.ok( tennisCourtService.findTennisCourtById( tennisCourtId ) );
   }
 
   @GetMapping( "with-schedules/{id}" )
   @ApiOperation( "Find Tennis court by id" )
-  @ApiResponses( value = { @ApiResponse( code = 200, message = "Ok" ) } )
+  @ApiResponses( value = { @ApiResponse( code = 200, message = "Tennis court founded" ) } )
   public ResponseEntity< TennisCourtDTO > findTennisCourtWithSchedulesById( @PathVariable( "id" ) Long tennisCourtId ) {
     return ResponseEntity.ok( tennisCourtService.findTennisCourtWithSchedulesById( tennisCourtId ) );
   }
