@@ -1,6 +1,13 @@
 .gradle
 /build/
 !gradle/wrapper/gradle-wrapper.jar
+/bin/*
+
+### files Android Studio ###
+/local.properties
+
+### files Visual Studio Code ###
+/.vscode/launch.json
 
 ### STS ###
 .apt_generated

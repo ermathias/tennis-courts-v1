@@ -21,9 +21,8 @@ public class ReservationService {
     }
 
     public ReservationDTO findReservation(Long reservationId) {
-        return reservationRepository.findById(reservationId).map(reservationMapper::map).orElseThrow(() -> {
-            throw new EntityNotFoundException("Reservation not found.");
-        });
+        return reservationRepository.findById(reservationId).map(reservationMapper::map)
+                .orElseThrow(() -> new EntityNotFoundException("Reservation not found."));
     }
 
     public ReservationDTO cancelReservation(Long reservationId) {
@@ -38,9 +37,7 @@ public class ReservationService {
             BigDecimal refundValue = getRefundValue(reservation);
             return this.updateReservation(reservation, refundValue, ReservationStatus.CANCELLED);
 
-        }).orElseThrow(() -> {
-            throw new EntityNotFoundException("Reservation not found.");
-        });
+        }).orElseThrow(() -> new EntityNotFoundException("Reservation not found."));
     }
 
     private Reservation updateReservation(Reservation reservation, BigDecimal refundValue, ReservationStatus status) {
@@ -71,8 +68,10 @@ public class ReservationService {
         return BigDecimal.ZERO;
     }
 
-    /*TODO: This method actually not fully working, find a way to fix the issue when it's throwing the error:
-            "Cannot reschedule to the same slot.*/
+    /*
+     * TODO: This method actually not fully working, find a way to fix the issue
+     * when it's throwing the error: "Cannot reschedule to the same slot.
+     */
     public ReservationDTO rescheduleReservation(Long previousReservationId, Long scheduleId) {
         Reservation previousReservation = cancel(previousReservationId);
 
@@ -84,9 +83,7 @@ public class ReservationService {
         reservationRepository.save(previousReservation);
 
         ReservationDTO newReservation = bookReservation(CreateReservationRequestDTO.builder()
-                .guestId(previousReservation.getGuest().getId())
-                .scheduleId(scheduleId)
-                .build());
+                .guestId(previousReservation.getGuest().getId()).scheduleId(scheduleId).build());
         newReservation.setPreviousReservation(reservationMapper.map(previousReservation));
         return newReservation;
     }
