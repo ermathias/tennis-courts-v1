@@ -82,6 +82,12 @@ public class ReservationService {
         long hours = ChronoUnit.HOURS.between(LocalDateTime.now(), reservation.getSchedule().getStartDateTime());
         if (hours >= 24) {
             return reservation.getValue();
+        } else if (hours <= 2) {
+            return reservation.getValue().multiply(new BigDecimal(0.25));
+        } else if (hours < 12) {
+            return reservation.getValue().multiply(new BigDecimal(0.5));
+        } else if (hours < 24) {
+            return reservation.getValue().multiply(new BigDecimal(0.75));
         }
         return BigDecimal.ZERO;
     }
