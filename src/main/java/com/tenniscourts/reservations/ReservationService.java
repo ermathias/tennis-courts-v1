@@ -33,9 +33,9 @@ public class ReservationService {
     public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
         Reservation reservation = Reservation.builder()
                 .schedule(scheduleRepository.findById(createReservationRequestDTO.getScheduleId())
-                        .orElseThrow(() -> new EntityNotFoundException("Schedule not found")))
+                        .orElseThrow(() -> new EntityNotFoundException("Schedule not found.")))
                 .guest(guestRepository.findById(createReservationRequestDTO.getGuestId())
-                        .orElseThrow(() -> new EntityNotFoundException("Guest not found")))
+                        .orElseThrow(() -> new EntityNotFoundException("Guest not found.")))
                 .reservationStatus(ReservationStatus.READY_TO_PLAY).value(BigDecimal.valueOf(10))
                 .refundValue(BigDecimal.valueOf(10)).build();
         return reservationMapper.map(reservationRepository.save(reservation));

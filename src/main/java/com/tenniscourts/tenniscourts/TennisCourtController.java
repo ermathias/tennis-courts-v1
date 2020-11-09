@@ -37,17 +37,18 @@ public class TennisCourtController extends BaseRestController {
                 .build();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{tennisCourtId}")
     @ApiOperation("Find Tennis Court by id")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Ok") })
-    public ResponseEntity<TennisCourtDTO> findTennisCourtById(@PathVariable("id") Long tennisCourtId) {
+    public ResponseEntity<TennisCourtDTO> findTennisCourtById(@PathVariable("tennisCourtId") Long tennisCourtId) {
         return ResponseEntity.ok(tennisCourtService.findTennisCourtById(tennisCourtId));
     }
 
-    @GetMapping("with-schedules/{id}")
+    @GetMapping("with-schedules/{tennisCourtId}")
     @ApiOperation("Find schedules for Tennis Court by id")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Ok") })
-    public ResponseEntity<TennisCourtDTO> findTennisCourtWithSchedulesById(@PathVariable("id") Long tennisCourtId) {
+    public ResponseEntity<TennisCourtDTO> findTennisCourtWithSchedulesById(
+            @PathVariable("tennisCourtId") Long tennisCourtId) {
         return ResponseEntity.ok(tennisCourtService.findTennisCourtWithSchedulesById(tennisCourtId));
     }
 

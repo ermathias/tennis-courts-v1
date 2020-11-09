@@ -27,7 +27,7 @@ public class ScheduleController extends BaseRestController {
 
     @PostMapping
     @ApiOperation("Creating a new tennis court schedule")
-    @ApiResponses(value = { @ApiResponse(code = 201, message = "Schedule created with success") })
+    @ApiResponses(value = { @ApiResponse(code = 201, message = "Schedule created with success.") })
     public ResponseEntity<Void> addScheduleTennisCourt(
             @Valid @RequestBody CreateScheduleRequestDTO createScheduleRequestDTO) {
         return ResponseEntity
@@ -60,10 +60,10 @@ public class ScheduleController extends BaseRestController {
         return ResponseEntity.ok(scheduleService.findAllNextSchedules());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{scheduleId}")
     @ApiOperation("Find scheduling by id")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Ok") })
-    public ResponseEntity<ScheduleDTO> findByScheduleId(Long scheduleId) {
+    public ResponseEntity<ScheduleDTO> findByScheduleId(@PathVariable("scheduleId") Long scheduleId) {
         return ResponseEntity.ok(scheduleService.findSchedule(scheduleId));
     }
 }

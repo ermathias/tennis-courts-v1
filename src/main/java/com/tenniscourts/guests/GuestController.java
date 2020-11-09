@@ -33,10 +33,10 @@ public class GuestController extends BaseRestController {
         return guestService.findAll(pageable);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{guestId}")
     @ApiOperation("Find Guest by id")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Ok") })
-    public ResponseEntity<GuestDTO> findGuestById(@PathVariable("id") Long guestId) {
+    public ResponseEntity<GuestDTO> findGuestById(@PathVariable("guestId") Long guestId) {
         return ResponseEntity.ok(guestService.findGuestById(guestId));
     }
 
@@ -47,10 +47,10 @@ public class GuestController extends BaseRestController {
         return ResponseEntity.ok(guestService.findGuestByName(guestName));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{guestId}")
     @ApiOperation("Delete Guest by id")
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ok") })
-    public void delete(@PathVariable("id") Long id) {
-        this.guestService.deleteById(id);
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Guest deleted with sucess") })
+    public void delete(@PathVariable("guestId") Long guestId) {
+        this.guestService.deleteById(guestId);
     }
 }

@@ -4,8 +4,6 @@ import com.tenniscourts.exceptions.EntityNotFoundException;
 import com.tenniscourts.tenniscourts.TennisCourtRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +27,7 @@ public class ScheduleService {
     public ScheduleDTO addSchedule(Long tennisCourtId, CreateScheduleRequestDTO createScheduleRequestDTO) {
         try {
             if (!tennisCourtRepository.findById(tennisCourtId).isPresent()) {
-                throw new EntityNotFoundException("Tennis court not exists");
+                throw new EntityNotFoundException("Tennis court not exists.");
             }
         } catch (EntityNotFoundException e) {
             e.printStackTrace();

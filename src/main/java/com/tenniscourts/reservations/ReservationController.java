@@ -38,7 +38,7 @@ public class ReservationController extends BaseRestController {
 
     @PatchMapping("/{reservationId}/reschedule/{newScheduleId}")
     @ApiOperation("Reschedule reservation by reservation id and schedule id")
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ok") })
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully rescheduled") })
     public ResponseEntity<ReservationDTO> rescheduleReservation(@PathVariable("reservationId") Long reservationId,
             @PathVariable("newScheduleId") Long scheduleId) {
         return ResponseEntity.ok(reservationService.rescheduleReservation(reservationId, scheduleId));
@@ -53,21 +53,21 @@ public class ReservationController extends BaseRestController {
 
     @DeleteMapping("/{reservationId}")
     @ApiOperation("Cancel reservation by id")
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ok") })
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Reservation deleted with sucess") })
     public ResponseEntity<ReservationDTO> cancelReservation(@PathVariable("reservationId") Long reservationId) {
         return ResponseEntity.ok(reservationService.cancelReservation(reservationId));
     }
 
     @DeleteMapping("/missed/{reservationId}")
     @ApiOperation("Cancel reservation if user missed")
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ok") })
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Reservation marked as missing") })
     public ResponseEntity<ReservationDTO> missedReservation(@PathVariable("reservationId") Long reservationId) {
         return ResponseEntity.ok(reservationService.missedReservation(reservationId));
     }
 
     @PatchMapping("/concluded/{reservationId}")
     @ApiOperation("Complete the reservation and return the money")
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ok") })
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Reservation marked as concluded") })
     public ResponseEntity<ReservationDTO> concludedReservation(@PathVariable("reservationId") Long reservationId) {
         return ResponseEntity.ok(reservationService.concludedReservation(reservationId));
     }
