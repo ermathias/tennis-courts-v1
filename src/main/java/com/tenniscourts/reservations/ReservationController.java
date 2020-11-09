@@ -64,4 +64,11 @@ public class ReservationController extends BaseRestController {
     public ResponseEntity<ReservationDTO> missedReservation(@PathVariable("reservationId") Long reservationId) {
         return ResponseEntity.ok(reservationService.missedReservation(reservationId));
     }
+
+    @PatchMapping("/concluded/{reservationId}")
+    @ApiOperation("Complete the reservation and return the money")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ok") })
+    public ResponseEntity<ReservationDTO> concludedReservation(@PathVariable("reservationId") Long reservationId) {
+        return ResponseEntity.ok(reservationService.concludedReservation(reservationId));
+    }
 }
