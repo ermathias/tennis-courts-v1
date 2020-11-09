@@ -57,4 +57,11 @@ public class ReservationController extends BaseRestController {
     public ResponseEntity<ReservationDTO> cancelReservation(@PathVariable("reservationId") Long reservationId) {
         return ResponseEntity.ok(reservationService.cancelReservation(reservationId));
     }
+
+    @DeleteMapping("/missed/{reservationId}")
+    @ApiOperation("Cancel reservation if user missed")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ok") })
+    public ResponseEntity<ReservationDTO> missedReservation(@PathVariable("reservationId") Long reservationId) {
+        return ResponseEntity.ok(reservationService.missedReservation(reservationId));
+    }
 }

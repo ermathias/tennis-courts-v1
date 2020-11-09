@@ -62,6 +62,18 @@ public class ReservationService {
         }).orElseThrow(() -> new EntityNotFoundException("Reservation not found."));
     }
 
+    public ReservationDTO missedReservation(Long reservationId) {
+        return reservationMapper.map(this.missed(reservationId));
+    }
+
+    private Reservation missed(Long reservationId) {
+        return reservationRepository.findById(reservationId).map(reservation -> {
+            this.validateCancellation(reservation);
+            BigDecimal refundValue = BigDecimal.ZERO;
+            return this.updateReservation(reservation, refundValue, ReservationStatus.MISSED);
+        }).orElseThrow(() -> new EntityNotFoundException("Reservation not found."));
+    }
+
     private Reservation updateReservation(Reservation reservation, BigDecimal refundValue, ReservationStatus status) {
         reservation.setReservationStatus(status);
         reservation.setValue(reservation.getValue().subtract(refundValue));
