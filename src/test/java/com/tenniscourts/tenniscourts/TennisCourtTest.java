@@ -60,11 +60,6 @@ class TennisCourtTest {
 
         @Test
         void shouldUpdateATennisCourt() throws Exception {
-                TennisCourtDTO tennisCourtDTO = TennisCourtDTO.builder().name("A name for tennis court")
-                                .tennisCourtSchedules(new ArrayList<>()).build();
-                mockMvc.perform(post("/tennis-courts").contentType("application/json")
-                                .content(objectMapper.writeValueAsString(tennisCourtDTO)))
-                                .andExpect(status().isCreated());
 
                 TennisCourtDTO updateTennisCourtDTO = TennisCourtDTO.builder().name("A new name for tennis court")
                                 .id(Long.valueOf(1)).tennisCourtSchedules(new ArrayList<>()).build();
@@ -76,32 +71,7 @@ class TennisCourtTest {
         @Test
         void shouldFindTennisCourtForId() throws Exception {
 
-                TennisCourtDTO tennisCourtDTO1 = TennisCourtDTO.builder().name("TesteTennisCourt1")
-                                .tennisCourtSchedules(new ArrayList<>()).build();
-
-                TennisCourtDTO tennisCourtDTO2 = TennisCourtDTO.builder().name("TesteTennisCourt2")
-                                .tennisCourtSchedules(new ArrayList<>()).build();
-
-                TennisCourtDTO tennisCourtDTO3 = TennisCourtDTO.builder().name("TesteTennisCourt3")
-                                .tennisCourtSchedules(new ArrayList<>()).build();
-
-                mockMvc.perform(post("/tennis-courts").contentType("application/json")
-                                .content(objectMapper.writeValueAsString(tennisCourtDTO1)))
-                                .andExpect(status().isCreated());
-                mockMvc.perform(post("/tennis-courts").contentType("application/json")
-                                .content(objectMapper.writeValueAsString(tennisCourtDTO2)))
-                                .andExpect(status().isCreated());
-                mockMvc.perform(post("/tennis-courts").contentType("application/json")
-                                .content(objectMapper.writeValueAsString(tennisCourtDTO3)))
-                                .andExpect(status().isCreated());
-
                 this.mockMvc.perform(MockMvcRequestBuilders.get("/tennis-courts/1"))
-                                .andExpect(MockMvcResultMatchers.status().isOk());
-
-                this.mockMvc.perform(MockMvcRequestBuilders.get("/tennis-courts/2"))
-                                .andExpect(MockMvcResultMatchers.status().isOk());
-
-                this.mockMvc.perform(MockMvcRequestBuilders.get("/tennis-courts/3"))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
         }
 

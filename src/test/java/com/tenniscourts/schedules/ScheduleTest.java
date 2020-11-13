@@ -73,10 +73,6 @@ class SchedulesTest {
 
         @Test
         void shouldCreateASchedule() throws Exception {
-                TennisCourtDTO tennisCourtDTO = TennisCourtDTO.builder().name("A name for tennis court")
-                                .tennisCourtSchedules(new ArrayList<>()).build();
-                mockMvcTennisCourt.perform(post("/tennis-courts").contentType("application/json")
-                                .content(objectMapper.writeValueAsString(tennisCourtDTO)));
 
                 CreateScheduleRequestDTO createScheduleRequestDTO = CreateScheduleRequestDTO.builder()
                                 .tennisCourtId(Long.valueOf(1)).startDateTime(LocalDateTime.now()).build();
@@ -88,16 +84,6 @@ class SchedulesTest {
 
         @Test
         public void testGETIndexSchedulesForId() throws Exception {
-                TennisCourtDTO tennisCourtDTO = TennisCourtDTO.builder().name("A name for tennis court")
-                                .tennisCourtSchedules(new ArrayList<>()).build();
-                mockMvcTennisCourt.perform(post("/tennis-courts").contentType("application/json")
-                                .content(objectMapper.writeValueAsString(tennisCourtDTO)));
-
-                CreateScheduleRequestDTO createScheduleRequestDTO = CreateScheduleRequestDTO.builder()
-                                .tennisCourtId(Long.valueOf(1)).startDateTime(LocalDateTime.now()).build();
-
-                mockMvc.perform(post("/schedules").contentType("application/json")
-                                .content(objectMapper.writeValueAsString(createScheduleRequestDTO)));
 
                 this.mockMvc.perform(MockMvcRequestBuilders.get("/schedules/1"))
                                 .andExpect(MockMvcResultMatchers.status().isOk());

@@ -75,5 +75,4 @@ public class ReservationServiceTest {
                 reservationService
                         .getRefundValue(Reservation.builder().schedule(schedule).value(new BigDecimal(10L)).build()), "2.50");
     }
-
 }

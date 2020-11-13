@@ -54,10 +54,7 @@ class GuestTest {
 
         @Test
         void shouldUpdateAGuest() throws Exception {
-                GuestDTO guestDTO = GuestDTO.builder().name("A name for guest").build();
-                mockMvc.perform(post("/guests").contentType("application/json")
-                                .content(objectMapper.writeValueAsString(guestDTO))).andExpect(status().isCreated());
-
+                
                 GuestDTO updateGuestDTO = GuestDTO.builder().name("A new name for guest").id(Long.valueOf(1)).build();
                 mockMvc.perform(post("/guests").contentType("application/json")
                                 .content(objectMapper.writeValueAsString(updateGuestDTO)))
@@ -66,17 +63,6 @@ class GuestTest {
 
         @Test
         void shouldFindTennisCourtForId() throws Exception {
-
-                GuestDTO guestDTO1 = GuestDTO.builder().name("TesteGuest1").build();
-                GuestDTO guestDTO2 = GuestDTO.builder().name("TesteGuest2").build();
-                GuestDTO guestDTO3 = GuestDTO.builder().name("TesteGuest3").build();
-
-                mockMvc.perform(post("/guests").contentType("application/json")
-                                .content(objectMapper.writeValueAsString(guestDTO1))).andExpect(status().isCreated());
-                mockMvc.perform(post("/guests").contentType("application/json")
-                                .content(objectMapper.writeValueAsString(guestDTO2))).andExpect(status().isCreated());
-                mockMvc.perform(post("/guests").contentType("application/json")
-                                .content(objectMapper.writeValueAsString(guestDTO3))).andExpect(status().isCreated());
 
                 this.mockMvc.perform(MockMvcRequestBuilders.get("/guests/1"))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
