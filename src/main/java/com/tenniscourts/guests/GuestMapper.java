@@ -2,10 +2,14 @@ package com.tenniscourts.guests;
 
 
 import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+/**
+ * Added ReportingPolicy.IGNORE because it was showing too many warnings when application started.
+ */
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface GuestMapper {
 
     Guest map(GuestDTO guest);

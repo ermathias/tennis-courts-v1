@@ -1,3 +1,5 @@
+
+--It was created a boolen column at Guest Table for checking user role purposes.
 insert into guest(id, name, admin) values(null,'Roger Federer','true');
 insert into guest(id, name, admin) values(null, 'Rafael Nadal','false');
 
