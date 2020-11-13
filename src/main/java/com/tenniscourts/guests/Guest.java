@@ -1,13 +1,8 @@
 package com.tenniscourts.guests;
 
 import com.tenniscourts.config.persistence.BaseEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,5 +23,13 @@ public class Guest extends BaseEntity<Long> {
   @Column
   @NotNull
   private String name;
+
+  /**
+   * true is Tennis Court Admin
+   * false is ordinary User
+   */
+  @Column
+  @NotNull
+  private boolean admin;
 
 }

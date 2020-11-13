@@ -5,6 +5,7 @@ import org.mapstruct.Mapper;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
+//@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ScheduleMapper {
 
     Schedule map(ScheduleDTO source);
