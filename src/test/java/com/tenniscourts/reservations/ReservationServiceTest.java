@@ -31,6 +31,10 @@ public class ReservationServiceTest {
 
         schedule.setStartDateTime(startDateTime);
 
-        Assert.assertEquals(reservationService.getRefundValue(Reservation.builder().schedule(schedule).value(new BigDecimal(10L)).build()), new BigDecimal(10));
+        Assert.assertEquals(
+                reservationService
+                        .getRefundValue(Reservation.builder().schedule(schedule).value(new BigDecimal(10L)).build()),
+                new BigDecimal(10));
     }
+
 }
