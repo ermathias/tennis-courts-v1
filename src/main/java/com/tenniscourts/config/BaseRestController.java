@@ -8,8 +8,7 @@ import java.net.URI;
 @ApiIgnore
 public class BaseRestController {
 
-  protected URI locationByEntity(Long entityId){
-        return ServletUriComponentsBuilder.fromCurrentRequest().path(
-                "/{id}").buildAndExpand(entityId).toUri();
+    protected URI locationByEntity(Long entityId) {
+        return ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(entityId).toUri();
     }
 }
