@@ -41,6 +41,6 @@ The actual code has the below user stories already implemented. You should compl
 1. Ensure the code is well tested
  
 # Deliverables and Closing Note 
-For delivering your code you have to do the **FORK** of the @wmalgarizi(wmalgarizi/justin) repository, then when you finish the implementation please submit a Pull Request to this **FORK** which will be placed in your github account.
+For delivering your code you have to do the **FORK** of the @wmalgarizi(wmalgarizi/marcelo) repository, then when you finish the implementation please submit a Pull Request to this **FORK** which will be placed in your github account.
 
 Good Luck and happy coding!
