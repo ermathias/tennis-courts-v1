@@ -44,3 +44,42 @@ The actual code has the below user stories already implemented. You should compl
 For delivering your code you have to do the **FORK** of the @josivansilva(josivansilva/gustavogallarreta) repository, then when you finish the implementation please submit a Pull Request to this **FORK** which will be placed in your github account.
 
 Good Luck and happy coding!
+
+#Development Report - Gustavo Gallarreta
+
+At initial, I needed to learn how works MapStruct, Lombok, and Swagger. Knowing better how the Frameworks implements the annotations, I started to do the tasks.
+
+I chose to work with a simple Git Flow. I created two new branches named Feature and Fix, where was committed the tasks. In the end, I merge the branch Feature and Fix with my Main.
+
+After any task, I tested the result on Postman. The Collection with requests is uploaded to the repository too.
+
+Task 1 ok.
+
+Task 2 I don't resolve because given the hour passed to resolve other tasks from the challenge.
+
+Task 3 ok.
+
+Task 4 ok.
+
+Task 5 ok.
+
+Task 6 ok.
+
+Task 7 ok.
+
+Task 8 ok.
+
+Task 9 ok.
+
+Task 10 ok. I understood that was a logical deduction when the guest doesn't reschedule or cancel the deposit is not refunded and know that another possibility will be adding another Reservation Status.
+
+Task 11 I don't resolve because given the hour passed to resolve other tasks from the challenge.
+Conclusion
+
+During this challenge, I came across some new developments that demanded good study time to bring an acceptable code. There are many possibilities to improve the code as implements a reservation status PLAYED or methods to increase the validation error. Another necessary thing is to improve the coverage of tests.
+
+In the tests, I tried to demonstrate knowledge, and due to the time, I didn't go further to increase the coverage.
+
+Swagger URI: http://localhost:8080/api/swagger-ui.html#/
+
+Grateful for the opportunity.
