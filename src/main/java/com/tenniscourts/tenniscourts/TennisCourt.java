@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
