@@ -3,6 +3,7 @@ package com.tenniscourts.reservations;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,5 +18,8 @@ public class CreateReservationRequestDTO {
 
     @NotNull
     private Long scheduleId;
+
+    @NotNull
+    private LocalDateTime startDateTime;
 
 }
