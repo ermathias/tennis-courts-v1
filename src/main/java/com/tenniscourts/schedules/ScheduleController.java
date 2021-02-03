@@ -1,38 +1,56 @@
 package com.tenniscourts.schedules;
 
 import com.tenniscourts.config.BaseRestController;
-import lombok.AllArgsConstructor;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
-@AllArgsConstructor
 @RestController
-@RequestMapping(value = "/api/schedule")
+@RequestMapping(value = "/v1/schedules")
+@CrossOrigin(origins = "*")
 public class ScheduleController extends BaseRestController {
-    @Autowired
+
     private final ScheduleService scheduleService;
 
-    @PostMapping(value = "/add")
-    public ResponseEntity<Void> addScheduleTennisCourt(@RequestBody CreateScheduleRequestDTO createScheduleRequestDTO) {
-        return ResponseEntity.created(locationByEntity(scheduleService.addSchedule(createScheduleRequestDTO.getTennisCourtId(), createScheduleRequestDTO).getId())).build();
+    @Autowired
+    public ScheduleController(ScheduleService scheduleService) {
+        this.scheduleService = scheduleService;
     }
 
-    @GetMapping(value = "/findbydate/{startDate}/{endDate}")
-    public ResponseEntity<List<ScheduleDTO>> findSchedulesByDates(@PathVariable(name = "startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                                                  @PathVariable(name = "endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        return ResponseEntity.ok(scheduleService.findSchedulesByDates(LocalDateTime.of(startDate, LocalTime.of(0, 0)), LocalDateTime.of(endDate, LocalTime.of(23, 59))));
+    @PostMapping
+    @ApiOperation(value = "API operation that create a new schedule.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Schedule successfully created.")
+    })
+    public ResponseEntity<Void> addScheduleTennisCourt(
+            @RequestBody CreateScheduleRequestDTO createScheduleRequestDTO) {
+        return ResponseEntity.created(locationByEntity(
+                scheduleService.addSchedule(createScheduleRequestDTO).getId())).build();
     }
 
-    @GetMapping(value = "/findbyid/{scheduleId}")
+    @GetMapping("/{scheduleId}")
+    @ApiOperation(value = "API operation that return a schedule by ID number.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Schedule found."),
+            @ApiResponse(code = 404, message = "Schedule not found.")
+    })
     public ResponseEntity<ScheduleDTO> findByScheduleId(@PathVariable Long scheduleId) {
-        return ResponseEntity.ok(scheduleService.findSchedule(scheduleId));
+        return ResponseEntity.ok(scheduleService.findScheduleById(scheduleId));
+    }
+
+    @GetMapping("/court/{courtId}")
+    @ApiOperation(value = "API operation that return a list of schedules by tennis court ID.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Schedule found."),
+            @ApiResponse(code = 404, message = "Schedule not found.")
+    })
+    public ResponseEntity<List<ScheduleDTO>> findByScheduleCourtId(@PathVariable Long courtId) {
+        return ResponseEntity.ok(scheduleService.findSchedulesByTennisCourtId(courtId));
     }
 
 }
