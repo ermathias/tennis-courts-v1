@@ -1,56 +1,69 @@
 package com.tenniscourts.guests;
 
 import com.tenniscourts.exceptions.EntityNotFoundException;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+
 @Service
-@AllArgsConstructor
 public class GuestService {
-    @Autowired
+
     private final GuestRepository guestRepository;
 
     private final GuestMapper guestMapper;
 
-    public GuestDTO addGuest(GuestDTO guest) {
-        return guestMapper.map(guestRepository.saveAndFlush(guestMapper.map(guest)));
+    @Autowired
+    public GuestService(GuestRepository guestRepository, GuestMapper guestMapper) {
+        this.guestRepository = guestRepository;
+        this.guestMapper = guestMapper;
+    }
+
+    public GuestDTO addGuest(GuestDTO guestDTO) {
+        return guestMapper.map(guestRepository.saveAndFlush(guestMapper.map(guestDTO)));
     }
 
     public GuestDTO findGuestById(Long id) {
-        return guestRepository.findById(id).map(guestMapper::map).orElseThrow(() -> new EntityNotFoundException("Guest not found."));
+        return guestRepository.findById(id)
+                .map(guestMapper::map)
+                .orElseThrow(() -> throwEntityNotFoundException(id));
     }
 
     public GuestDTO findGuestByName(String name) {
-        return guestRepository.findByName(name).map(guestMapper::map).orElseThrow(() -> new EntityNotFoundException("Guest not found."));
+        return guestRepository.findByName(name)
+                .map(guestMapper::map)
+                .orElseThrow(() -> throwEntityNotFoundException(name));
     }
 
     public GuestDTO updateGuest(GuestDTO guestDTO, Long id) {
-        Guest guest = guestRepository.findById(id).get();
+        Guest guest = guestRepository.findById(id)
+                .orElseThrow(() -> throwEntityNotFoundException(id));
         guest.setName(guestDTO.getName());
-        guestRepository.save(guest);
-        return guestDTO;
+        return guestMapper.map(guestRepository.save(guest));
     }
 
-    public GuestDTO removeGuest(Long guestId) {
-        return guestMapper.map(this.remove(guestId));
+    public GuestDTO removeGuest(Long id) {
+        return guestMapper.map(this.remove(id));
     }
 
-    private Guest remove(Long guestId) {
-        return guestRepository.findById(guestId).map(guest -> {
-            guestRepository.delete(guest);
-            return guest;
-        }).orElseThrow(() -> new EntityNotFoundException("Guest not found."));
+    private Guest remove(Long id) {
+        return guestRepository.findById(id)
+                .map(guest -> {
+                    guestRepository.delete(guest);
+                    return guest;
+                }).orElseThrow(() -> throwEntityNotFoundException(id));
     }
 
-    public List<GuestDTO> findall() {
-        List <Guest> guests = new ArrayList<>();
-        guests = guestRepository.findAll();
-        List <GuestDTO> guestDTOS = new ArrayList<>();
-        guests.forEach(guest -> guestDTOS.add(guestMapper.map(guest)));
-        return guestDTOS;
+    public List<GuestDTO> findAll() {
+        return guestRepository.findAll().stream()
+                .map(guestMapper::map)
+                .collect(toList());
     }
+
+    private EntityNotFoundException throwEntityNotFoundException(Object guest) {
+        return new EntityNotFoundException(String.format("Guest %s not found.", guest));
+    }
+
 }
