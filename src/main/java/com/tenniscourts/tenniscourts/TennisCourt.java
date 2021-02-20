@@ -22,6 +22,7 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 public class TennisCourt extends BaseEntity<Long> {
+    private static final long serialVersionUID = 1L;
 
     @Column
     @NotNull

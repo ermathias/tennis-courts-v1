@@ -10,12 +10,10 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class CustomAuditEntityListener {
-
     public final static Long USER_SYSTEM_ID = 1L;
 
     @PreUpdate
     public void preUpdate(BaseEntity baseEntity) throws UnknownHostException {
-
         baseEntity.setDateUpdate(LocalDateTime.now());
         if (Objects.isNull(baseEntity.getUserUpdate())) {
             baseEntity.setUserUpdate(USER_SYSTEM_ID);

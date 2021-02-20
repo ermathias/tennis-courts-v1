@@ -17,7 +17,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-
 @Entity
 @Table
 @Getter
@@ -27,6 +26,7 @@ import java.math.BigDecimal;
 @EqualsAndHashCode(callSuper = true)
 @Builder
 public class Reservation extends BaseEntity<Long> {
+    private static final long serialVersionUID = 1L;
 
     @OneToOne
     private Guest guest;

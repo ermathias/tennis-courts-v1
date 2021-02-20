@@ -24,9 +24,9 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 public class Guest extends BaseEntity<Long> {
+  private static final long serialVersionUID = 1L;
 
   @Column
   @NotNull
   private String name;
-
 }
