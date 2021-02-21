@@ -6,12 +6,16 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.inject.Inject;
+
 @Service
 @AllArgsConstructor
 public class ScheduleService {
 
+    @Inject
     private final ScheduleRepository scheduleRepository;
 
+    @Inject
     private final ScheduleMapper scheduleMapper;
 
     public ScheduleDTO addSchedule(Long tennisCourtId, CreateScheduleRequestDTO createScheduleRequestDTO) {
@@ -25,8 +29,7 @@ public class ScheduleService {
     }
 
     public ScheduleDTO findSchedule(Long scheduleId) {
-        //TODO: implement
-        return null;
+        return scheduleMapper.map(scheduleRepository.findById(scheduleId).get());
     }
 
     public List<ScheduleDTO> findSchedulesByTennisCourtId(Long tennisCourtId) {
