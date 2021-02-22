@@ -30,32 +30,32 @@ public class ReservationController extends BaseRestController {
     @Inject
     private final ReservationService reservationService;
 
-    @ApiOperation(value = "Book a reservation to a tennis court.")
     @PostMapping(value = "/book")
+    @ApiOperation(value = "Book a reservation to a tennis court.")
     public ResponseEntity<Void> bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
         return ResponseEntity.created(locationByEntity(reservationService.bookReservation(createReservationRequestDTO).getId())).build();
     }
 
-    @ApiOperation(value = "Find a book reservation by its id.")
     @GetMapping(value = "/{id}")
+    @ApiOperation(value = "Find a book reservation by its id.")
     public ResponseEntity<ReservationDTO> findReservation(@PathVariable("id") Long reservationId) {
         return ResponseEntity.ok(reservationService.findReservation(reservationId));
     }
 
-    @ApiOperation(value = "Cancel a book reservation by its id.")
     @PutMapping(value = "/cancel/{id}")
+    @ApiOperation(value = "Cancel a book reservation by its id.")
     public ResponseEntity<ReservationDTO> cancelReservation(@PathVariable("id")  Long reservationId) {
         return ResponseEntity.ok(reservationService.cancelReservation(reservationId));
     }
 
-    @ApiOperation(value = "Reschedule a book reservation of a tennis court.")
     @PostMapping(value = "/reschedule")
+    @ApiOperation(value = "Reschedule a book reservation of a tennis court.")
     public ResponseEntity<ReservationDTO> rescheduleReservation(@RequestParam("reservationId") Long reservationId, @RequestParam("scheduleId") Long scheduleId) {
         return ResponseEntity.ok(reservationService.rescheduleReservation(reservationId, scheduleId));
     }
 
-    @ApiOperation(value = "Find the time slots that are currently free.")
     @GetMapping(value = "/freeTimeSlots")
+    @ApiOperation(value = "Find the time slots that are currently free.")
     public ResponseEntity<List<ReservationDTO>> findFreeTimeSlots() {
         return ResponseEntity.ok(reservationService.findFreeTimeSlots());
     }

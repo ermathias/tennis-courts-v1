@@ -18,7 +18,6 @@ import javax.validation.constraints.NotNull;
 @Table
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
@@ -29,4 +28,10 @@ public class Guest extends BaseEntity<Long> {
   @Column
   @NotNull
   private String name;
+
+  @Builder
+  public Guest(Long id, String name) {
+    super.setId(id);
+    this.name = name;
+  }
 }
