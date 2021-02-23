@@ -45,7 +45,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 
         predicates.add(cb.not(cb.equal(scheduleReservation.get("reservationStatus").as(ReservationStatus.class), ReservationStatus.READY_TO_PLAY)));
 
-        predicates.add(cb.between(scheduleReservation.get("startDateTime").as(LocalDateTime.class), startDateTime, endDateTime));
+        predicates.add(cb.between(schedule.get("startDateTime").as(LocalDateTime.class), startDateTime, endDateTime));
 
         cq.select(schedule).where(predicates.toArray(new Predicate[]{}));
 		

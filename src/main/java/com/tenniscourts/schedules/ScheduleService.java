@@ -13,14 +13,13 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import com.tenniscourts.exceptions.EntityNotFoundException;
-import com.tenniscourts.reservations.Reservation;
-import com.tenniscourts.reservations.ReservationStatus;
 import com.tenniscourts.tenniscourts.TennisCourt;
 import com.tenniscourts.tenniscourts.TennisCourtRepository;
 
 @Service
 @AllArgsConstructor
 public class ScheduleService {
+    private final long DEFAULT_TIME_SLOT = 1L;
 
     @Inject
     private final ScheduleRepository scheduleRepository;
@@ -43,11 +42,15 @@ public class ScheduleService {
         newSchedule = Schedule.builder()
             .tennisCourt(savedTennisCourt)
             .startDateTime(createScheduleRequestDTO.getStartDateTime())
-            .endDateTime(createScheduleRequestDTO.getEndDateTime())
+            .endDateTime(addDefaultTimeSlot(createScheduleRequestDTO.getStartDateTime()))
             .build();
         scheduleRepository.save(newSchedule);
 
         return scheduleMapper.map(newSchedule);
+    }
+
+    private LocalDateTime addDefaultTimeSlot(LocalDateTime startDateTime) {
+        return startDateTime.plusHours(DEFAULT_TIME_SLOT);
     }
 
     public List<ScheduleDTO> findSchedulesByDates(LocalDateTime startDate, LocalDateTime endDate) {
