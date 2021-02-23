@@ -36,7 +36,8 @@ public class ReservationController extends BaseRestController {
     @PostMapping
     @ApiOperation(value = "Book a reservation to a tennis court.")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "The reservation has been added to the tennis court.")
+        @ApiResponse(code = 201, message = "The reservation has been added to the tennis court."),
+        @ApiResponse(code = 404, message = "The informed parameters have been produced validation error(s).")
     })
     public ResponseEntity<Void> bookReservation(@RequestBody CreateReservationRequestDTO createReservationRequestDTO) {
         return ResponseEntity.created(locationByEntity(reservationService.bookReservation(createReservationRequestDTO).getId())).build();
@@ -56,7 +57,7 @@ public class ReservationController extends BaseRestController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "The canceled reservation object."),
         @ApiResponse(code = 404, message = "The informed reservation was not found."),
-        @ApiResponse(code = 400, message = "The informed reservation produced validation error(s).")
+        @ApiResponse(code = 400, message = "The informed reservation have been produced validation error(s).")
     })
     public ResponseEntity<ReservationDTO> cancelReservation(@PathVariable("id")  Long reservationId) {
         return ResponseEntity.ok(reservationService.cancelReservation(reservationId));

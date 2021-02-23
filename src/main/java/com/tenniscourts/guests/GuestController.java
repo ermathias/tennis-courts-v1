@@ -56,7 +56,7 @@ public class GuestController extends BaseRestController {
     @GetMapping(value = "/{id}")
     @ApiOperation(value = "Find a guest by its id.")
     public ResponseEntity<GuestDTO> findById(@PathVariable("id") Long guestId) {
-        return ResponseEntity.ok(guestService.findById(guestId));
+        return ResponseEntity.ok(guestService.findGuest(guestId));
     }
 
     @GetMapping("/name/{name}")

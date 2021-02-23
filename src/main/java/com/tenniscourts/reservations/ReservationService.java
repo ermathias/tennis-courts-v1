@@ -1,6 +1,9 @@
 package com.tenniscourts.reservations;
 
 import com.tenniscourts.exceptions.EntityNotFoundException;
+import com.tenniscourts.guests.Guest;
+import com.tenniscourts.guests.GuestService;
+import com.tenniscourts.schedules.Schedule;
 import com.tenniscourts.schedules.ScheduleDTO;
 import com.tenniscourts.schedules.ScheduleService;
 
@@ -11,7 +14,6 @@ import lombok.AllArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -19,6 +21,8 @@ import javax.transaction.Transactional;
 @Service
 @AllArgsConstructor
 public class ReservationService {
+
+    private static BigDecimal RESERVATION_DEPOSIT_VALUE = BigDecimal.TEN;
 
     @Inject
     private final ReservationRepository reservationRepository;
@@ -29,9 +33,34 @@ public class ReservationService {
     @Inject
     private final ScheduleService scheduleService;
 
-    public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
-        Reservation reservation = Reservation.builder().reservationStatus(ReservationStatus.READY_TO_PLAY).build();
+    @Inject
+    private final GuestService guestService;
+
+    @Transactional
+    public ReservationDTO bookReservation(CreateReservationRequestDTO reservationDTO) {
+        Schedule savedSchedule = scheduleService.findById(reservationDTO.getScheduleId());
+        Guest savedGuest = guestService.findById(reservationDTO.getGuestId());
+
+        validateReservation(savedSchedule, savedGuest);
+
+        Reservation reservation = Reservation.builder()
+            .guest(savedGuest)
+            .schedule(savedSchedule)
+            .reservationStatus(ReservationStatus.READY_TO_PLAY)
+            .refundValue(RESERVATION_DEPOSIT_VALUE)
+            .build();
+
         return reservationMapper.map(reservationRepository.save(reservation));
+    }
+
+    private void validateReservation(Schedule savedSchedule, Guest savedGuest) {
+        if (savedSchedule == null) {
+            throw new EntityNotFoundException("Schedule not found.");
+        }
+
+        if (savedGuest == null) {
+            throw new EntityNotFoundException("Guest not found.");
+        }
     }
 
     public ReservationDTO findReservation(Long reservationId) {

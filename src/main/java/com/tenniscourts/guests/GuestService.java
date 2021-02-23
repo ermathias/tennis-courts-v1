@@ -35,7 +35,7 @@ public class GuestService {
         guestRepository.delete(savedGuest);
     }
 
-    public GuestDTO findById(Long id) {
+    public GuestDTO findGuest(Long id) {
         return guestRepository.findById(id).map(guestMapper::map).orElseThrow(() -> {
             throw new EntityNotFoundException(createGuestNotFoundMessage(id));
         });
@@ -51,5 +51,9 @@ public class GuestService {
 
     public List<GuestDTO> findAll(Pageable pageable) {
         return guestMapper.map(guestRepository.findAll(pageable).getContent());
+    }
+
+    public Guest findById(Long id) {
+        return guestRepository.findById(id).orElse(null);
     }
 }

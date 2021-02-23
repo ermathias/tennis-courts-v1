@@ -35,7 +35,7 @@ public class ScheduleController extends BaseRestController {
     @Inject
     private final ScheduleService scheduleService;
 
-    @PostMapping("/")
+    @PostMapping
     @ApiOperation(value = "Add a schedule to a tennis court.")
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "The schedule has been added to the tennis court"),

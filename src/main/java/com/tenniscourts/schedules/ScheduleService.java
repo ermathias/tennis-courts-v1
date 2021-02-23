@@ -69,4 +69,8 @@ public class ScheduleService {
     public List<ScheduleDTO> findSchedulesWithFreeTimeSlotsByScheduleDate(LocalDate scheduleDate) {
         return scheduleMapper.map(scheduleRepository.findSchedulesWithFreeTimeSlotsByScheduleDate(scheduleDate));
     }
+
+    public Schedule findById(Long scheduleId) {
+        return scheduleRepository.findById(scheduleId).orElse(null);
+    }
 }
