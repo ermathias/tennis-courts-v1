@@ -14,6 +14,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -39,6 +40,7 @@ public class ReservationService {
         });
     }
 
+    @Transactional
     public ReservationDTO cancelReservation(Long reservationId) {
         return reservationMapper.map(cancel(reservationId));
     }
@@ -88,6 +90,7 @@ public class ReservationService {
         }
     }
 
+    @Transactional
     public ReservationDTO rescheduleReservation(Long previousReservationId, Long scheduleId) {
         Reservation previousReservation = cancel(previousReservationId);
         ScheduleDTO savedSchedule = scheduleService.findSchedule(scheduleId);
@@ -103,9 +106,5 @@ public class ReservationService {
                 .build());
         newReservation.setPreviousReservation(reservationMapper.map(previousReservation));
         return newReservation;
-    }
-
-    public List<ReservationDTO> findFreeTimeSlots() {
-        return reservationMapper.map(reservationRepository.findByReservationStatus(ReservationStatus.READY_TO_PLAY));
     }
 }

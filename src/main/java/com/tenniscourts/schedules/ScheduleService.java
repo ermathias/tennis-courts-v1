@@ -3,13 +3,18 @@ package com.tenniscourts.schedules;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import com.tenniscourts.exceptions.EntityNotFoundException;
+import com.tenniscourts.reservations.Reservation;
+import com.tenniscourts.reservations.ReservationStatus;
 import com.tenniscourts.tenniscourts.TennisCourt;
 import com.tenniscourts.tenniscourts.TennisCourtRepository;
 
@@ -56,5 +61,9 @@ public class ScheduleService {
 
     public List<ScheduleDTO> findSchedulesByTennisCourtId(Long tennisCourtId) {
         return scheduleMapper.map(scheduleRepository.findByTennisCourt_IdOrderByStartDateTime(tennisCourtId));
+    }
+
+    public List<ScheduleDTO> findSchedulesWithFreeTimeSlotsByScheduleDate(LocalDate scheduleDate) {
+        return scheduleMapper.map(scheduleRepository.findSchedulesWithFreeTimeSlotsByScheduleDate(scheduleDate));
     }
 }

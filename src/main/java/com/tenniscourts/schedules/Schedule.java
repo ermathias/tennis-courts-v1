@@ -42,7 +42,7 @@ public class Schedule extends BaseEntity<Long> {
     @NotNull
     private LocalDateTime endDateTime;
 
-    @OneToMany
+    @OneToMany(mappedBy = "schedule")
     private List<Reservation> reservations;
 
     public void addReservation(Reservation reservation) {

@@ -4,6 +4,7 @@ import com.tenniscourts.config.BaseRestController;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +35,7 @@ public class ScheduleController extends BaseRestController {
     @PostMapping
     @ApiOperation(value = "Add a schedule to a tennis court.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "The schedule has been added to the tennis court"),
+        @ApiResponse(code = 201, message = "The schedule has been added to the tennis court"),
         @ApiResponse(code = 404, message = "The informed tennis court was not found.")
     })
     public ResponseEntity<Void> addScheduleTennisCourt(@RequestBody CreateScheduleRequestDTO createScheduleRequestDTO) {
@@ -50,5 +51,14 @@ public class ScheduleController extends BaseRestController {
     //TODO: implement rest and swagger
     public ResponseEntity<ScheduleDTO> findByScheduleId(Long scheduleId) {
         return ResponseEntity.ok(scheduleService.findSchedule(scheduleId));
+    }
+
+    @GetMapping(value = "/schedulesWithFreeTimeSlots")
+    @ApiOperation(value = "Find schedules with free time slots (ready for reservations) given a schedule date.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "A list of schedule objects which are ready for reservations in a given schedule date.")
+    })
+    public ResponseEntity<List<ScheduleDTO>> findSchedulesWithFreeTimeSlotsByScheduleDate() {
+        return ResponseEntity.ok(scheduleService.findSchedulesWithFreeTimeSlotsByScheduleDate(null)); //LocalDate scheduleDate
     }
 }

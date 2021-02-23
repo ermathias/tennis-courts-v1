@@ -28,7 +28,7 @@ import io.swagger.annotations.ApiOperation;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/guests")
-@Api("Guests API")
+@Api(description = "Guests REST API")
 @CrossOrigin(origins = "*")
 public class GuestController extends BaseRestController {
 
