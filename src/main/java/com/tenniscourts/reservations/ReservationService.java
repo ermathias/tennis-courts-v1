@@ -47,6 +47,7 @@ public class ReservationService {
             .guest(savedGuest)
             .schedule(savedSchedule)
             .reservationStatus(ReservationStatus.READY_TO_PLAY)
+            .value(BigDecimal.ZERO)
             .refundValue(RESERVATION_DEPOSIT_VALUE)
             .build();
 
@@ -104,13 +105,19 @@ public class ReservationService {
     }
 
     public BigDecimal getRefundValue(Reservation reservation) {
-        long hours = ChronoUnit.HOURS.between(LocalDateTime.now(), reservation.getSchedule().getStartDateTime());
+        BigDecimal refundValue = reservation.getRefundValue();
+        BigDecimal chargedValue = BigDecimal.ZERO;
+        long minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), reservation.getSchedule().getStartDateTime());
 
-        if (hours >= 24) {
-            return reservation.getValue();
+        if (minutes < 120) {
+            chargedValue = refundValue.multiply(new BigDecimal(75));
+        } else if (minutes < 720) {
+            chargedValue = refundValue.multiply(new BigDecimal(50));
+        }  else if (minutes < 1440) {
+            chargedValue = refundValue.multiply(new BigDecimal(25));
         }
 
-        return BigDecimal.ZERO;
+        return refundValue.subtract(chargedValue);
     }
 
     private void validateSameTimeSlot(Reservation reservation, ScheduleDTO schedule) throws IllegalArgumentException {
