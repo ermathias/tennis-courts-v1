@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface ReservationRepository extends JpaRepository<Reservation, Long> {
+public interface ReservationRepository extends ReservationRepositoryCustom, JpaRepository<Reservation, Long> {
 
     List<Reservation> findBySchedule_Id(Long scheduleId);
 

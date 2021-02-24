@@ -12,8 +12,11 @@ import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -144,6 +147,7 @@ public class ReservationService {
         return newReservation;
     }
 
+    @Transactional
     public ReservationDTO noShow(Long reservationId) {
         Reservation savedReservation = reservationRepository.findById(reservationId).orElse(null);
 
@@ -156,5 +160,9 @@ public class ReservationService {
         savedReservation.setRefundValue(BigDecimal.ZERO);
 
         return reservationMapper.map(reservationRepository.save(savedReservation));
+    }
+
+    public List<ReservationDTO> getHistory(LocalDate startDate, LocalDate endDate) {
+        return reservationMapper.map(reservationRepository.getHistory(startDate, endDate));
     }
 }

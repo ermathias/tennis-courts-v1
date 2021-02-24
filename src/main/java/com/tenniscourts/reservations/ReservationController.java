@@ -1,6 +1,8 @@
 package com.tenniscourts.reservations;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -82,5 +84,14 @@ public class ReservationController extends BaseRestController {
     })
     public ResponseEntity<ReservationDTO> noShow(@PathVariable("id")  Long reservationId) {
         return ResponseEntity.ok(reservationService.noShow(reservationId));
+    }
+
+    @GetMapping(value = "/history")
+    @ApiOperation(value = "Presents the reservations that have been made at the establishment, optionally between the start and end dates.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "A list reservations that have been made at the establishment.")
+    })
+    public ResponseEntity<List<ReservationDTO>> getHistory(@RequestParam("startDate") Optional<LocalDate> startDate, @RequestParam("endDate") Optional<LocalDate> endDate) {
+        return ResponseEntity.ok(reservationService.getHistory(startDate.orElse(null), endDate.orElse(null)));
     }
 }
