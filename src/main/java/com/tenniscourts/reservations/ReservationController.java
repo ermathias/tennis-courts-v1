@@ -73,4 +73,14 @@ public class ReservationController extends BaseRestController {
     public ResponseEntity<ReservationDTO> rescheduleReservation(@RequestParam("reservationId") Long reservationId, @RequestParam("scheduleId") Long scheduleId) {
         return ResponseEntity.ok(reservationService.rescheduleReservation(reservationId, scheduleId));
     }
+
+    @PutMapping(value = "/noShow")
+    @ApiOperation(value = "Credits 100% of the reservation fee in case of no show.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "The updated reservation object."),
+        @ApiResponse(code = 404, message = "The informed reservation was not found.")
+    })
+    public ResponseEntity<ReservationDTO> noShow(@PathVariable("id")  Long reservationId) {
+        return ResponseEntity.ok(reservationService.noShow(reservationId));
+    }
 }

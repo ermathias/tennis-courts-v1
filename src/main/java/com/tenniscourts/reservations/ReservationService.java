@@ -143,4 +143,18 @@ public class ReservationService {
         newReservation.setPreviousReservation(reservationMapper.map(previousReservation));
         return newReservation;
     }
+
+    public ReservationDTO noShow(Long reservationId) {
+        Reservation savedReservation = reservationRepository.findById(reservationId).orElse(null);
+
+        if (savedReservation == null) {
+            throw new EntityNotFoundException("Reservation not found.");
+        }
+
+        savedReservation.setReservationStatus(ReservationStatus.NO_SHOW);
+        savedReservation.setValue(savedReservation.getValue());
+        savedReservation.setRefundValue(BigDecimal.ZERO);
+
+        return reservationMapper.map(reservationRepository.save(savedReservation));
+    }
 }
