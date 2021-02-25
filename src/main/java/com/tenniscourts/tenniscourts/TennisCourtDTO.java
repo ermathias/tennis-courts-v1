@@ -25,5 +25,4 @@ public class TennisCourtDTO {
     private String name;
 
     private List<ScheduleDTO> tennisCourtSchedules;
-
 }

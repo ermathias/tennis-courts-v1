@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
@@ -46,12 +47,12 @@ public class ScheduleController extends BaseRestController {
     }
 
     @GetMapping(value = "/schedulesByDates")
-    @ApiOperation(value = "Find schedules by the given start and end dates.")
+    @ApiOperation(value = "Find schedules by the given a start and an end dates.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "A list of schedule objects.")
+        @ApiResponse(code = 200, message = "A list of schedule objects between the informed dates.")
     })
-    public ResponseEntity<List<ScheduleDTO>> findSchedulesByDates(LocalDate startDate,
-                                                                  LocalDate endDate) {
+    public ResponseEntity<List<ScheduleDTO>> findSchedulesByDates(@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate startDate,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate endDate) {
         return ResponseEntity.ok(scheduleService.findSchedulesByDates(startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX)));
     }
 

@@ -52,15 +52,21 @@ public class ScheduleService {
     }
 
     public List<ScheduleDTO> findSchedulesByDates(LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        return scheduleMapper.map(scheduleRepository.findAllByStartDateTimeAndEndDateTime(startDateTime, endDateTime));
+        return scheduleMapper.map(scheduleRepository.findAllByStartDateTimeGreaterThanEqualAndEndDateTimeLessThanEqual(startDateTime, endDateTime));
     }
 
     public ScheduleDTO findSchedule(Long scheduleId) {
+        Schedule savedSchedule = scheduleRepository.findById(scheduleId).orElse(null);
+
+        if (savedSchedule == null) {
+            throw new EntityNotFoundException("The informed schedule was not found.");   
+        }
+
         return scheduleMapper.map(scheduleRepository.findById(scheduleId).get());
     }
 
-    public List<ScheduleDTO> findSchedulesByTennisCourtId(Long tennisCourtId) {
-        return scheduleMapper.map(scheduleRepository.findByTennisCourt_IdOrderByStartDateTime(tennisCourtId));
+    public List<ScheduleDTO> findSchedulesByTennisCourt(TennisCourt tennisCourt) {
+        return scheduleMapper.map(scheduleRepository.findAllByTennisCourt(tennisCourt));
     }
 
     public List<ScheduleDTO> findSchedulesWithFreeTimeSlotsByScheduleDate(LocalDate scheduleDate) {
