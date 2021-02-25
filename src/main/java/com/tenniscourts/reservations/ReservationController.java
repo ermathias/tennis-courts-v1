@@ -29,7 +29,7 @@ import io.swagger.annotations.ApiResponse;
 @RestController
 @RequestMapping("/api/reservations")
 @Api(description = "Reservations REST API")
-@CrossOrigin(origins = "*")
+@CrossOrigin
 public class ReservationController extends BaseRestController {
 
     @Inject
@@ -39,7 +39,7 @@ public class ReservationController extends BaseRestController {
     @ApiOperation(value = "Book a reservation to a tennis court.")
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "The reservation has been added to the tennis court."),
-        @ApiResponse(code = 404, message = "The informed parameters have been produced validation error(s).")
+        @ApiResponse(code = 404, message = "The informed schedule or guest were not found.")
     })
     public ResponseEntity<Void> bookReservation(@RequestBody CreateReservationRequestDTO createReservationRequestDTO) {
         return ResponseEntity.created(locationByEntity(reservationService.bookReservation(createReservationRequestDTO).getId())).build();
@@ -48,7 +48,8 @@ public class ReservationController extends BaseRestController {
     @GetMapping(value = "/{id}")
     @ApiOperation(value = "Find a reservation by its id.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "A reservation object.")
+        @ApiResponse(code = 200, message = "A reservation object."),
+        @ApiResponse(code = 404, message = "The informed reservation was not found.")
     })
     public ResponseEntity<ReservationDTO> findReservation(@PathVariable("id") Long reservationId) {
         return ResponseEntity.ok(reservationService.findReservation(reservationId));
@@ -76,11 +77,12 @@ public class ReservationController extends BaseRestController {
         return ResponseEntity.ok(reservationService.rescheduleReservation(reservationId, scheduleId));
     }
 
-    @PutMapping(value = "/noShow")
+    @PutMapping(value = "/noShow/{id}")
     @ApiOperation(value = "Credits 100% of the reservation fee in case of no show.")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "The updated reservation object."),
-        @ApiResponse(code = 404, message = "The informed reservation was not found.")
+        @ApiResponse(code = 404, message = "The informed reservation was not found."),
+        @ApiResponse(code = 400, message = "The informed reservation produced validation error(s).")
     })
     public ResponseEntity<ReservationDTO> noShow(@PathVariable("id")  Long reservationId) {
         return ResponseEntity.ok(reservationService.noShow(reservationId));

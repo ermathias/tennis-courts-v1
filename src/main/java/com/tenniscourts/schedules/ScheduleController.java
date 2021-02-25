@@ -29,7 +29,7 @@ import javax.inject.Inject;
 @RestController
 @RequestMapping("/api/schedules")
 @Api(description = "Schedules REST API")
-@CrossOrigin(origins = "*")
+@CrossOrigin
 public class ScheduleController extends BaseRestController {
 
     @Inject
@@ -45,13 +45,22 @@ public class ScheduleController extends BaseRestController {
         return ResponseEntity.created(locationByEntity(scheduleService.addSchedule(createScheduleRequestDTO.getTennisCourtId(), createScheduleRequestDTO).getId())).build();
     }
 
-    //TODO: implement rest and swagger
+    @GetMapping(value = "/schedulesByDates")
+    @ApiOperation(value = "Find schedules by the given start and end dates.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "A list of schedule objects.")
+    })
     public ResponseEntity<List<ScheduleDTO>> findSchedulesByDates(LocalDate startDate,
                                                                   LocalDate endDate) {
-        return ResponseEntity.ok(scheduleService.findSchedulesByDates(LocalDateTime.of(startDate, LocalTime.of(0, 0)), LocalDateTime.of(endDate, LocalTime.of(23, 59))));
+        return ResponseEntity.ok(scheduleService.findSchedulesByDates(startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX)));
     }
 
-    //TODO: implement rest and swagger
+    @GetMapping(value = "/{id}")
+    @ApiOperation(value = "Find a schedule by its id.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "A schedule object."),
+        @ApiResponse(code = 404, message = "The informed schedule was not found.")
+    })
     public ResponseEntity<ScheduleDTO> findByScheduleId(Long scheduleId) {
         return ResponseEntity.ok(scheduleService.findSchedule(scheduleId));
     }

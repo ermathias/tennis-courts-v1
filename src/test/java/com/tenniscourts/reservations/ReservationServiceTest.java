@@ -24,13 +24,44 @@ public class ReservationServiceTest {
     ReservationService reservationService;
 
     @Test
+    public void getRefundValue75PercentCharged() {
+        Schedule schedule = createSchedule(1);
+        Reservation reservation = createReservation(schedule, BigDecimal.TEN);
+        Assert.assertTrue(reservationService.getRefundValue(reservation).compareTo(new BigDecimal(2.5)) == 0);
+    }
+
+    @Test
+    public void getRefundValue50PercentCharged() {
+        Schedule schedule = createSchedule(11);
+        Reservation reservation = createReservation(schedule, BigDecimal.TEN);
+        Assert.assertTrue(reservationService.getRefundValue(reservation).compareTo(new BigDecimal(5)) == 0);
+    }
+
+    @Test
+    public void getRefundValue25PercentCharged() {
+        Schedule schedule = createSchedule(23);
+        Reservation reservation = createReservation(schedule, BigDecimal.TEN);
+        Assert.assertTrue(reservationService.getRefundValue(reservation).compareTo(new BigDecimal(7.5)) == 0);
+    }
+
+    @Test
     public void getRefundValueFullRefund() {
+        Schedule schedule = createSchedule(24);
+        Reservation reservation = createReservation(schedule, BigDecimal.TEN);
+        Assert.assertTrue(reservationService.getRefundValue(reservation).compareTo(BigDecimal.TEN) == 0);
+    }
+
+    private Schedule createSchedule(long hoursToPlusToStartDateTime) {
         Schedule schedule = new Schedule();
 
-        LocalDateTime startDateTime = LocalDateTime.now().plusDays(2);
+        LocalDateTime startDateTime = LocalDateTime.now().plusHours(hoursToPlusToStartDateTime);
 
         schedule.setStartDateTime(startDateTime);
 
-        Assert.assertEquals(reservationService.getRefundValue(Reservation.builder().schedule(schedule).value(new BigDecimal(10L)).build()), new BigDecimal(10));
+        return schedule;
+    }
+
+    private Reservation createReservation(Schedule schedule, BigDecimal value) {
+        return Reservation.builder().schedule(schedule).value(value).build();
     }
 }

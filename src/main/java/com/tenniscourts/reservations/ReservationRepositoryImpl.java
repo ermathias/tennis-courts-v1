@@ -28,33 +28,28 @@ public class ReservationRepositoryImpl implements ReservationRepositoryCustom {
 
     @Override
     public List<Reservation> getHistory(LocalDate startDate, LocalDate endDate) {
-        LocalDateTime startDateTime = startDate.atStartOfDay();
-        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
-
         CriteriaBuilder cb = em.getCriteriaBuilder();
-
         CriteriaQuery<Reservation> cq = cb.createQuery(Reservation.class);
 
         Root<Reservation> reservation = cq.from(Reservation.class);
-
         Join<Reservation, Schedule> reservationSchedule = reservation.join("schedule", JoinType.INNER);
 
         List<Predicate> predicates = new ArrayList<Predicate>();
-
         predicates.add(cb.not(cb.equal(reservation.get("reservationStatus").as(ReservationStatus.class), ReservationStatus.READY_TO_PLAY)));
 
         if (startDate != null) {
+            LocalDateTime startDateTime = startDate.atStartOfDay();
             predicates.add(cb.greaterThanOrEqualTo(reservationSchedule.<LocalDateTime>get("startDateTime").as(LocalDateTime.class), startDateTime));
         }
 
         if (endDate != null) {
+            LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
             predicates.add(cb.lessThanOrEqualTo(reservationSchedule.<LocalDateTime>get("startDateTime").as(LocalDateTime.class), endDateTime));
         }
 
         cq.select(reservation).where(predicates.toArray(new Predicate[]{}));
 
         TypedQuery<Reservation> query = em.createQuery(cq);
-
         try {
             return query.getResultList();
         } catch (NoResultException nre) {

@@ -15,7 +15,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -30,7 +29,7 @@ import java.math.BigDecimal;
 @Builder
 public class Reservation extends BaseEntity<Long> {
     private static final long serialVersionUID = 1L;
-
+    
     @NotNull
     @ManyToOne
     private Guest guest;
@@ -41,11 +40,14 @@ public class Reservation extends BaseEntity<Long> {
     private Schedule schedule;
 
     @NotNull
-    private BigDecimal value;
+    @Builder.Default
+    private BigDecimal value = BigDecimal.ZERO;
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private ReservationStatus reservationStatus;
+    @Builder.Default
+    private ReservationStatus reservationStatus = ReservationStatus.READY_TO_PLAY;
 
-    private BigDecimal refundValue;
+    @Builder.Default
+    private BigDecimal refundValue = BigDecimal.ZERO;
 }

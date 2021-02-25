@@ -4,5 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ScheduleRepositoryCustom {
-    List<Schedule> findSchedulesWithFreeTimeSlotsByScheduleDate(LocalDate scheduleDate);
+    List<Schedule> findSchedulesWithReservationsDifferentThanReadyToPlayByScheduleDate(LocalDate scheduleDate);
+
+    List<Schedule> findSchedulesWithNoReservationsByScheduleDate(LocalDate scheduleDate);
 }

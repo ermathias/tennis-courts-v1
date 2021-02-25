@@ -22,9 +22,22 @@ public class GuestService {
     private final GuestMapper guestMapper;
 
     @Transactional
-    public GuestDTO save(GuestDTO guestDTO) {
-        Guest guest = Guest.builder().id(guestDTO.getId()).name(guestDTO.getName()).build();
-        return guestMapper.map(guestRepository.save(guest));
+    public GuestDTO insert(GuestDTO guestDTO) {
+        Guest newGuest = Guest.builder().id(guestDTO.getId()).name(guestDTO.getName()).build();
+        return guestMapper.map(guestRepository.save(newGuest));
+    }
+
+    @Transactional
+    public GuestDTO update(GuestDTO guestDTO) {
+        Guest savedGuest = null;
+
+        savedGuest = guestRepository.findById(guestDTO.getId()).orElseThrow(() -> {
+            throw new EntityNotFoundException(createGuestNotFoundMessage(guestDTO.getId()));
+        });
+
+        savedGuest.setName(guestDTO.getName());
+
+        return guestMapper.map(guestRepository.save(savedGuest));
     }
 
     public void delete(Long id) {

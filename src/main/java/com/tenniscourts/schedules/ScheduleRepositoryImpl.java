@@ -16,6 +16,7 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import com.tenniscourts.reservations.Reservation;
 import com.tenniscourts.reservations.ReservationStatus;
@@ -29,32 +30,55 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 	private EntityManager em;
 
     @Override
-    public List<Schedule> findSchedulesWithFreeTimeSlotsByScheduleDate(LocalDate scheduleDate) {
+    public List<Schedule> findSchedulesWithReservationsDifferentThanReadyToPlayByScheduleDate(LocalDate scheduleDate) {
         LocalDateTime startDateTime = scheduleDate.atStartOfDay();
         LocalDateTime endDateTime = scheduleDate.atTime(LocalTime.MAX);
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
-		
-		CriteriaQuery<Schedule> cq = cb.createQuery(Schedule.class);
-		
-		Root<Schedule> schedule = cq.from(Schedule.class);
-		
-		Join<Schedule, Reservation> scheduleReservation = schedule.join("reservations", JoinType.INNER);
+        CriteriaQuery<Schedule> cq = cb.createQuery(Schedule.class);
+
+        Root<Schedule> schedule = cq.from(Schedule.class);
+        Join<Schedule, Reservation> scheduleReservation = schedule.join("reservations", JoinType.INNER);
 
         List<Predicate> predicates = new ArrayList<Predicate>();
-
         predicates.add(cb.not(cb.equal(scheduleReservation.get("reservationStatus").as(ReservationStatus.class), ReservationStatus.READY_TO_PLAY)));
-
         predicates.add(cb.between(schedule.get("startDateTime").as(LocalDateTime.class), startDateTime, endDateTime));
 
         cq.select(schedule).where(predicates.toArray(new Predicate[]{}));
-		
-		TypedQuery<Schedule> query = em.createQuery(cq);
 
+        TypedQuery<Schedule> query = em.createQuery(cq);
+        try {
+            return query.getResultList();
+        } catch (NoResultException nre) {
+            return new ArrayList<Schedule>();
+        }
+    }
+
+    @Override
+    public List<Schedule> findSchedulesWithNoReservationsByScheduleDate(LocalDate scheduleDate) {
+        LocalDateTime startDateTime = scheduleDate.atStartOfDay();
+        LocalDateTime endDateTime = scheduleDate.atTime(LocalTime.MAX);
+
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Schedule> cq = cb.createQuery(Schedule.class);
+
+		Root<Schedule> schedule = cq.from(Schedule.class);
+
+        Subquery<Reservation> subquery = cq.subquery(Reservation.class); 
+        Root<Reservation> reservation = subquery.from(Reservation.class);  
+        subquery.select(reservation).where(cb.equal(reservation.get("schedule").as(Schedule.class), schedule));
+
+        List<Predicate> predicates = new ArrayList<Predicate>();
+        predicates.add(cb.not(cb.exists(subquery)));
+        predicates.add(cb.between(schedule.get("startDateTime").as(LocalDateTime.class), startDateTime, endDateTime));
+
+        cq.select(schedule).where(predicates.toArray(new Predicate[]{}));
+        
+        TypedQuery<Schedule> query = em.createQuery(cq);
         try {
 			return query.getResultList();
 		} catch (NoResultException nre) {
 			return new ArrayList<Schedule>();
 		}
-    }   
+    }
 }

@@ -5,9 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -53,9 +51,8 @@ public class ScheduleService {
         return startDateTime.plusHours(DEFAULT_TIME_SLOT);
     }
 
-    public List<ScheduleDTO> findSchedulesByDates(LocalDateTime startDate, LocalDateTime endDate) {
-        //TODO: implement
-        return null;
+    public List<ScheduleDTO> findSchedulesByDates(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        return scheduleMapper.map(scheduleRepository.findAllByStartDateTimeAndEndDateTime(startDateTime, endDateTime));
     }
 
     public ScheduleDTO findSchedule(Long scheduleId) {
@@ -67,7 +64,14 @@ public class ScheduleService {
     }
 
     public List<ScheduleDTO> findSchedulesWithFreeTimeSlotsByScheduleDate(LocalDate scheduleDate) {
-        return scheduleMapper.map(scheduleRepository.findSchedulesWithFreeTimeSlotsByScheduleDate(scheduleDate));
+        List<Schedule> schedulesWithReservationsDifferentThanReadyToPlay = 
+            scheduleRepository.findSchedulesWithReservationsDifferentThanReadyToPlayByScheduleDate(scheduleDate);
+
+        List<Schedule> schedulesWithNoReservations = scheduleRepository.findSchedulesWithNoReservationsByScheduleDate(scheduleDate);
+
+        schedulesWithReservationsDifferentThanReadyToPlay.addAll(schedulesWithNoReservations); // JPA/Hybernate doesn't support UNION operator
+
+        return scheduleMapper.map(schedulesWithReservationsDifferentThanReadyToPlay);
     }
 
     public Schedule findById(Long scheduleId) {

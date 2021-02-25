@@ -22,6 +22,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString
+@Builder
 public class Guest extends BaseEntity<Long> {
   private static final long serialVersionUID = 1L;
 
@@ -30,8 +31,7 @@ public class Guest extends BaseEntity<Long> {
   private String name;
 
   @Builder
-  public Guest(Long id, String name) {
+  public Guest(Long id) {
     super.setId(id);
-    this.name = name;
   }
 }

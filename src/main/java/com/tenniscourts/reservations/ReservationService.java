@@ -16,7 +16,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -50,8 +49,8 @@ public class ReservationService {
             .guest(savedGuest)
             .schedule(savedSchedule)
             .reservationStatus(ReservationStatus.READY_TO_PLAY)
-            .value(BigDecimal.ZERO)
-            .refundValue(RESERVATION_DEPOSIT_VALUE)
+            .value(RESERVATION_DEPOSIT_VALUE)
+            .refundValue(BigDecimal.ZERO)
             .build();
 
         return reservationMapper.map(reservationRepository.save(reservation));
@@ -108,19 +107,19 @@ public class ReservationService {
     }
 
     public BigDecimal getRefundValue(Reservation reservation) {
-        BigDecimal refundValue = reservation.getRefundValue();
+        BigDecimal reservationValue = reservation.getValue();
         BigDecimal chargedValue = BigDecimal.ZERO;
-        long minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), reservation.getSchedule().getStartDateTime());
+        long hours = ChronoUnit.HOURS.between(LocalDateTime.now(), reservation.getSchedule().getStartDateTime());
 
-        if (minutes < 120) {
-            chargedValue = refundValue.multiply(new BigDecimal(75));
-        } else if (minutes < 720) {
-            chargedValue = refundValue.multiply(new BigDecimal(50));
-        }  else if (minutes < 1440) {
-            chargedValue = refundValue.multiply(new BigDecimal(25));
+        if (hours < 2L) {
+            chargedValue = reservationValue.multiply(new BigDecimal(0.75));
+        } else if (hours < 12L) {
+            chargedValue = reservationValue.multiply(new BigDecimal(0.5));
+        }  else if (hours < 24L) {
+            chargedValue = reservationValue.multiply(new BigDecimal(0.25));
         }
 
-        return refundValue.subtract(chargedValue);
+        return reservationValue.subtract(chargedValue);
     }
 
     private void validateSameTimeSlot(Reservation reservation, ScheduleDTO schedule) throws IllegalArgumentException {
@@ -151,9 +150,7 @@ public class ReservationService {
     public ReservationDTO noShow(Long reservationId) {
         Reservation savedReservation = reservationRepository.findById(reservationId).orElse(null);
 
-        if (savedReservation == null) {
-            throw new EntityNotFoundException("Reservation not found.");
-        }
+        validateNoShow(savedReservation);
 
         savedReservation.setReservationStatus(ReservationStatus.NO_SHOW);
         savedReservation.setValue(savedReservation.getValue());
@@ -164,5 +161,19 @@ public class ReservationService {
 
     public List<ReservationDTO> getHistory(LocalDate startDate, LocalDate endDate) {
         return reservationMapper.map(reservationRepository.getHistory(startDate, endDate));
+    }
+
+    private void validateNoShow(Reservation savedReservation) {
+        if (savedReservation == null) {
+            throw new EntityNotFoundException("Reservation not found.");
+        }
+
+        if (savedReservation.getReservationStatus() != ReservationStatus.READY_TO_PLAY) {
+            throw new IllegalArgumentException("Cannot set the reservation as no show because it's not in ready to play status.");
+        }
+
+        if (savedReservation.getSchedule().getStartDateTime().isAfter(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Cannot set the reservation as no show because it's in the future.");
+        }
     }
 }
