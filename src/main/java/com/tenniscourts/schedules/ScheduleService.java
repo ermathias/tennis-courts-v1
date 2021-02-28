@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import com.tenniscourts.exceptions.EntityNotFoundException;
+import com.tenniscourts.reservations.ReservationStatus;
 import com.tenniscourts.tenniscourts.TennisCourt;
 import com.tenniscourts.tenniscourts.TennisCourtRepository;
 
@@ -59,7 +60,7 @@ public class ScheduleService {
         Schedule savedSchedule = scheduleRepository.findById(scheduleId).orElse(null);
 
         if (savedSchedule == null) {
-            throw new EntityNotFoundException("The informed schedule was not found.");   
+            throw new EntityNotFoundException("The informed schedule was not found.");
         }
 
         return scheduleMapper.map(scheduleRepository.findById(scheduleId).get());
@@ -70,12 +71,12 @@ public class ScheduleService {
     }
 
     public List<ScheduleDTO> findSchedulesWithFreeTimeSlotsByScheduleDate(LocalDate scheduleDate) {
-        List<Schedule> schedulesWithReservationsDifferentThanReadyToPlay = 
-            scheduleRepository.findSchedulesWithReservationsDifferentThanReadyToPlayByScheduleDate(scheduleDate);
+        List<Schedule> schedulesWithReservationsDifferentThanReadyToPlay = scheduleRepository.findSchedulesWithReservationsByReservationStatusList(scheduleDate, 
+                new ReservationStatus[]{ReservationStatus.READY_TO_PLAY, ReservationStatus.RESCHEDULED});
 
         List<Schedule> schedulesWithNoReservations = scheduleRepository.findSchedulesWithNoReservationsByScheduleDate(scheduleDate);
 
-        schedulesWithReservationsDifferentThanReadyToPlay.addAll(schedulesWithNoReservations); // JPA/Hybernate doesn't support UNION operator
+        schedulesWithReservationsDifferentThanReadyToPlay.addAll(schedulesWithNoReservations);
 
         return scheduleMapper.map(schedulesWithReservationsDifferentThanReadyToPlay);
     }

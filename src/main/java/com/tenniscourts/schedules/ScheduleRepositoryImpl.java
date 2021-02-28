@@ -30,7 +30,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 	private EntityManager em;
 
     @Override
-    public List<Schedule> findSchedulesWithReservationsDifferentThanReadyToPlayByScheduleDate(LocalDate scheduleDate) {
+    public List<Schedule> findSchedulesWithReservationsByReservationStatusList(LocalDate scheduleDate, ReservationStatus... reservationStatusList) {
         LocalDateTime startDateTime = scheduleDate.atStartOfDay();
         LocalDateTime endDateTime = scheduleDate.atTime(LocalTime.MAX);
 
@@ -41,7 +41,9 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
         Join<Schedule, Reservation> scheduleReservation = schedule.join("reservations", JoinType.INNER);
 
         List<Predicate> predicates = new ArrayList<Predicate>();
-        predicates.add(cb.not(cb.equal(scheduleReservation.get("reservationStatus").as(ReservationStatus.class), ReservationStatus.READY_TO_PLAY)));
+        for (ReservationStatus status : reservationStatusList) {
+            predicates.add(cb.not(cb.equal(scheduleReservation.get("reservationStatus").as(ReservationStatus.class), status)));    
+        }
         predicates.add(cb.between(schedule.get("startDateTime").as(LocalDateTime.class), startDateTime, endDateTime));
 
         cq.select(schedule).where(predicates.toArray(new Predicate[]{}));
