@@ -39,7 +39,8 @@ public class ScheduleController extends BaseRestController {
     @ApiOperation(value = "Add a schedule to a tennis court.")
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "The schedule has been added to the tennis court"),
-        @ApiResponse(code = 404, message = "The informed tennis court was not found.")
+        @ApiResponse(code = 404, message = "The informed tennis court was not found."),
+        @ApiResponse(code = 400, message = "There is already a schedule within the given period of time.")
     })
     public ResponseEntity<Void> addScheduleTennisCourt(@RequestBody CreateScheduleRequestDTO createScheduleRequestDTO) {
         return ResponseEntity.created(locationByEntity(scheduleService.addSchedule(createScheduleRequestDTO.getTennisCourtId(), createScheduleRequestDTO).getId())).build();

@@ -16,4 +16,6 @@ public interface ScheduleRepository extends ScheduleRepositoryCustom, JpaReposit
     List<Schedule> findAllByStartDateTimeBetween(LocalDateTime startDateTime, LocalDateTime endDateTime);
 
     List<Schedule> findAllByStartDateTimeGreaterThanEqualAndEndDateTimeLessThanEqual(LocalDateTime startDateTime, LocalDateTime endDateTime);
+
+    boolean existsByStartDateTimeLessThanEqualAndEndDateTimeGreaterThanEqual(LocalDateTime startDateTimeParam1, LocalDateTime startDateTimeParam2);
 }

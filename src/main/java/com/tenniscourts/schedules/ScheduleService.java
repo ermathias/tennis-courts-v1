@@ -34,9 +34,7 @@ public class ScheduleService {
         TennisCourt savedTennisCourt = tennisCourtRepository.findById(tennisCourtId).orElse(null);
         Schedule newSchedule = null;
 
-        if (savedTennisCourt == null) {
-            throw new EntityNotFoundException("The informed tennis court was not found.");   
-        }
+        validateSchedule(savedTennisCourt, createScheduleRequestDTO.getStartDateTime());
 
         newSchedule = Schedule.builder()
             .tennisCourt(savedTennisCourt)
@@ -46,6 +44,18 @@ public class ScheduleService {
         scheduleRepository.save(newSchedule);
 
         return scheduleMapper.map(newSchedule);
+    }
+
+    private void validateSchedule(TennisCourt tennisCourt, LocalDateTime startDateTime) {
+        if (tennisCourt == null) {
+            throw new EntityNotFoundException("The informed tennis court was not found.");   
+        }
+
+        boolean schedulesWithDateTimeBetweenTheInformed = scheduleRepository.existsByStartDateTimeLessThanEqualAndEndDateTimeGreaterThanEqual(startDateTime, startDateTime);
+
+        if (schedulesWithDateTimeBetweenTheInformed) {
+            throw new IllegalArgumentException("There is already a schedule within the given period of time.");
+        }
     }
 
     private LocalDateTime addDefaultTimeSlot(LocalDateTime startDateTime) {
