@@ -39,7 +39,8 @@ public class ReservationController extends BaseRestController {
     @ApiOperation(value = "Book a reservation to a tennis court.")
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "The reservation has been added to the tennis court."),
-        @ApiResponse(code = 404, message = "The informed schedule or guest were not found.")
+        @ApiResponse(code = 404, message = "The informed schedule or guest were not found."),
+        @ApiResponse(code = 400, message = "Cannot have two reservations ready to play for a given schedule.")
     })
     public ResponseEntity<Void> bookReservation(@RequestBody CreateReservationRequestDTO createReservationRequestDTO) {
         return ResponseEntity.created(locationByEntity(reservationService.bookReservation(createReservationRequestDTO).getId())).build();

@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.tenniscourts.schedules.Schedule;
+
 @Repository
 public interface ReservationRepository extends ReservationRepositoryCustom, JpaRepository<Reservation, Long> {
 
@@ -14,4 +16,6 @@ public interface ReservationRepository extends ReservationRepositoryCustom, JpaR
     List<Reservation> findByReservationStatusAndSchedule_StartDateTimeGreaterThanEqualAndSchedule_EndDateTimeLessThanEqual(ReservationStatus reservationStatus, LocalDateTime startDateTime, LocalDateTime endDateTime);
 
     List<Reservation> findByReservationStatus(ReservationStatus status);
+
+    boolean existsByScheduleAndReservationStatus(Schedule schedule, ReservationStatus status);
 }

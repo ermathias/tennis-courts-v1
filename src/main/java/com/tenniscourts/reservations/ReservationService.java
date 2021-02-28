@@ -64,6 +64,12 @@ public class ReservationService {
         if (savedGuest == null) {
             throw new EntityNotFoundException("Guest not found.");
         }
+
+        boolean existsSavedReservations = reservationRepository.existsByScheduleAndReservationStatus(savedSchedule, ReservationStatus.READY_TO_PLAY);
+
+        if (existsSavedReservations) {
+            throw new IllegalArgumentException("Cannot have two reservations ready to play for a given schedule.");
+        }
     }
 
     public ReservationDTO findReservation(Long reservationId) {
