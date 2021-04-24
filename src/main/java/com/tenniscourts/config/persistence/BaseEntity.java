@@ -7,12 +7,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import javax.persistence.Column;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -23,7 +18,9 @@ import java.time.LocalDateTime;
 @EntityListeners(CustomAuditEntityListener.class)
 public class BaseEntity<ID> implements Serializable {
 
-    @Id
+	private static final long serialVersionUID = 1635784288495940108L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private ID id;
 

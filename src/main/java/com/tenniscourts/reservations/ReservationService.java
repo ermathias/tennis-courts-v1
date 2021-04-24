@@ -1,12 +1,16 @@
 package com.tenniscourts.reservations;
 
 import com.tenniscourts.exceptions.EntityNotFoundException;
+import com.tenniscourts.guests.GuestRepository;
+import com.tenniscourts.schedules.ScheduleRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -16,8 +20,29 @@ public class ReservationService {
 
     private final ReservationMapper reservationMapper;
 
+    private final ScheduleRepository scheduleRepository;
+
+    private final GuestRepository guestRepository;
+
     public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
-        throw new UnsupportedOperationException();
+
+        var schedule = scheduleRepository.findById(createReservationRequestDTO.getScheduleId());
+        var guest = guestRepository.findById(createReservationRequestDTO.getGuestId());
+
+        if (schedule.isPresent() && guest.isPresent()) {
+            var reservation = Reservation.builder()
+                    .guest(guest.get())
+                    .schedule(schedule.get())
+                    .value(new BigDecimal("100.00").add(new BigDecimal("10.00")))
+                    .reservationStatus(ReservationStatus.READY_TO_PLAY)
+                    .refundValue(new BigDecimal("0.00"))
+                    .build();
+
+            schedule.get().addReservation(reservation);
+            return reservationMapper.map(reservationRepository.saveAndFlush(reservation));
+        } else {
+            throw new EntityNotFoundException("Schedule or Guest not found");
+        }
     }
 
     public ReservationDTO findReservation(Long reservationId) {
@@ -63,20 +88,27 @@ public class ReservationService {
 
     public BigDecimal getRefundValue(Reservation reservation) {
         long hours = ChronoUnit.HOURS.between(LocalDateTime.now(), reservation.getSchedule().getStartDateTime());
+        BigDecimal refundValue = reservation.getValue();
 
         if (hours >= 24) {
-            return reservation.getValue();
+            return refundValue;
+        } else if (hours >= 12 && hours <= 23) {
+            return refundValue.divide(new BigDecimal("4")).multiply(new BigDecimal("3"));
+        } else if (hours >= 2 && hours <= 11) {
+            return refundValue.divide(new BigDecimal("4")).multiply(new BigDecimal("2"));
+        } else if (hours >= 0 && hours <= 2) {
+            return refundValue.divide(new BigDecimal("4"));
         }
 
         return BigDecimal.ZERO;
     }
 
-    /*TODO: This method actually not fully working, find a way to fix the issue when it's throwing the error:
-            "Cannot reschedule to the same slot.*/
     public ReservationDTO rescheduleReservation(Long previousReservationId, Long scheduleId) {
         Reservation previousReservation = cancel(previousReservationId);
 
         if (scheduleId.equals(previousReservation.getSchedule().getId())) {
+            previousReservation.setReservationStatus(ReservationStatus.READY_TO_PLAY);
+            reservationRepository.save(previousReservation);
             throw new IllegalArgumentException("Cannot reschedule to the same slot.");
         }
 
@@ -90,4 +122,18 @@ public class ReservationService {
         newReservation.setPreviousReservation(reservationMapper.map(previousReservation));
         return newReservation;
     }
+
+    public List<ReservationDTO> getAllMyReservations(Long id) {
+        var guest = guestRepository.findById(id);
+        if (guest.isPresent()) {
+            List<Reservation> reservationList = reservationRepository.findByGuestIdAndScheduleStartDateTimeLessThan(id, LocalDateTime.now());
+            List<ReservationDTO> reservationDTOList = new ArrayList<>();
+            for (Reservation reservation : reservationList) {
+                reservationDTOList.add(reservationMapper.map(reservation));
+            }
+            return reservationDTOList;
+        }
+        throw new EntityNotFoundException("Guest not found.");
+    }
+
 }
