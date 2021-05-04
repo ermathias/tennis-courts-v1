@@ -27,7 +27,7 @@ import java.math.BigDecimal;
 @EqualsAndHashCode(callSuper = true)
 @Builder
 public class Reservation extends BaseEntity<Long> {
-
+ 
     @OneToOne
     private Guest guest;
 
