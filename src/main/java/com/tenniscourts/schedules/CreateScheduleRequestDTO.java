@@ -18,4 +18,8 @@ public class CreateScheduleRequestDTO {
     @NotNull
     private LocalDateTime startDateTime;
 
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    @NotNull
+    private LocalDateTime endDateTime;
+
 }

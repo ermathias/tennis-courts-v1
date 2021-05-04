@@ -1,5 +1,4 @@
 package com.tenniscourts.reservations;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,12 +15,16 @@ import java.math.BigDecimal;
 @Setter
 @Builder
 @Data
-public class CreateReservationRequestDTO {
+public class RescheduleReservationRequestDTO {
 
     @NotNull
-    private Long guestId;
+    private Long reservationId;
 
     @NotNull
-    private Long scheduleId;
+    private Long newScheduleId;
+
+    @NotNull
+    private BigDecimal value;
 
 }
+
