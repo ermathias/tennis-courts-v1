@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 
 @AllArgsConstructor
 public class TennisCourtController extends BaseRestController {
-
+	@Autowired
     private final TennisCourtService tennisCourtService;
 
     //TODO: implement rest and swagger
