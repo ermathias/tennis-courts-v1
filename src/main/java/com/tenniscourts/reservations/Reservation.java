@@ -25,7 +25,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Builder
+@ToString
 public class Reservation extends BaseEntity<Long> {
 
     @OneToOne
@@ -36,7 +36,7 @@ public class Reservation extends BaseEntity<Long> {
     private Schedule schedule;
 
     @NotNull
-    private BigDecimal value;
+    private BigDecimal value = BigDecimal.valueOf(10);
 
     @NotNull
     private ReservationStatus reservationStatus = ReservationStatus.READY_TO_PLAY;
