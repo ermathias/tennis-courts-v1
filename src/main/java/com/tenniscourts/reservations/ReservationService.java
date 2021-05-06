@@ -12,8 +12,10 @@ import java.time.temporal.ChronoUnit;
 @AllArgsConstructor
 public class ReservationService {
 
+	@Autowired
     private final ReservationRepository reservationRepository;
 
+	@Autowired
     private final ReservationMapper reservationMapper;
 
     public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
@@ -74,7 +76,7 @@ public class ReservationService {
     /*TODO: This method actually not fully working, find a way to fix the issue when it's throwing the error:
             "Cannot reschedule to the same slot.*/
     public ReservationDTO rescheduleReservation(Long previousReservationId, Long scheduleId) {
-        Reservation previousReservation = cancel(previousReservationId);
+    	Reservation previousReservation = reservationRepository.findById(previousReservationId).get();
 
         if (scheduleId.equals(previousReservation.getSchedule().getId())) {
             throw new IllegalArgumentException("Cannot reschedule to the same slot.");

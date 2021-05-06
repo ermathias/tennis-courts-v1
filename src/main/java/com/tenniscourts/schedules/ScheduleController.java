@@ -9,24 +9,30 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-@AllArgsConstructor
+
+@RestController
+@RequestMapping(path ="schedule/")
 public class ScheduleController extends BaseRestController {
 
+	@Autowired
     private final ScheduleService scheduleService;
 
-    //TODO: implement rest and swagger
-    public ResponseEntity<Void> addScheduleTennisCourt(CreateScheduleRequestDTO createScheduleRequestDTO) {
+	@ApiOperation(Value='addScheduleTennisCourt', tags = "addScheduleTennisCourt")
+	@PostMapping(path ="/addScheduleTennisCourt")
+    public ResponseEntity<Void> addScheduleTennisCourt(@Valid @RequestBody CreateScheduleRequestDTO createScheduleRequestDTO) {
         return ResponseEntity.created(locationByEntity(scheduleService.addSchedule(createScheduleRequestDTO.getTennisCourtId(), createScheduleRequestDTO).getId())).build();
     }
 
-    //TODO: implement rest and swagger
-    public ResponseEntity<List<ScheduleDTO>> findSchedulesByDates(LocalDate startDate,
-                                                                  LocalDate endDate) {
+	@ApiOperation(Value='findSchedulesByDates',response = ScheduleDTO.class, tags = "findSchedulesByDates")
+    @GetMapping("/findSchedulesByDates/{startDate,endDate}")
+    public ResponseEntity<List<ScheduleDTO>> findSchedulesByDates(@PathVariable("startDate") localDate startDate,
+    		@PathVariable("startDate") LocalDate endDate) {
         return ResponseEntity.ok(scheduleService.findSchedulesByDates(LocalDateTime.of(startDate, LocalTime.of(0, 0)), LocalDateTime.of(endDate, LocalTime.of(23, 59))));
     }
-
-    //TODO: implement rest and swagger
-    public ResponseEntity<ScheduleDTO> findByScheduleId(Long scheduleId) {
+	
+	@ApiOperation(Value='findByScheduleId',response = ScheduleDTO.class, tags = "findByScheduleId")
+    @GetMapping("/findByScheduleId/{scheduleId}")
+    public ResponseEntity<ScheduleDTO> findByScheduleId(@PathVariable("scheduleId") Long scheduleId) {
         return ResponseEntity.ok(scheduleService.findSchedule(scheduleId));
     }
 }

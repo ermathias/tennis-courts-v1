@@ -22,12 +22,10 @@ import java.util.List;
 
 @Entity
 @Table
-@Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true, exclude = "reservations")
+@Data
 public class Schedule extends BaseEntity<Long> {
 
     @ManyToOne

@@ -20,12 +20,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-@Builder
+@Data
 public class Reservation extends BaseEntity<Long> {
 
     @OneToOne

@@ -10,12 +10,15 @@ import java.util.List;
 @AllArgsConstructor
 public class ScheduleService {
 
+	@Autowired
     private final ScheduleRepository scheduleRepository;
 
+	@Autowired
     private final ScheduleMapper scheduleMapper;
 
+	
     public ScheduleDTO addSchedule(Long tennisCourtId, CreateScheduleRequestDTO createScheduleRequestDTO) {
-        //TODO: implement addSchedule
+        
         return null;
     }
 
@@ -32,4 +35,6 @@ public class ScheduleService {
     public List<ScheduleDTO> findSchedulesByTennisCourtId(Long tennisCourtId) {
         return scheduleMapper.map(scheduleRepository.findByTennisCourt_IdOrderByStartDateTime(tennisCourtId));
     }
+    
+       
 }
