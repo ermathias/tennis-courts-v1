@@ -13,7 +13,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/schedule")
+@RequestMapping("/v1/schedules")
 @AllArgsConstructor
 public class ScheduleController extends BaseRestController {
 
