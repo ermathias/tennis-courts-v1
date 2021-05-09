@@ -1,7 +1,12 @@
 package com.tenniscourts.reservations;
 
 import com.tenniscourts.exceptions.EntityNotFoundException;
+import com.tenniscourts.guests.Guest;
+import com.tenniscourts.guests.GuestRepository;
+import com.tenniscourts.schedules.Schedule;
+import com.tenniscourts.schedules.ScheduleRepository;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.Validate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -13,11 +18,30 @@ import java.time.temporal.ChronoUnit;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
-
+    private final GuestRepository guestRepository;
+    private final ScheduleRepository scheduleRepository;
     private final ReservationMapper reservationMapper;
 
     public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
-        throw new UnsupportedOperationException();
+        Validate.notNull(createReservationRequestDTO.getGuestId(), "Guest id can't be null");
+        Validate.notNull(createReservationRequestDTO.getScheduleId(), "Schedule id can't be null");
+
+        Guest guest = guestRepository.findById(createReservationRequestDTO.getGuestId()).orElseThrow(() -> {
+            throw new EntityNotFoundException("Guest not found.");
+        });
+
+        Schedule schedule = scheduleRepository.findById(createReservationRequestDTO.getScheduleId()).orElseThrow(() -> {
+            throw new EntityNotFoundException("Schedule not found");
+        });
+
+        Reservation reservation = Reservation.builder()
+                .guest(guest)
+                .schedule(schedule)
+                .reservationStatus(ReservationStatus.READY_TO_PLAY)
+                .value(BigDecimal.valueOf(10))
+                .build();
+
+        return reservationMapper.map(reservationRepository.save(reservation));
     }
 
     public ReservationDTO findReservation(Long reservationId) {

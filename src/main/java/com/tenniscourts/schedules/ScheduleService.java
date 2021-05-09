@@ -22,8 +22,9 @@ public class ScheduleService {
         Validate.notNull(tennisCourtId, "Tennis court id can't be null");
         Validate.notNull(createScheduleRequestDTO.getStartDateTime(), "Start date time can't be null");
 
-        TennisCourt tennisCourt = tennisCourtRepository.findById(tennisCourtId).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Could no find tennis court with id %s", tennisCourtId.toString())));
+        TennisCourt tennisCourt = tennisCourtRepository.findById(tennisCourtId).orElseThrow(() -> {
+            throw new EntityNotFoundException(String.format("Could no find tennis court with id %s", tennisCourtId.toString()));
+        });
 
         Schedule schedule = Schedule.builder()
                 .startDateTime(createScheduleRequestDTO.getStartDateTime())
@@ -34,14 +35,19 @@ public class ScheduleService {
         return scheduleMapper.map(scheduleRepository.save(schedule));
     }
 
+    public List<ScheduleDTO> findFreeSchedules(Long tennisCourtId) {
+        return scheduleMapper.map(scheduleRepository.findAllByTennisCourt_IdAndReservationsIsNull(tennisCourtId));
+    }
+
     public List<ScheduleDTO> findSchedulesByDates(LocalDateTime startDate, LocalDateTime endDate) {
         return scheduleMapper.map(scheduleRepository.findAllByStartDateTimeBetween(startDate, endDate));
     }
 
     public ScheduleDTO findSchedule(Long scheduleId) {
         Validate.notNull(scheduleId, "Schedule id can't be null");
-        return scheduleRepository.findById(scheduleId).map(scheduleMapper::map).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Schedule not found with id %d", scheduleId)));
+        return scheduleRepository.findById(scheduleId).map(scheduleMapper::map).orElseThrow(() -> {
+            throw new EntityNotFoundException(String.format("Schedule not found with id %d", scheduleId));
+        });
     }
 
     public List<ScheduleDTO> findSchedulesByTennisCourtId(Long tennisCourtId) {

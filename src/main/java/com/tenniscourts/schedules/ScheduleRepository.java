@@ -9,4 +9,5 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
     List<Schedule> findByTennisCourt_IdOrderByStartDateTime(Long id);
     List<Schedule> findAllByStartDateTimeBetween(LocalDateTime initialDate, LocalDateTime finalDate);
+    List<Schedule> findAllByTennisCourt_IdAndReservationsIsNull(Long tennisCourtId);
 }

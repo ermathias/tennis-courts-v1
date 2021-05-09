@@ -26,6 +26,12 @@ public class ScheduleController extends BaseRestController {
                 createScheduleRequestDTO).getId())).build();
     }
 
+    @ApiOperation(value = "Find free schedules")
+    @GetMapping("/{tennisCourtId}/free")
+    public ResponseEntity<List<ScheduleDTO>> getScheduleService(@PathVariable Long tennisCourtId) {
+        return ResponseEntity.ok(scheduleService.findFreeSchedules(tennisCourtId));
+    }
+
     @ApiOperation(value = "Returns schedules of a given start date and end date")
     @GetMapping
     public ResponseEntity<List<ScheduleDTO>> findSchedulesByDates(@RequestParam("startDate") @DateTimeFormat(pattern="yyyy-MM-dd")LocalDate startDate,
