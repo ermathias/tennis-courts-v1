@@ -20,17 +20,20 @@ import java.time.LocalDateTime;
 @ContextConfiguration(classes = ReservationService.class)
 public class ReservationServiceTest {
 
-    @InjectMocks
-    ReservationService reservationService;
+	@InjectMocks
+	ReservationService reservationService;
 
-    @Test
-    public void getRefundValueFullRefund() {
-        Schedule schedule = new Schedule();
+	@Test
+	public void getRefundValueFullRefund() {
+		Schedule schedule = new Schedule();
 
-        LocalDateTime startDateTime = LocalDateTime.now().plusDays(2);
+		LocalDateTime startDateTime = LocalDateTime.now().plusDays(2);
 
-        schedule.setStartDateTime(startDateTime);
+		schedule.setStartDateTime(startDateTime);
 
-        Assert.assertEquals(reservationService.getRefundValue(Reservation.builder().schedule(schedule).value(new BigDecimal(10L)).build()), new BigDecimal(10));
-    }
+		Assert.assertEquals(
+				reservationService
+						.getRefundValue(Reservation.builder().schedule(schedule).value(new BigDecimal(10L)).build()),
+				new BigDecimal(10));
+	}
 }
