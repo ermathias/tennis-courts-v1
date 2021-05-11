@@ -28,7 +28,7 @@ public class ScheduleController extends BaseRestController {
 
     @ApiOperation(value = "Find free schedules")
     @GetMapping("/{tennisCourtId}/free")
-    public ResponseEntity<List<ScheduleDTO>> getScheduleService(@PathVariable Long tennisCourtId) {
+    public ResponseEntity<List<ScheduleDTO>> findFreeSchedulesByTennisCourtId(@PathVariable Long tennisCourtId) {
         return ResponseEntity.ok(scheduleService.findFreeSchedules(tennisCourtId));
     }
 

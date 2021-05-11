@@ -6,12 +6,21 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/v1/reservations")
 @AllArgsConstructor
 public class ReservationController extends BaseRestController {
 
     private final ReservationService reservationService;
+
+    @ApiOperation(value = "Makes reservations given a list of schedules and guests")
+    @PostMapping("/bulk")
+    public ResponseEntity<Void> bookReservations(@RequestBody List<CreateReservationRequestDTO> createReservationRequestDTO) {
+        reservationService.bulkBookReservations(createReservationRequestDTO);
+        return ResponseEntity.ok().build();
+    }
 
     @ApiOperation(value = "Makes a reservation given a guest id and a schedule id")
     @PostMapping
@@ -35,5 +44,11 @@ public class ReservationController extends BaseRestController {
     @PostMapping("/{reservationId}/reschedule/{scheduleId}")
     public ResponseEntity<ReservationDTO> rescheduleReservation(@PathVariable Long reservationId, @PathVariable Long scheduleId) {
         return ResponseEntity.ok(reservationService.rescheduleReservation(reservationId, scheduleId));
+    }
+    
+    @ApiOperation(value = "Mark reservation as completed")
+    @PostMapping("/{reservationId}/completed")
+    public ResponseEntity<ReservationDTO> markReservationAsCompleted(@PathVariable Long reservationId) {
+        return ResponseEntity.ok(reservationService.markAsCompleted(reservationId));
     }
 }

@@ -1,5 +1,6 @@
 package com.tenniscourts.reservations;
 
+import com.tenniscourts.exceptions.BusinessException;
 import com.tenniscourts.exceptions.EntityNotFoundException;
 import com.tenniscourts.guests.Guest;
 import com.tenniscourts.guests.GuestRepository;
@@ -8,10 +9,13 @@ import com.tenniscourts.schedules.ScheduleRepository;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.Validate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -21,6 +25,11 @@ public class ReservationService {
     private final GuestRepository guestRepository;
     private final ScheduleRepository scheduleRepository;
     private final ReservationMapper reservationMapper;
+
+    public void bulkBookReservations(List<CreateReservationRequestDTO> createReservationRequestDTOS) {
+        Validate.notEmpty(createReservationRequestDTOS, "The list can't empty");
+        createReservationRequestDTOS.forEach(this::bookReservation);
+    }
 
     public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
         Validate.notNull(createReservationRequestDTO.getGuestId(), "Guest id can't be null");
@@ -34,6 +43,8 @@ public class ReservationService {
             throw new EntityNotFoundException("Schedule not found");
         });
 
+        Validate.isTrue(CollectionUtils.isEmpty(schedule.getReservations()), "Schedule is not free");
+
         Reservation reservation = Reservation.builder()
                 .guest(guest)
                 .schedule(schedule)
@@ -41,11 +52,19 @@ public class ReservationService {
                 .value(BigDecimal.valueOf(10))
                 .build();
 
-        return reservationMapper.map(reservationRepository.save(reservation));
+        reservationRepository.save(reservation);
+        schedule.addReservation(reservation);
+        scheduleRepository.save(schedule);
+
+        return reservationMapper.map(reservation);
     }
 
     public ReservationDTO findReservation(Long reservationId) {
-        return reservationRepository.findById(reservationId).map(reservationMapper::map).orElseThrow(() -> {
+        return reservationMapper.map(findReservationOrThrow(reservationId));
+    }
+
+    private Reservation findReservationOrThrow(Long reservationId) {
+        return reservationRepository.findById(reservationId).orElseThrow(() -> {
             throw new EntityNotFoundException("Reservation not found.");
         });
     }
@@ -60,6 +79,10 @@ public class ReservationService {
             this.validateCancellation(reservation);
 
             BigDecimal refundValue = getRefundValue(reservation);
+            Schedule schedule = reservation.getSchedule();
+            schedule.setReservations(new ArrayList<>());
+            scheduleRepository.save(schedule);
+
             return this.updateReservation(reservation, refundValue, ReservationStatus.CANCELLED);
 
         }).orElseThrow(() -> {
@@ -113,5 +136,21 @@ public class ReservationService {
                 .build());
         newReservation.setPreviousReservation(reservationMapper.map(previousReservation));
         return newReservation;
+    }
+
+    public ReservationDTO markAsCompleted(Long reservationId) {
+        Validate.notNull(reservationId, "Reservation id can't be null");
+        Reservation reservation = findReservationOrThrow(reservationId);
+
+        Validate.isTrue(reservation.getReservationStatus().equals(ReservationStatus.READY_TO_PLAY),
+                "Invalid reservation status change");
+
+        reservation.setReservationStatus(ReservationStatus.COMPLETED);
+        reservation.setRefundValue(reservation.getValue());
+        reservation.setValue(BigDecimal.ZERO);
+
+        reservationRepository.save(reservation);
+
+        return reservationMapper.map(reservation);
     }
 }
