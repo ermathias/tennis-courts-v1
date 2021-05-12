@@ -115,7 +115,15 @@ public class ReservationService {
             return reservation.getValue();
         }
 
-        return BigDecimal.ZERO;
+        if (hours >= 12) {
+            return reservation.getValue().multiply(BigDecimal.valueOf(0.75));
+        }
+
+        if (hours >= 2) {
+            return reservation.getValue().multiply(BigDecimal.valueOf(0.5));
+        }
+
+        return reservation.getValue().multiply(BigDecimal.valueOf(0.25));
     }
 
     /*TODO: This method actually not fully working, find a way to fix the issue when it's throwing the error:
