@@ -6,7 +6,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.net.URI;
 
 @ApiIgnore
-public class BaseRestController {
+public abstract class BaseRestController {
 
   protected URI locationByEntity(Long entityId){
         return ServletUriComponentsBuilder.fromCurrentRequest().path(

@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 public class CreateReservationRequestDTO {
 
     @NotNull
-    private Long guestId;
+    private Long guestId ;
 
     @NotNull
     private Long scheduleId;

@@ -3,19 +3,29 @@ package com.tenniscourts.tenniscourts;
 import com.tenniscourts.exceptions.EntityNotFoundException;
 import com.tenniscourts.schedules.ScheduleService;
 import lombok.AllArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
 public class TennisCourtService {
 
+	@Autowired
     private final TennisCourtRepository tennisCourtRepository;
 
+	@Autowired
     private final ScheduleService scheduleService;
 
-    private final TennisCourtMapper tennisCourtMapper;
+	
+    private final TennisCourtMapper tennisCourtMapper=null;
 
-    public TennisCourtDTO addTennisCourt(TennisCourtDTO tennisCourt) {
+    public TennisCourtService(TennisCourtRepository tennisCourtRepository, ScheduleService scheduleService) {
+		super();
+		this.tennisCourtRepository = tennisCourtRepository;
+		this.scheduleService = scheduleService;
+	}
+
+	public TennisCourtDTO addTennisCourt(TennisCourtDTO tennisCourt) {
         return tennisCourtMapper.map(tennisCourtRepository.saveAndFlush(tennisCourtMapper.map(tennisCourt)));
     }
 

@@ -4,7 +4,7 @@ import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",uses = ReservationService.class)
 public interface ReservationMapper {
 
     Reservation map(ReservationDTO source);
