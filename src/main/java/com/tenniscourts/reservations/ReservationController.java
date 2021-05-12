@@ -41,9 +41,9 @@ public class ReservationController extends BaseRestController {
     }
 
     @ApiOperation(value = "Reschedules a reservation")
-    @PostMapping("/{reservationId}/reschedule/{scheduleId}")
-    public ResponseEntity<ReservationDTO> rescheduleReservation(@PathVariable Long reservationId, @PathVariable Long scheduleId) {
-        return ResponseEntity.ok(reservationService.rescheduleReservation(reservationId, scheduleId));
+    @PostMapping("/{reservationId}/reschedule/{newScheduleId}")
+    public ResponseEntity<ReservationDTO> rescheduleReservation(@PathVariable Long reservationId, @PathVariable Long newScheduleId) {
+        return ResponseEntity.ok(reservationService.rescheduleReservation(reservationId, newScheduleId));
     }
     
     @ApiOperation(value = "Mark reservation as completed")
