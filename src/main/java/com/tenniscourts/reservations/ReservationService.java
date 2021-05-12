@@ -127,9 +127,7 @@ public class ReservationService {
 
         return reservation.getValue().multiply(BigDecimal.valueOf(0.25));
     }
-
-    /*TODO: This method actually not fully working, find a way to fix the issue when it's throwing the error:
-            "Cannot reschedule to the same slot.*/
+    
     public ReservationDTO rescheduleReservation(Long previousReservationId, Long newScheduleId) {
         Reservation previousReservation = findReservationOrThrow(previousReservationId);
 
