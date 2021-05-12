@@ -1,5 +1,6 @@
 package com.tenniscourts.reservations;
 
+import com.tenniscourts.guests.GuestDTO;
 import com.tenniscourts.schedules.ScheduleDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,6 +31,8 @@ public class ReservationDTO {
     private BigDecimal refundValue;
 
     private BigDecimal value;
+
+    private GuestDTO guest;
 
     @NotNull
     private Long scheduledId;
