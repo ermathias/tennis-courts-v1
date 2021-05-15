@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class GuestServiceImpl implements GuestService {
 
 	private final GuestRepository guestRepository;
@@ -28,8 +31,10 @@ public class GuestServiceImpl implements GuestService {
 
 	@Override
 	public GuestDTO modifyGuest(GuestDTO guestDTO) {
-		// TODO Auto-generated method stub
-		return null;
+		Guest guest = guestRepository.findById(guestDTO.getId())
+				.orElseThrow(() -> new EntityNotFoundException("Guest not found"));
+		guest.setName(guestDTO.getName());
+		return GuestMapper.GUEST_MAPPER_INSTANCE.map(guestRepository.saveAndFlush(guest));
 	}
 
 	@Override

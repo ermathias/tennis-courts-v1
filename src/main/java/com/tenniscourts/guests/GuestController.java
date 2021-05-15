@@ -2,7 +2,10 @@ package com.tenniscourts.guests;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -78,7 +81,7 @@ public class GuestController extends BaseRestController {
 			@ApiResponse(code = SwaggerConfig.BAD_REQUEST_CODE, message = SwaggerConfig.BAD_REQUEST_MESSAGE),
 			@ApiResponse(code = SwaggerConfig.INTERNAL_SERVER_ERROR_CODE, message = SwaggerConfig.INTERNAL_SERVER_ERROR_MESSAGE) })
 	@GetMapping
-	public ResponseEntity<List<GuestDTO>> findGuestByName(@RequestParam String name) {
+	public ResponseEntity<List<GuestDTO>> findGuestByName(@RequestParam @NotBlank String name) {
 		return ResponseEntity.ok(guestService.findGuestByName(name));
 	}
 
@@ -112,7 +115,7 @@ public class GuestController extends BaseRestController {
 	public ResponseEntity<List<GuestDTO>> findAllGuest() {
 		return ResponseEntity.ok(guestService.findAllGuests());
 	}
-	
+
 	/**
 	 * To delete guest by Id
 	 * 
@@ -123,7 +126,7 @@ public class GuestController extends BaseRestController {
 	@ApiResponses({ @ApiResponse(code = SwaggerConfig.OK_CODE, message = SwaggerConfig.OK_MESSAGE),
 			@ApiResponse(code = SwaggerConfig.BAD_REQUEST_CODE, message = SwaggerConfig.BAD_REQUEST_MESSAGE),
 			@ApiResponse(code = SwaggerConfig.INTERNAL_SERVER_ERROR_CODE, message = SwaggerConfig.INTERNAL_SERVER_ERROR_MESSAGE) })
-	@PutMapping("/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<String> removeGuest(@PathVariable("id") Long guestId) {
 		return ResponseEntity.ok(guestService.removeGuest(guestId));
 	}

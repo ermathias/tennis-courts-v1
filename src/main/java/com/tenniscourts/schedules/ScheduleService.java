@@ -3,6 +3,8 @@ package com.tenniscourts.schedules;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import com.tenniscourts.exceptions.AlreadyExistsEntityException;
@@ -11,10 +13,11 @@ import com.tenniscourts.exceptions.InvalidDateTimeException;
 import com.tenniscourts.tenniscourts.TennisCourt;
 import com.tenniscourts.tenniscourts.TennisCourtRepository;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
+@Transactional
 public class ScheduleService {
 
 	private final ScheduleRepository scheduleRepository;
