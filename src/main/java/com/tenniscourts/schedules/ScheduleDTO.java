@@ -16,8 +16,8 @@ public class ScheduleDTO {
 
     private TennisCourtDTO tennisCourt;
 
-    @NotNull
-    private Long tennisCourtId;
+   /* @NotNull
+    private Long tennisCourtId;*/
 
     @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm")
     @NotNull
