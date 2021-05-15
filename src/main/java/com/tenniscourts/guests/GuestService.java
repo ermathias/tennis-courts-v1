@@ -21,8 +21,8 @@ public class GuestService {
         return guestRepository.findAll();
     }
 
-    public GuestDTO addGuest(GuestDTO tennisCourt) {
-        return guestMapper.map(guestRepository.saveAndFlush(guestMapper.map(tennisCourt)));
+    public GuestDTO addGuest(CreateGuestDTO createGuestDTO) {
+        return guestMapper.map(guestRepository.saveAndFlush(guestMapper.map(createGuestDTO)));
     }
 
     public GuestDTO findGuestById(Long id) {

@@ -9,4 +9,6 @@ public interface GuestMapper {
 
     @InheritInverseConfiguration
     Guest map(GuestDTO source);
+    
+    Guest  map(CreateGuestDTO source);
 }

@@ -29,8 +29,8 @@ public class GuestController extends BaseRestController {
 
     @ApiOperation("Add a Guest")
     @PostMapping
-    public ResponseEntity<Void> addGuest(@Valid @RequestBody GuestDTO guestDTO) {
-        return ResponseEntity.created(locationByEntity(guestService.addGuest(guestDTO).getId())).build();
+    public ResponseEntity<Void> addGuest(@Valid @RequestBody CreateGuestDTO createGuestDTO) {
+        return ResponseEntity.created(locationByEntity(guestService.addGuest(createGuestDTO).getId())).build();
     }
 
     @ApiOperation("List all Guests")
@@ -53,8 +53,8 @@ public class GuestController extends BaseRestController {
 
     @ApiOperation("Update a Guest")
     @PutMapping
-    public ResponseEntity<GuestDTO> updateGuest(@Valid @RequestBody UpdateGuestDTO updateguestDTO) {
-      return ResponseEntity.ok(guestService.updateGuest(updateguestDTO));
+    public ResponseEntity<GuestDTO> updateGuest(@Valid @RequestBody UpdateGuestDTO updateGuestDTO) {
+      return ResponseEntity.ok(guestService.updateGuest(updateGuestDTO));
     }
     
     @ApiOperation("Delete a Guest by Id")
