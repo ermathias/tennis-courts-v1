@@ -33,4 +33,38 @@ public class ReservationServiceTest {
 
         Assert.assertEquals(reservationService.getRefundValue(Reservation.builder().schedule(schedule).value(new BigDecimal(10L)).build()), new BigDecimal(10));
     }
+
+
+    @Test
+    public void getRefundValueSeventhyFiveRefund() {
+        Schedule schedule = new Schedule();
+
+        LocalDateTime startDateTime = LocalDateTime.now().plusHours(2);
+
+        schedule.setStartDateTime(startDateTime);
+
+        Assert.assertEquals(reservationService.getRefundValue(Reservation.builder().schedule(schedule).value(new BigDecimal(10L)).build()), new BigDecimal(10).multiply(BigDecimal.valueOf(0.75)));
+    }
+
+    @Test
+    public void getRefundValueFifthyRefund() {
+        Schedule schedule = new Schedule();
+
+        LocalDateTime startDateTime = LocalDateTime.now().plusHours(3);
+
+        schedule.setStartDateTime(startDateTime);
+
+        Assert.assertEquals(reservationService.getRefundValue(Reservation.builder().schedule(schedule).value(new BigDecimal(10L)).build()), new BigDecimal(10).multiply(BigDecimal.valueOf(0.5)));
+    }
+
+    @Test
+    public void getRefundValueTwentyFiveRefund() {
+        Schedule schedule = new Schedule();
+
+        LocalDateTime startDateTime = LocalDateTime.now().plusHours(14);
+
+        schedule.setStartDateTime(startDateTime);
+
+        Assert.assertEquals(reservationService.getRefundValue(Reservation.builder().schedule(schedule).value(new BigDecimal(10L)).build()), new BigDecimal(10).multiply(BigDecimal.valueOf(0.25)));
+    }
 }
