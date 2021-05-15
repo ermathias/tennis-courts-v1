@@ -29,8 +29,8 @@ public class TennisCourtController extends BaseRestController {
         @ApiResponse(code = 201, message = "Tennis Court Added")
     })
     @PostMapping("")
-    public ResponseEntity<Void> addTennisCourt(@Valid @RequestBody TennisCourtDTO tennisCourtDTO) {
-        return ResponseEntity.created(locationByEntity(tennisCourtService.addTennisCourt(tennisCourtDTO).getId())).build();
+    public ResponseEntity<Void> addTennisCourt(@Valid @RequestBody CreateTennisCourtDTO createTennisCourtDTO) {
+        return ResponseEntity.created(locationByEntity(tennisCourtService.addTennisCourt(createTennisCourtDTO).getId())).build();
     }
 
     @ApiOperation("Find tennis Court By Id")

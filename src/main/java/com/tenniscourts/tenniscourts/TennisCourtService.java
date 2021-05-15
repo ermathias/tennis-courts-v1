@@ -19,8 +19,8 @@ public class TennisCourtService {
 	@Autowired
     private final TennisCourtMapper tennisCourtMapper;
 
-    public TennisCourtDTO addTennisCourt(TennisCourtDTO tennisCourt) {
-        return tennisCourtMapper.map(tennisCourtRepository.saveAndFlush(tennisCourtMapper.map(tennisCourt)));
+    public TennisCourtDTO addTennisCourt(CreateTennisCourtDTO createTennisCourt) {
+        return tennisCourtMapper.map(tennisCourtRepository.saveAndFlush(tennisCourtMapper.map(createTennisCourt)));
     }
 
     public TennisCourtDTO findTennisCourtById(Long id) {
