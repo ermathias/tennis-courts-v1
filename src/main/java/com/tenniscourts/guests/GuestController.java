@@ -28,6 +28,9 @@ public class GuestController extends BaseRestController {
     private final GuestService guestService;
 
     @ApiOperation("Add a Guest")
+    @ApiResponses(value = { 
+        @ApiResponse(code = 201, message = "Guest Added") 
+    })
     @PostMapping
     public ResponseEntity<Void> addGuest(@Valid @RequestBody CreateGuestDTO createGuestDTO) {
         return ResponseEntity.created(locationByEntity(guestService.addGuest(createGuestDTO).getId())).build();
