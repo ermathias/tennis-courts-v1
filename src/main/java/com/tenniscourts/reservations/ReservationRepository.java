@@ -18,7 +18,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
 	Optional<Reservation> findByScheduleAndGuest(Schedule schedule, Guest guest);
 
-	// List<Reservation>
-	// findByStartDateTimeGreaterThanEqualAndEndDateTimeLessThanEqualAndTennisCourt(LocalDateTime
-	// startDateTime, LocalDateTime endDateTime, TennisCourt tennisCourt);
+	List<Reservation> findAllByDateUpdateBetween(LocalDateTime fromDate, LocalDateTime toDate);
+
 }

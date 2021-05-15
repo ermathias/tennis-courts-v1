@@ -1,5 +1,19 @@
 package com.tenniscourts.reservations;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.tenniscourts.config.BaseRestController;
 import com.tenniscourts.config.swagger.SwaggerConfig;
 
@@ -8,14 +22,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Reservation Controller
@@ -61,7 +67,7 @@ public class ReservationController extends BaseRestController {
 			@ApiResponse(code = SwaggerConfig.NOT_FOUND_CODE, message = SwaggerConfig.NOT_FOUND_MESSAGE),
 			@ApiResponse(code = SwaggerConfig.INTERNAL_SERVER_ERROR_CODE, message = SwaggerConfig.INTERNAL_SERVER_ERROR_MESSAGE) })
 	@GetMapping("/{id}")
-	public ResponseEntity<ReservationDTO> findReservation(@PathVariable("id")Long reservationId) {
+	public ResponseEntity<ReservationDTO> findReservation(@PathVariable("id") Long reservationId) {
 		return ResponseEntity.ok(reservationService.findReservation(reservationId));
 	}
 
@@ -78,7 +84,7 @@ public class ReservationController extends BaseRestController {
 			@ApiResponse(code = SwaggerConfig.NOT_FOUND_CODE, message = SwaggerConfig.NOT_FOUND_MESSAGE),
 			@ApiResponse(code = SwaggerConfig.INTERNAL_SERVER_ERROR_CODE, message = SwaggerConfig.INTERNAL_SERVER_ERROR_MESSAGE) })
 	@PutMapping("/{id}")
-	public ResponseEntity<ReservationDTO> cancelReservation(@PathVariable("id")Long reservationId) {
+	public ResponseEntity<ReservationDTO> cancelReservation(@PathVariable("id") Long reservationId) {
 		return ResponseEntity.ok(reservationService.cancelReservation(reservationId));
 	}
 
@@ -98,5 +104,24 @@ public class ReservationController extends BaseRestController {
 	@GetMapping("/{id}/schedules/{scheduleID}")
 	public ResponseEntity<ReservationDTO> rescheduleReservation(Long reservationId, Long scheduleId) {
 		return ResponseEntity.ok(reservationService.rescheduleReservation(reservationId, scheduleId));
+	}
+
+	/**
+	 * To retrieve reservation history
+	 * 
+	 * @param fromDate
+	 * @param toDate
+	 * @return List of {@link ReservationDTO}
+	 */
+
+	@ApiOperation(value = "To retrieve reservation history", tags = SwaggerConfig.RESERVATION_ENDPOINT)
+	@ApiResponses({ @ApiResponse(code = SwaggerConfig.OK_CODE, message = SwaggerConfig.OK_MESSAGE),
+			@ApiResponse(code = SwaggerConfig.BAD_REQUEST_CODE, message = SwaggerConfig.BAD_REQUEST_MESSAGE),
+			@ApiResponse(code = SwaggerConfig.INTERNAL_SERVER_ERROR_CODE, message = SwaggerConfig.INTERNAL_SERVER_ERROR_MESSAGE) })
+	@GetMapping("/tennis-courts/{id}/history")
+	public ResponseEntity<List<ReservationDTO>> retrieveHistory(
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromDate,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime toDate) {
+		return ResponseEntity.ok(reservationService.retrieveHistory(fromDate, toDate));
 	}
 }

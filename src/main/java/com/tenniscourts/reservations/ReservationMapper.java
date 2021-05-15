@@ -1,5 +1,7 @@
 package com.tenniscourts.reservations;
 
+import java.util.List;
+
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -14,8 +16,11 @@ public interface ReservationMapper {
 	Reservation map(ReservationDTO source);
 
 	@Mapping(target = "guestId", source = "guest.id")
-    @Mapping(target = "scheduledId", source = "schedule.id")
+	@Mapping(target = "scheduledId", source = "schedule.id")
 	ReservationDTO map(Reservation source);
 
 	Reservation map(CreateReservationRequestDTO source);
+
+	List<ReservationDTO> map(List<Reservation> reservations);
+
 }

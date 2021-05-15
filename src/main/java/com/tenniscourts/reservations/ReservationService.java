@@ -3,6 +3,7 @@ package com.tenniscourts.reservations;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.tenniscourts.exceptions.AlreadyExistsEntityException;
 import com.tenniscourts.exceptions.EntityNotFoundException;
+import com.tenniscourts.exceptions.InvalidDateTimeException;
 import com.tenniscourts.guests.GuestMapper;
 import com.tenniscourts.guests.GuestService;
 import com.tenniscourts.schedules.ScheduleMapper;
@@ -49,17 +51,6 @@ public class ReservationService {
 		return ReservationMapper.RESERVATION_MAPPER_INSTANCE.map(this.cancel(reservationId));
 	}
 
-	private Reservation cancel(Long reservationId) {
-		return reservationRepository.findById(reservationId).map(reservation -> {
-
-			this.validateCancellation(reservation);
-
-			BigDecimal refundValue = getRefundValue(reservation);
-			return this.updateReservation(reservation, refundValue, ReservationStatus.CANCELLED);
-
-		}).orElseThrow(() -> new EntityNotFoundException("Reservation not found."));
-	}
-
 	public BigDecimal getRefundValue(Reservation reservation) {
 		long hours = ChronoUnit.HOURS.between(LocalDateTime.now(), reservation.getSchedule().getStartDateTime());
 
@@ -92,6 +83,14 @@ public class ReservationService {
 		return newReservation;
 	}
 
+	public List<ReservationDTO> retrieveHistory(LocalDateTime fromDate, LocalDateTime toDate) {
+		if (fromDate.isAfter(toDate)) {
+			throw new InvalidDateTimeException("Please provide valid range");
+		}
+		return ReservationMapper.RESERVATION_MAPPER_INSTANCE
+				.map(reservationRepository.findAllByDateUpdateBetween(fromDate, toDate));
+	}
+
 	private Reservation checkReservationExist(Reservation reservation) {
 		Optional<Reservation> reservationOptional = reservationRepository
 				.findByScheduleAndGuest(reservation.getSchedule(), reservation.getGuest());
@@ -118,4 +117,16 @@ public class ReservationService {
 			throw new IllegalArgumentException("Can cancel/reschedule only future dates.");
 		}
 	}
+
+	private Reservation cancel(Long reservationId) {
+		return reservationRepository.findById(reservationId).map(reservation -> {
+
+			this.validateCancellation(reservation);
+
+			BigDecimal refundValue = getRefundValue(reservation);
+			return this.updateReservation(reservation, refundValue, ReservationStatus.CANCELLED);
+
+		}).orElseThrow(() -> new EntityNotFoundException("Reservation not found."));
+	}
+
 }
