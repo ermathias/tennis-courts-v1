@@ -35,9 +35,11 @@ public class Reservation extends BaseEntity<Long> {
     @NotNull
     private Schedule schedule;
 
+    @Builder.Default
     @NotNull
-    private BigDecimal value;
+    private BigDecimal value = new BigDecimal(10L);
 
+    @Builder.Default
     @NotNull
     private ReservationStatus reservationStatus = ReservationStatus.READY_TO_PLAY;
 
