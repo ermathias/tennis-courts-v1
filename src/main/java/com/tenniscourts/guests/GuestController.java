@@ -23,6 +23,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Guest Controller
@@ -32,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/guests")
 @Api(value = SwaggerConfig.GUEST_VALUE, tags = SwaggerConfig.GUEST_ENDPOINT)
+@Slf4j
 public class GuestController extends BaseRestController {
 
 	private final GuestService guestService;
@@ -51,6 +53,7 @@ public class GuestController extends BaseRestController {
 	})
 	@PostMapping
 	public ResponseEntity<Void> addGuest(@RequestBody GuestRequest guestRequest) {
+		log.info("Adding guest");
 		return ResponseEntity.created(locationByEntity(guestService.addGuest(guestRequest).getId())).build();
 	}
 
@@ -82,6 +85,7 @@ public class GuestController extends BaseRestController {
 			@ApiResponse(code = SwaggerConfig.INTERNAL_SERVER_ERROR_CODE, message = SwaggerConfig.INTERNAL_SERVER_ERROR_MESSAGE) })
 	@GetMapping
 	public ResponseEntity<List<GuestDTO>> findGuestByName(@RequestParam @NotBlank String name) {
+		log.info("Finding guest");
 		return ResponseEntity.ok(guestService.findGuestByName(name));
 	}
 
@@ -98,6 +102,7 @@ public class GuestController extends BaseRestController {
 			@ApiResponse(code = SwaggerConfig.INTERNAL_SERVER_ERROR_CODE, message = SwaggerConfig.INTERNAL_SERVER_ERROR_MESSAGE) })
 	@PutMapping
 	public ResponseEntity<GuestDTO> modifyGuest(@RequestBody GuestDTO guestDTO) {
+		log.info("Started modifying guest");
 		return ResponseEntity.ok(guestService.modifyGuest(guestDTO));
 	}
 
@@ -113,6 +118,7 @@ public class GuestController extends BaseRestController {
 			@ApiResponse(code = SwaggerConfig.INTERNAL_SERVER_ERROR_CODE, message = SwaggerConfig.INTERNAL_SERVER_ERROR_MESSAGE) })
 	@GetMapping("/all")
 	public ResponseEntity<List<GuestDTO>> findAllGuest() {
+		log.info("Started finding guest");
 		return ResponseEntity.ok(guestService.findAllGuests());
 	}
 
@@ -128,6 +134,7 @@ public class GuestController extends BaseRestController {
 			@ApiResponse(code = SwaggerConfig.INTERNAL_SERVER_ERROR_CODE, message = SwaggerConfig.INTERNAL_SERVER_ERROR_MESSAGE) })
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> removeGuest(@PathVariable("id") Long guestId) {
+		log.info("Started removing guest");
 		return ResponseEntity.ok(guestService.removeGuest(guestId));
 	}
 }

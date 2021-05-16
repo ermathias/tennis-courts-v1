@@ -22,6 +22,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Reservation Controller
@@ -30,6 +31,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping("/reservations")
 @Api(value = SwaggerConfig.RESERVATION_VALUE, tags = SwaggerConfig.RESERVATION_ENDPOINT)
+@Slf4j
 public class ReservationController extends BaseRestController {
 
 	private final ReservationService reservationService;
@@ -40,7 +42,6 @@ public class ReservationController extends BaseRestController {
 	 * @param createReservationRequestDTO,
 	 *            request info
 	 */
-
 	@ApiOperation(value = "Book reservation", tags = SwaggerConfig.RESERVATION_ENDPOINT)
 	@ApiResponses({ @ApiResponse(code = SwaggerConfig.CREATED_CODE, message = SwaggerConfig.CREATED_MESSAGE),
 			@ApiResponse(code = SwaggerConfig.BAD_REQUEST_CODE, message = SwaggerConfig.BAD_REQUEST_MESSAGE),
@@ -49,6 +50,7 @@ public class ReservationController extends BaseRestController {
 	})
 	@PostMapping
 	public ResponseEntity<Void> bookReservation(@RequestBody CreateReservationRequestDTO createReservationRequestDTO) {
+		log.info("Booking reservation started");
 		return ResponseEntity
 				.created(locationByEntity(reservationService.bookReservation(createReservationRequestDTO).getId()))
 				.build();
@@ -68,6 +70,7 @@ public class ReservationController extends BaseRestController {
 			@ApiResponse(code = SwaggerConfig.INTERNAL_SERVER_ERROR_CODE, message = SwaggerConfig.INTERNAL_SERVER_ERROR_MESSAGE) })
 	@GetMapping("/{id}")
 	public ResponseEntity<ReservationDTO> findReservation(@PathVariable("id") Long reservationId) {
+		log.info("Started to find reservation");
 		return ResponseEntity.ok(reservationService.findReservation(reservationId));
 	}
 
@@ -85,6 +88,7 @@ public class ReservationController extends BaseRestController {
 			@ApiResponse(code = SwaggerConfig.INTERNAL_SERVER_ERROR_CODE, message = SwaggerConfig.INTERNAL_SERVER_ERROR_MESSAGE) })
 	@PutMapping("/{id}")
 	public ResponseEntity<ReservationDTO> cancelReservation(@PathVariable("id") Long reservationId) {
+		log.info("Started to cancel reservation");
 		return ResponseEntity.ok(reservationService.cancelReservation(reservationId));
 	}
 
@@ -103,6 +107,7 @@ public class ReservationController extends BaseRestController {
 			@ApiResponse(code = SwaggerConfig.INTERNAL_SERVER_ERROR_CODE, message = SwaggerConfig.INTERNAL_SERVER_ERROR_MESSAGE) })
 	@GetMapping("/{id}/schedules/{scheduleID}")
 	public ResponseEntity<ReservationDTO> rescheduleReservation(Long reservationId, Long scheduleId) {
+		log.info("Started to reschedule reservation");
 		return ResponseEntity.ok(reservationService.rescheduleReservation(reservationId, scheduleId));
 	}
 
@@ -122,6 +127,7 @@ public class ReservationController extends BaseRestController {
 	public ResponseEntity<List<ReservationDTO>> retrieveHistory(
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromDate,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime toDate) {
+		log.info("Started to  reservation history");
 		return ResponseEntity.ok(reservationService.retrieveHistory(fromDate, toDate));
 	}
 }

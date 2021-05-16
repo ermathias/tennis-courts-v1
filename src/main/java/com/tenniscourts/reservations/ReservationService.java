@@ -19,10 +19,16 @@ import com.tenniscourts.schedules.ScheduleMapper;
 import com.tenniscourts.schedules.ScheduleService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Reservation Service
+ * 
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class ReservationService {
 
 	private final ReservationRepository reservationRepository;
@@ -30,8 +36,13 @@ public class ReservationService {
 	private final ScheduleService scheduleService;
 	private static final BigDecimal RESERVATION_DEPOSIT = BigDecimal.TEN;
 
+	/**
+	 * Method to book reservation
+	 * 
+	 * @param createReservationRequestDTO
+	 * @return {@link ReservationDTO}
+	 */
 	public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
-
 		return ReservationMapper.RESERVATION_MAPPER_INSTANCE
 				.map(reservationRepository.saveAndFlush(checkReservationExist(Reservation.builder()
 						.schedule(ScheduleMapper.SCHEDULE_MAPPER_INSTANCE
@@ -42,15 +53,34 @@ public class ReservationService {
 						.refundValue(RESERVATION_DEPOSIT).build())));
 	}
 
+	/**
+	 * Method to find reservation
+	 * 
+	 * @param reservationId
+	 * @return {@link ReservationDTO}
+	 */
 	public ReservationDTO findReservation(Long reservationId) {
 		return reservationRepository.findById(reservationId).map(ReservationMapper.RESERVATION_MAPPER_INSTANCE::map)
 				.orElseThrow(() -> new EntityNotFoundException("Reservation not found."));
 	}
 
+	/**
+	 * Method to cancel reservation
+	 * 
+	 * @param reservationId
+	 * @return {@link ReservationDTO}
+	 */
 	public ReservationDTO cancelReservation(Long reservationId) {
 		return ReservationMapper.RESERVATION_MAPPER_INSTANCE.map(this.cancel(reservationId));
 	}
 
+	/**
+	 * Method to reschedule reservation
+	 * 
+	 * @param previousReservationId
+	 * @param scheduleId
+	 * @return {@link ReservationDTO}
+	 */
 	public ReservationDTO rescheduleReservation(Long previousReservationId, Long scheduleId) {
 		Reservation previousReservation = cancel(previousReservationId);
 
@@ -67,6 +97,13 @@ public class ReservationService {
 		return newReservation;
 	}
 
+	/**
+	 * Method to retrieve reservation history
+	 * 
+	 * @param fromDate
+	 * @param toDate
+	 * @return List of {@link ReservationDTO}
+	 */
 	public List<ReservationDTO> retrieveHistory(LocalDateTime fromDate, LocalDateTime toDate) {
 		if (fromDate.isAfter(toDate)) {
 			throw new InvalidDateTimeException("Please provide valid range");
@@ -75,33 +112,63 @@ public class ReservationService {
 				.map(reservationRepository.findAllByDateUpdateBetween(fromDate, toDate));
 	}
 
+	/**
+	 * Method to check existence of reservation
+	 * 
+	 * @param reservation
+	 * @return {@link Reservation}
+	 */
 	private Reservation checkReservationExist(Reservation reservation) {
+		log.info("Checking reservation existence");
 		Optional<Reservation> reservationOptional = reservationRepository
 				.findByScheduleAndGuest(reservation.getSchedule(), reservation.getGuest());
 		if (reservationOptional.isPresent()) {
+			log.info("Reservation already existing");
 			throw new AlreadyExistsEntityException("This schedule already reserved for given guest");
 		}
 		return reservation;
 	}
 
+	/**
+	 * Method to update reservation
+	 * 
+	 * @param reservation
+	 * @param refundValue
+	 * @param status
+	 * @return {@link Reservation}
+	 */
 	private Reservation updateReservation(Reservation reservation, BigDecimal refundValue, ReservationStatus status) {
+		log.info("Updating reservation");
 		reservation.setReservationStatus(status);
 		reservation.setValue(reservation.getValue().subtract(refundValue));
 		reservation.setRefundValue(refundValue);
-
 		return reservationRepository.save(reservation);
 	}
 
+	/**
+	 * Method to validate cancellation
+	 * 
+	 * @param reservation
+	 */
 	private void validateCancellation(Reservation reservation) {
+		log.info("validating reservation");
 		if (!ReservationStatus.READY_TO_PLAY.equals(reservation.getReservationStatus())) {
+			log.info("Cannot cancel/reschedule because it's not in ready to play status.");
 			throw new IllegalArgumentException("Cannot cancel/reschedule because it's not in ready to play status.");
 		}
 
 		if (reservation.getSchedule().getStartDateTime().isBefore(LocalDateTime.now())) {
+			log.info("Can cancel/reschedule only future dates.");
 			throw new IllegalArgumentException("Can cancel/reschedule only future dates.");
 		}
 	}
 
+	/**
+	 * Method to cancel reservation for given Id
+	 * 
+	 * @param reservationId
+	 * @return {@link Reservation}
+	 */
 	private Reservation cancel(Long reservationId) {
 		return reservationRepository.findById(reservationId).map(reservation -> {
 
@@ -113,6 +180,12 @@ public class ReservationService {
 		}).orElseThrow(() -> new EntityNotFoundException("Reservation not found."));
 	}
 
+	/**
+	 * Method to calculate the refund value
+	 * 
+	 * @param reservation
+	 * @return {@link BigDecimal}
+	 */
 	private BigDecimal getRefundValue(Reservation reservation) {
 		long hours = ChronoUnit.HOURS.between(LocalDateTime.now(), reservation.getSchedule().getStartDateTime());
 

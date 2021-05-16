@@ -21,6 +21,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Schedule Controller
@@ -30,6 +31,7 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/schedules")
 @Api(value = SwaggerConfig.SCHEDULER_VALUE, tags = SwaggerConfig.SCHEDULER_ENDPOINT)
 @AllArgsConstructor
+@Slf4j
 public class ScheduleController extends BaseRestController {
 
 	private final ScheduleService scheduleService;
@@ -49,6 +51,7 @@ public class ScheduleController extends BaseRestController {
 	})
 	@PostMapping
 	public ResponseEntity<Void> addScheduleTennisCourt(@RequestBody CreateScheduleRequestDTO createScheduleRequestDTO) {
+		log.info("Started adding schedule");
 		return ResponseEntity
 				.created(locationByEntity(scheduleService
 						.addSchedule(createScheduleRequestDTO.getTennisCourtId(), createScheduleRequestDTO).getId()))
@@ -72,7 +75,7 @@ public class ScheduleController extends BaseRestController {
 	public ResponseEntity<List<ScheduleDTO>> findSchedulesByDates(
 			@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
 			@RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
-
+		log.info("Started finding schedule");
 		return ResponseEntity.ok(scheduleService.findSchedulesByDates(LocalDateTime.parse(startDate.toString()),
 				LocalDateTime.parse(endDate.toString())));
 
@@ -92,6 +95,7 @@ public class ScheduleController extends BaseRestController {
 			@ApiResponse(code = SwaggerConfig.INTERNAL_SERVER_ERROR_CODE, message = SwaggerConfig.INTERNAL_SERVER_ERROR_MESSAGE) })
 	@GetMapping("/{id}")
 	public ResponseEntity<ScheduleDTO> findByScheduleId(@PathVariable("id") Long scheduleId) {
+		log.info("Started finding schedule");
 		return ResponseEntity.ok(scheduleService.findSchedule(scheduleId));
 	}
 }
