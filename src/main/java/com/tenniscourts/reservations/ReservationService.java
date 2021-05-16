@@ -120,6 +120,9 @@ public class ReservationService {
 	 */
 	private Reservation checkReservationExist(Reservation reservation) {
 		log.info("Checking reservation existence");
+		if(reservation.getSchedule().getStartDateTime().isBefore(LocalDateTime.now())) {
+			throw new IllegalArgumentException("Given schedule is expired");
+		}
 		Optional<Reservation> reservationOptional = reservationRepository
 				.findByScheduleAndGuest(reservation.getSchedule(), reservation.getGuest());
 		if (reservationOptional.isPresent()) {
