@@ -16,7 +16,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 	List<Reservation> findByReservationStatusAndSchedule_StartDateTimeGreaterThanEqualAndSchedule_EndDateTimeLessThanEqual(
 			ReservationStatus reservationStatus, LocalDateTime startDateTime, LocalDateTime endDateTime);
 
-	Optional<Reservation> findByScheduleAndGuest(Schedule schedule, Guest guest);
+	Optional<Reservation> findByScheduleAndGuestAndReservationStatus(Schedule schedule, Guest guest,
+			ReservationStatus reservationStatus);
 
 	List<Reservation> findAllByDateUpdateBetween(LocalDateTime fromDate, LocalDateTime toDate);
 

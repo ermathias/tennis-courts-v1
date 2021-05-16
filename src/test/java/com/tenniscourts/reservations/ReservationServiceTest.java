@@ -78,7 +78,7 @@ public class ReservationServiceTest {
 	public void shouldReturnReservationDTOWhenBookReservation() {
 		doReturn(guestDTO).when(guestService).findGuestById(GUEST_ID);
 		doReturn(scheduleDTO).when(scheduleService).findSchedule(SCHEDULE_ID);
-		doReturn(Optional.empty()).when(reservationRepository).findByScheduleAndGuest(schedule, guest);
+		doReturn(Optional.empty()).when(reservationRepository).findByScheduleAndGuestAndReservationStatus(schedule, guest,ReservationStatus.READY_TO_PLAY);
 		doReturn(reservation).when(reservationRepository).saveAndFlush(Mockito.any(Reservation.class));
 
 		ReservationDTO actual = reservationService.bookReservation(createReservationRequestDTO);
@@ -89,7 +89,7 @@ public class ReservationServiceTest {
 	public void shouldReturnAlreadyExistWhenBookReservation() {
 		doReturn(scheduleDTO).when(scheduleService).findSchedule(SCHEDULE_ID);
 		doReturn(guestDTO).when(guestService).findGuestById(GUEST_ID);
-		doReturn(Optional.of(reservation)).when(reservationRepository).findByScheduleAndGuest(schedule, guest);
+		doReturn(Optional.of(reservation)).when(reservationRepository).findByScheduleAndGuestAndReservationStatus(schedule, guest,ReservationStatus.READY_TO_PLAY);
 		try {
 			reservationService.bookReservation(createReservationRequestDTO);
 		} catch (AlreadyExistsEntityException ex) {
@@ -228,7 +228,7 @@ public class ReservationServiceTest {
 		neSchedule.setId(NEW_SCHEDULE_ID);
 		doReturn(guestDTO).when(guestService).findGuestById(GUEST_ID);
 		doReturn(scheduleDTO).when(scheduleService).findSchedule(NEW_SCHEDULE_ID);
-		doReturn(Optional.empty()).when(reservationRepository).findByScheduleAndGuest(schedule, guest);
+		doReturn(Optional.empty()).when(reservationRepository).findByScheduleAndGuestAndReservationStatus(schedule, guest,ReservationStatus.READY_TO_PLAY);
 		Reservation reScheduledReservation = buildReservation();
 		reScheduledReservation.setReservationStatus(ReservationStatus.RESCHEDULED);
 		doReturn(reScheduledReservation).when(reservationRepository).saveAndFlush(Mockito.any(Reservation.class));

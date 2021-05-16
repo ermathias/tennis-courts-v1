@@ -120,11 +120,11 @@ public class ReservationService {
 	 */
 	private Reservation checkReservationExist(Reservation reservation) {
 		log.info("Checking reservation existence");
-		if(reservation.getSchedule().getStartDateTime().isBefore(LocalDateTime.now())) {
+		if (reservation.getSchedule().getStartDateTime().isBefore(LocalDateTime.now())) {
 			throw new IllegalArgumentException("Given schedule is expired");
 		}
-		Optional<Reservation> reservationOptional = reservationRepository
-				.findByScheduleAndGuest(reservation.getSchedule(), reservation.getGuest());
+		Optional<Reservation> reservationOptional = reservationRepository.findByScheduleAndGuestAndReservationStatus(
+				reservation.getSchedule(), reservation.getGuest(), ReservationStatus.READY_TO_PLAY);
 		if (reservationOptional.isPresent()) {
 			log.info("Reservation already existing");
 			throw new AlreadyExistsEntityException("This schedule already reserved for given guest");
