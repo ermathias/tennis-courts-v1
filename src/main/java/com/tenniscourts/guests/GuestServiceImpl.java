@@ -31,16 +31,14 @@ public class GuestServiceImpl implements GuestService {
 
 	@Override
 	public GuestDTO modifyGuest(GuestDTO guestDTO) {
-		Guest guest = guestRepository.findById(guestDTO.getId())
-				.orElseThrow(() -> new EntityNotFoundException("Guest not found"));
-		guest.setName(guestDTO.getName());
+		Guest guest = GuestMapper.GUEST_MAPPER_INSTANCE.map(findGuestById(guestDTO.getId()));
 		return GuestMapper.GUEST_MAPPER_INSTANCE.map(guestRepository.saveAndFlush(guest));
 	}
 
 	@Override
 	public GuestDTO findGuestById(Long guestId) throws EntityNotFoundException {
 		return guestRepository.findById(guestId).map(GuestMapper.GUEST_MAPPER_INSTANCE::map)
-				.orElseThrow(() -> new EntityNotFoundException("Guest Not Found"));
+				.orElseThrow(() -> new EntityNotFoundException("Guest not found"));
 	}
 
 	@Override
@@ -53,7 +51,7 @@ public class GuestServiceImpl implements GuestService {
 		try {
 			guestRepository.deleteById(guestId);
 		} catch (EmptyResultDataAccessException ex) {
-			throw new EntityNotFoundException("Gusest not exist");
+			throw new EntityNotFoundException("Guest not found");
 		}
 		return "SUCCESS";
 	}
