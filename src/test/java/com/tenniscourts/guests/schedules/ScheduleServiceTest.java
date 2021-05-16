@@ -17,6 +17,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.tenniscourts.exceptions.AlreadyExistsEntityException;
+import com.tenniscourts.exceptions.EntityNotFoundException;
+import com.tenniscourts.exceptions.InvalidDateTimeException;
 import com.tenniscourts.schedules.CreateScheduleRequestDTO;
 import com.tenniscourts.schedules.Schedule;
 import com.tenniscourts.schedules.ScheduleDTO;
@@ -73,6 +76,112 @@ public class ScheduleServiceTest {
 		assertEquals(TENNIS_COURT_ID, tennisCourt.getId());
 		assertEquals(TENNIS_COURT_NAME, tennisCourt.getName());
 
+	}
+
+	@Test
+	public void shouldReturnInvalidDateWhileAddSchedule() {
+		createScheduleRequestDTO.setStartDateTime(START_DATE.minusHours(10));
+		try {
+			scheduleService.addSchedule(TENNIS_COURT_ID, createScheduleRequestDTO);
+		} catch (InvalidDateTimeException ex) {
+			assertNotNull(ex);
+			assertEquals("Can not schedule Future Date", ex.getMessage());
+		}
+
+	}
+
+	@Test
+	public void shouldReturnAlreadyExistWhileAddSchedule() {
+		List<Schedule> schedules = new ArrayList<>();
+		schedules.add(schedule);
+		doReturn(schedules).when(scheduleRepository).findByTennisCourt_IdOrderByStartDateTime(TENNIS_COURT_ID);
+		try {
+			scheduleService.addSchedule(TENNIS_COURT_ID, createScheduleRequestDTO);
+		} catch (AlreadyExistsEntityException ex) {
+			assertNotNull(ex);
+			assertEquals("This slot already scheduled", ex.getMessage());
+		}
+
+	}
+
+	@Test
+	public void shouldReturnTennisCourtNotFoundWhileAddSchedule() {
+		List<Schedule> schedules = new ArrayList<>();
+		Schedule existSchedule = buildSchedule();
+		existSchedule.setStartDateTime(START_DATE.plusDays(2));
+		schedules.add(existSchedule);
+		doReturn(schedules).when(scheduleRepository).findByTennisCourt_IdOrderByStartDateTime(TENNIS_COURT_ID);
+		doReturn(Optional.empty()).when(tennisCourtRepository).findById(TENNIS_COURT_ID);
+		try {
+			scheduleService.addSchedule(TENNIS_COURT_ID, createScheduleRequestDTO);
+		} catch (EntityNotFoundException ex) {
+			assertNotNull(ex);
+			assertEquals("Tennis court not found", ex.getMessage());
+		}
+
+	}
+
+	@Test
+	public void shouldReturnScheduleDTOWhenFindSchedulesByDates() {
+		List<Schedule> schedules = new ArrayList<>();
+		schedules.add(schedule);
+		doReturn(schedules).when(scheduleRepository).findBystartDateTimeAndEndDateTime(START_DATE, END_DATE);
+		List<ScheduleDTO> actualList = scheduleService.findSchedulesByDates(START_DATE, END_DATE);
+		assertNotNull(actualList);
+		ScheduleDTO actual = actualList.get(0);
+		assertNotNull(actual);
+		assertEquals(SHEDULE_ID, actual.getId());
+		assertEquals(START_DATE, actual.getStartDateTime());
+		assertEquals(END_DATE, actual.getEndDateTime());
+		TennisCourtDTO tennisCourt = actual.getTennisCourt();
+		assertNotNull(tennisCourt);
+		assertEquals(TENNIS_COURT_ID, tennisCourt.getId());
+		assertEquals(TENNIS_COURT_NAME, tennisCourt.getName());
+	}
+
+	@Test
+	public void shouldReturnScheduleDTOWhenFindSchedule() {
+
+		doReturn(Optional.of(schedule)).when(scheduleRepository).findById(SHEDULE_ID);
+		ScheduleDTO actual = scheduleService.findSchedule(SHEDULE_ID);
+		assertNotNull(actual);
+		assertEquals(SHEDULE_ID, actual.getId());
+		assertEquals(START_DATE, actual.getStartDateTime());
+		assertEquals(END_DATE, actual.getEndDateTime());
+		TennisCourtDTO tennisCourt = actual.getTennisCourt();
+		assertNotNull(tennisCourt);
+		assertEquals(TENNIS_COURT_ID, tennisCourt.getId());
+		assertEquals(TENNIS_COURT_NAME, tennisCourt.getName());
+	}
+
+	@Test
+	public void shouldReturnScheduleNotFoundWhenFindSchedule() {
+
+		doReturn(Optional.empty()).when(scheduleRepository).findById(SHEDULE_ID);
+		try {
+			scheduleService.findSchedule(SHEDULE_ID);
+		} catch (EntityNotFoundException ex) {
+			assertNotNull(ex);
+			assertEquals("Schedule not found", ex.getMessage());
+		}
+	}
+
+	@Test
+	public void shouldReturnScheduleDTOWhenFindSchedulesByTennisCourtId() {
+		List<Schedule> schedules = new ArrayList<>();
+		schedules.add(schedule);
+		doReturn(schedules).when(scheduleRepository).findByTennisCourt_IdOrderByStartDateTime(TENNIS_COURT_ID);
+		List<ScheduleDTO> actualList = scheduleService.findSchedulesByTennisCourtId(TENNIS_COURT_ID);
+		assertNotNull(actualList);
+		ScheduleDTO actual = actualList.get(0);
+		assertNotNull(actual);
+		assertEquals(SHEDULE_ID, actual.getId());
+		assertEquals(START_DATE, actual.getStartDateTime());
+		assertEquals(END_DATE, actual.getEndDateTime());
+		TennisCourtDTO tennisCourt = actual.getTennisCourt();
+		assertNotNull(tennisCourt);
+		assertEquals(TENNIS_COURT_ID, tennisCourt.getId());
+		assertEquals(TENNIS_COURT_NAME, tennisCourt.getName());
 	}
 
 	private CreateScheduleRequestDTO buildCreateScheduleRequestDTO() {

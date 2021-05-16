@@ -15,9 +15,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @ExtendWith(MockitoExtension.class)
 public class GuestControllerTest {
@@ -32,21 +29,10 @@ public class GuestControllerTest {
 	@Mock
 	private GuestServiceImpl guestService;
 
-	@Mock
-	ServletUriComponentsBuilder servletUriComponentsBuilder;
-
-	@Mock
-	UriComponentsBuilder uriComponentsBuilder;
-
-	@Mock
-	UriComponents uriComponents;
-
-	private GuestRequest guestRequest;
 	private GuestDTO guestDTO;
 
 	@BeforeEach
 	public void setUp() {
-		guestRequest = buildGuestRequest();
 		guestDTO = buildGuestDTO();
 	}
 
@@ -116,12 +102,6 @@ public class GuestControllerTest {
 		assertNotNull(status);
 		assertEquals(SUCEESS_STRING, status);
 
-	}
-
-	private GuestRequest buildGuestRequest() {
-		GuestRequest guestRquest = new GuestRequest();
-		guestRquest.setName(GUEST_NAME);
-		return guestRquest;
 	}
 
 	private GuestDTO buildGuestDTO() {

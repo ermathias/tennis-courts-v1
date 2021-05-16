@@ -51,22 +51,6 @@ public class ReservationService {
 		return ReservationMapper.RESERVATION_MAPPER_INSTANCE.map(this.cancel(reservationId));
 	}
 
-	public BigDecimal getRefundValue(Reservation reservation) {
-		long hours = ChronoUnit.HOURS.between(LocalDateTime.now(), reservation.getSchedule().getStartDateTime());
-
-		if (hours >= 24) {
-			return reservation.getValue();
-		} else if (hours < 24 && hours >= 12) {
-			return reservation.getValue().multiply(new BigDecimal(0.75));
-		} else if (hours < 12 && hours >= 2) {
-			return reservation.getValue().multiply(new BigDecimal(0.5));
-		} else if (hours < 2 && hours >= 0) {
-			return reservation.getValue().multiply(new BigDecimal(0.25));
-		} else {
-			return BigDecimal.ZERO;
-		}
-	}
-
 	public ReservationDTO rescheduleReservation(Long previousReservationId, Long scheduleId) {
 		Reservation previousReservation = cancel(previousReservationId);
 
@@ -127,6 +111,22 @@ public class ReservationService {
 			return this.updateReservation(reservation, refundValue, ReservationStatus.CANCELLED);
 
 		}).orElseThrow(() -> new EntityNotFoundException("Reservation not found."));
+	}
+
+	private BigDecimal getRefundValue(Reservation reservation) {
+		long hours = ChronoUnit.HOURS.between(LocalDateTime.now(), reservation.getSchedule().getStartDateTime());
+
+		if (hours >= 24) {
+			return reservation.getValue();
+		} else if (hours < 24 && hours >= 12) {
+			return reservation.getValue().multiply(new BigDecimal(0.75));
+		} else if (hours < 12 && hours >= 2) {
+			return reservation.getValue().multiply(new BigDecimal(0.5));
+		} else if (hours < 2 && hours >= 0) {
+			return reservation.getValue().multiply(new BigDecimal(0.25));
+		} else {
+			return BigDecimal.ZERO;
+		}
 	}
 
 }
