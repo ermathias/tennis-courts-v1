@@ -2,7 +2,9 @@ package com.tenniscourts.schedules;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.tenniscourts.exceptions.EntityNotFoundException;
+import com.tenniscourts.tenniscourts.TennisCourt;
 import com.tenniscourts.tenniscourts.TennisCourtDTO;
+import com.tenniscourts.tenniscourts.TennisCourtRepository;
 import com.tenniscourts.tenniscourts.TennisCourtService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,19 +22,22 @@ public class ScheduleService {
 
     private final ScheduleMapper scheduleMapper;
 
-   // private final TennisCourtService tennisCourtService;
+    private final TennisCourtRepository tennisCourtRepository;
 
 
     public ScheduleDTO addSchedule(Long tennisCourtId, CreateScheduleRequestDTO createScheduleRequestDTO) {
-        //TODO: implement addSchedule
-//        TennisCourtDTO tennisCourtDTO = tennisCourtService.findTennisCourtById(tennisCourtId);
-//        ScheduleDTO scheduleDTO = new ScheduleDTO();
-//        scheduleDTO.setTennisCourtDTO(tennisCourtDTO);
-//        scheduleDTO.setStartDateTime(createScheduleRequestDTO.startDateTime);
-//        scheduleDTO.setEndDateTime(createScheduleRequestDTO.endDateTime);
-//        scheduleDTO.setTennisCourtId(tennisCourtId);
-//        return ScheduleMapper.map(scheduleRepository.saveAndFlush(ScheduleMapper.map(scheduleDTO)));
-        return null;
+
+        TennisCourt tennisCourtData = tennisCourtRepository.findById(tennisCourtId).orElseThrow(() -> {
+            throw new IllegalArgumentException("Tennis Court Info Not Found");
+        });
+
+        Schedule schedule = Schedule.builder()
+                .tennisCourt(tennisCourtData)
+                .startDateTime(createScheduleRequestDTO.getStartDateTime())
+                .endDateTime(createScheduleRequestDTO.getStartDateTime().plusHours(1L))
+                .build();
+
+        return scheduleMapper.map(scheduleRepository.saveAndFlush(schedule));
 
     }
 

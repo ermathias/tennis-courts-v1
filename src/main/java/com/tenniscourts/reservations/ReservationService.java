@@ -90,21 +90,35 @@ public class ReservationService {
     public BigDecimal getRefundValue(Reservation reservation) {
         long hours = ChronoUnit.HOURS.between(LocalDateTime.now(), reservation.getSchedule().getStartDateTime());
 
+        BigDecimal reservationPercent = null;
+        BigDecimal reservationValue = reservation.getValue();
         if (hours >= 24) {
-            return reservation.getValue();
+            return reservationValue;
+        } else if (hours >= 12) {
+            reservationPercent = new BigDecimal(0.25);
+        } else if (hours >= 2) {
+            reservationPercent = new BigDecimal(0.5);
+        } else if (hours >= 0) {
+            reservationPercent = new BigDecimal(0.75);
+        } else {
+            return BigDecimal.ZERO;
         }
 
-        return BigDecimal.ZERO;
+        return reservationValue.multiply(reservationPercent);
     }
 
     /*TODO: This method actually not fully working, find a way to fix the issue when it's throwing the error:
             "Cannot reschedule to the same slot.*/
     public ReservationDTO rescheduleReservation(Long previousReservationId, Long scheduleId) {
-        Reservation previousReservation = cancel(previousReservationId);
 
+        Reservation previousReservation = reservationRepository.findById(previousReservationId).orElseThrow(() -> {
+            throw new IllegalArgumentException("Reservation Not Exists");
+        });
+        cancel(previousReservationId);
         if (scheduleId.equals(previousReservation.getSchedule().getId())) {
             throw new IllegalArgumentException("Cannot reschedule to the same slot.");
         }
+
 
         previousReservation.setReservationStatus(ReservationStatus.RESCHEDULED);
         reservationRepository.save(previousReservation);

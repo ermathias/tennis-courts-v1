@@ -35,6 +35,11 @@ public class GuestService {
         });
     }
 
+    public List<Guest> findAllGuests (){
+        return guestRepository.findAll();
+    }
+
+
     public List<GuestUserDTO> findUserByName(String name) {
         return guestMapper.map(guestRepository.findByName(name));
     }

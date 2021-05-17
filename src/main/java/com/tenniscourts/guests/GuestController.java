@@ -45,6 +45,12 @@ import java.util.List;
         }
 
 
+        @ApiOperation("Show all Guests")
+        @GetMapping
+        public ResponseEntity<List<Guest>> showGuestsList() {
+            return ResponseEntity.ok(guestService.findAllGuests());
+        }
+
 }
 
 
