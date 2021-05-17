@@ -37,7 +37,7 @@ public class ScheduleService {
 	public ScheduleDTO addSchedule(Long tennisCourtId, CreateScheduleRequestDTO createScheduleRequestDTO) {
 		log.info("Inserting schedule");
 		if (createScheduleRequestDTO.getStartDateTime().isBefore(LocalDateTime.now())) {
-			throw new InvalidDateTimeException("Can not schedule Future Date");
+			throw new InvalidDateTimeException("Can schedule only Future Date");
 		}
 		findSchedulesByTennisCourtId(tennisCourtId).forEach(schedule -> {
 			checkExistance(schedule, createScheduleRequestDTO.getStartDateTime());

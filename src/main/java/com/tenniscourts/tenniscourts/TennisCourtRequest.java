@@ -1,6 +1,6 @@
 package com.tenniscourts.tenniscourts;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 public class TennisCourtRequest {
 
-    @NotNull
-    private String name;
+	@NotBlank(message = "Name should not empty")
+	private String name;
 }

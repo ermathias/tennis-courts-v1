@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 
 @ExtendWith(MockitoExtension.class)
 public class GuestControllerTest {
@@ -28,6 +29,9 @@ public class GuestControllerTest {
 
 	@Mock
 	private GuestServiceImpl guestService;
+
+	@Mock
+	BindingResult bindingResult;
 
 	private GuestDTO guestDTO;
 
@@ -67,7 +71,7 @@ public class GuestControllerTest {
 	@Test
 	public void shouldReurnGuestWhenModify() {
 		doReturn(guestDTO).when(guestService).modifyGuest(guestDTO);
-		ResponseEntity<GuestDTO> responseEntity = guestController.modifyGuest(guestDTO);
+		ResponseEntity<GuestDTO> responseEntity = guestController.modifyGuest(guestDTO, bindingResult);
 		assertNotNull(responseEntity);
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		GuestDTO guestDTO = responseEntity.getBody();

@@ -32,6 +32,7 @@ public class GuestServiceImpl implements GuestService {
 	@Override
 	public GuestDTO modifyGuest(GuestDTO guestDTO) {
 		Guest guest = GuestMapper.GUEST_MAPPER_INSTANCE.map(findGuestById(guestDTO.getId()));
+		guest.setName(guestDTO.getName());
 		return GuestMapper.GUEST_MAPPER_INSTANCE.map(guestRepository.saveAndFlush(guest));
 	}
 

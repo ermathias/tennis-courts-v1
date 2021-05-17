@@ -1,6 +1,10 @@
 package com.tenniscourts.tenniscourts;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +29,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping("/tennis-courts")
 @Api(value = SwaggerConfig.TENNIS_COURTS_VALUE, tags = SwaggerConfig.TENNIS_COURTS_ENDPOINT)
+@Validated
 public class TennisCourtController extends BaseRestController {
 
 	private final TennisCourtService tennisCourtService;
@@ -43,7 +48,8 @@ public class TennisCourtController extends BaseRestController {
 
 	})
 	@PostMapping
-	public ResponseEntity<Void> addTennisCourt(@RequestBody TennisCourtRequest tennisCourtRequest) {
+	public ResponseEntity<Void> addTennisCourt(@RequestBody @Valid TennisCourtRequest tennisCourtRequest,
+			BindingResult bindingResult) {
 		return ResponseEntity.created(locationByEntity(tennisCourtService.addTennisCourt(tennisCourtRequest).getId()))
 				.build();
 	}

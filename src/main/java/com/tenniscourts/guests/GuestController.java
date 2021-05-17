@@ -2,9 +2,12 @@ package com.tenniscourts.guests;
 
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/guests")
 @Api(value = SwaggerConfig.GUEST_VALUE, tags = SwaggerConfig.GUEST_ENDPOINT)
 @Slf4j
+@Validated
 public class GuestController extends BaseRestController {
 
 	private final GuestService guestService;
@@ -52,7 +56,7 @@ public class GuestController extends BaseRestController {
 
 	})
 	@PostMapping
-	public ResponseEntity<Void> addGuest(@RequestBody GuestRequest guestRequest) {
+	public ResponseEntity<Void> addGuest(@RequestBody @Valid GuestRequest guestRequest, BindingResult bindingResultS) {
 		log.info("Adding guest");
 		return ResponseEntity.created(locationByEntity(guestService.addGuest(guestRequest).getId())).build();
 	}
@@ -101,7 +105,7 @@ public class GuestController extends BaseRestController {
 			@ApiResponse(code = SwaggerConfig.NOT_FOUND_CODE, message = SwaggerConfig.NOT_FOUND_MESSAGE),
 			@ApiResponse(code = SwaggerConfig.INTERNAL_SERVER_ERROR_CODE, message = SwaggerConfig.INTERNAL_SERVER_ERROR_MESSAGE) })
 	@PutMapping
-	public ResponseEntity<GuestDTO> modifyGuest(@RequestBody GuestDTO guestDTO) {
+	public ResponseEntity<GuestDTO> modifyGuest(@RequestBody @Valid GuestDTO guestDTO, BindingResult bindingResult) {
 		log.info("Started modifying guest");
 		return ResponseEntity.ok(guestService.modifyGuest(guestDTO));
 	}
