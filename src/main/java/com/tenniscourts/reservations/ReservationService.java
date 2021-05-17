@@ -1,12 +1,21 @@
 package com.tenniscourts.reservations;
 
 import com.tenniscourts.exceptions.EntityNotFoundException;
+import com.tenniscourts.guests.Guest;
+import com.tenniscourts.guests.GuestMapper;
+import com.tenniscourts.guests.GuestService;
+import com.tenniscourts.schedules.Schedule;
+import com.tenniscourts.schedules.ScheduleMapper;
+import com.tenniscourts.schedules.ScheduleService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -16,8 +25,25 @@ public class ReservationService {
 
     private final ReservationMapper reservationMapper;
 
+    private final GuestService guestService;
+
+    private final ScheduleService scheduleService;
+
+    private final GuestMapper guestMapper;
+
+    private final ScheduleMapper scheduleMapper;
     public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
-        throw new UnsupportedOperationException();
+
+        BigDecimal reservationAmt =  new BigDecimal(10);
+        Guest guest = guestMapper.map(guestService.findUser(createReservationRequestDTO.getGuestId()));
+        Schedule schedule = scheduleMapper.map(scheduleService.findSchedule(createReservationRequestDTO.getScheduleId()));
+        Reservation reservation = new Reservation();
+        reservation.setGuest(guest);
+        reservation.setSchedule(schedule);
+        reservation.setValue(reservationAmt);
+        reservation.setRefundValue(reservationAmt);
+        return reservationMapper.map(reservationRepository.saveAndFlush(reservation));
+
     }
 
     public ReservationDTO findReservation(Long reservationId) {
@@ -89,5 +115,9 @@ public class ReservationService {
                 .build());
         newReservation.setPreviousReservation(reservationMapper.map(previousReservation));
         return newReservation;
+    }
+
+    public List<ReservationDTO> findAllReservation() {
+        return reservationMapper.map(reservationRepository.findAll());
     }
 }
