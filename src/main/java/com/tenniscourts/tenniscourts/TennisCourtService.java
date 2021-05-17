@@ -1,33 +1,58 @@
 package com.tenniscourts.tenniscourts;
 
-import com.tenniscourts.exceptions.EntityNotFoundException;
-import com.tenniscourts.schedules.ScheduleService;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import com.tenniscourts.exceptions.EntityNotFoundException;
+import com.tenniscourts.schedules.ScheduleService;
+
+import lombok.RequiredArgsConstructor;
+
+/**
+ * Tennis Court Service
+ */
+
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class TennisCourtService {
 
-    private final TennisCourtRepository tennisCourtRepository;
+	private final TennisCourtRepository tennisCourtRepository;
 
-    private final ScheduleService scheduleService;
+	private final ScheduleService scheduleService;
 
-    private final TennisCourtMapper tennisCourtMapper;
+	/**
+	 * Method to Add Tennis Court
+	 * 
+	 * @param tennisCourtRequest
+	 * @return {@link TennisCourtDTO}
+	 */
+	public TennisCourtDTO addTennisCourt(TennisCourtRequest tennisCourtRequest) {
+		return TennisCourtMapper.TENNIS_COURT_MAPPER_INSTANCE.map(tennisCourtRepository
+				.saveAndFlush(TennisCourtMapper.TENNIS_COURT_MAPPER_INSTANCE.map(tennisCourtRequest)));
+	}
 
-    public TennisCourtDTO addTennisCourt(TennisCourtDTO tennisCourt) {
-        return tennisCourtMapper.map(tennisCourtRepository.saveAndFlush(tennisCourtMapper.map(tennisCourt)));
-    }
+	/**
+	 * Method to find Tennis Court By Id
+	 * 
+	 * @param id
+	 * @return {@link TennisCourtDTO}
+	 */
+	public TennisCourtDTO findTennisCourtById(Long id) throws EntityNotFoundException {
 
-    public TennisCourtDTO findTennisCourtById(Long id) {
-        return tennisCourtRepository.findById(id).map(tennisCourtMapper::map).orElseThrow(() -> {
-            throw new EntityNotFoundException("Tennis Court not found.");
-        });
-    }
+		return tennisCourtRepository.findById(id).map(TennisCourtMapper.TENNIS_COURT_MAPPER_INSTANCE::map)
+				.orElseThrow(() -> new EntityNotFoundException("Tennis Court not found."));
 
-    public TennisCourtDTO findTennisCourtWithSchedulesById(Long tennisCourtId) {
-        TennisCourtDTO tennisCourtDTO = findTennisCourtById(tennisCourtId);
-        tennisCourtDTO.setTennisCourtSchedules(scheduleService.findSchedulesByTennisCourtId(tennisCourtId));
-        return tennisCourtDTO;
-    }
+	}
+
+	/**
+	 * Method to find tennis court with schedule By Id
+	 * 
+	 * @param tennisCourtId
+	 * @return {@link TennisCourtDTO}
+	 */
+	public TennisCourtDTO findTennisCourtWithSchedulesById(Long tennisCourtId) {
+
+		TennisCourtDTO tennisCourtDTO = findTennisCourtById(tennisCourtId);
+		tennisCourtDTO.setTennisCourtSchedules(scheduleService.findSchedulesByTennisCourtId(tennisCourtId));
+		return tennisCourtDTO;
+	}
 }

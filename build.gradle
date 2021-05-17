@@ -25,6 +25,7 @@ configurations {
     providedRuntime
 }
 
+
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-starter-jersey')
@@ -42,4 +43,8 @@ dependencies {
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
     implementation group: 'org.mapstruct', name: 'mapstruct-jdk8', version: '1.2.0.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.2.0.Final'
+}
+
+sourceSets {
+  main.java.srcDirs += "build/generated/sources/annotationProcessor/java/main"
 }

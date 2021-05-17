@@ -1,18 +1,26 @@
 package com.tenniscourts.reservations;
 
+import java.util.List;
+
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
+import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface ReservationMapper {
 
-    Reservation map(ReservationDTO source);
+	public static final ReservationMapper RESERVATION_MAPPER_INSTANCE = Mappers.getMapper(ReservationMapper.class);
 
-    @InheritInverseConfiguration
-    ReservationDTO map(Reservation source);
+	Reservation map(ReservationDTO source);
 
-    @Mapping(target = "guest.id", source = "guestId")
-    @Mapping(target = "schedule.id", source = "scheduleId")
-    Reservation map(CreateReservationRequestDTO source);
+	@Mapping(target = "guestId", source = "guest.id")
+	@Mapping(target = "scheduledId", source = "schedule.id")
+	ReservationDTO map(Reservation source);
+
+	Reservation map(CreateReservationRequestDTO source);
+
+	List<ReservationDTO> map(List<Reservation> reservations);
+
 }
