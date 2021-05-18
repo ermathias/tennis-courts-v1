@@ -23,8 +23,14 @@ public class ScheduleController extends BaseRestController {
 
     @ApiOperation(value = "Add schedules for Tennis Court", response = Void.class)
     @PostMapping("/schedule")
-    public ResponseEntity<Void> addScheduleTennisCourt(CreateScheduleRequestDTO createScheduleRequestDTO) {
-        return ResponseEntity.created(locationByEntity(scheduleService.addSchedule(createScheduleRequestDTO.getTennisCourtId(), createScheduleRequestDTO).getId())).build();
+
+    public ResponseEntity<Void> addScheduleTennisCourt(Long tennisCourtId, String startDate, String endDate) {
+
+        LocalDateTime sDate = LocalDateTime.parse(startDate);
+        LocalDateTime eDate = LocalDateTime.parse(endDate);
+
+        return ResponseEntity.created(locationByEntity(scheduleService.addSchedule(tennisCourtId,  CreateScheduleRequestDTO.builder().startDateTime(sDate).endDateTime(eDate).build()).getId())).build();
+
     }
 
     @ApiOperation(value = "Find Schedules by Dates", response = Iterable.class)
