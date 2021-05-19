@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.2.3.RELEASE'
+        springBootVersion = '2.2.3.RELEASE'        
     }
     repositories {
         mavenCentral()
@@ -10,11 +10,15 @@ buildscript {
     }
 }
 
+
+plugins {
+    id "com.diffplug.eclipse.apt" version "3.26.0" // Only for Eclipse
+}
+
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'war'
-
 version = '0.0.1-SNAPSHOT'
 
 repositories {
@@ -35,11 +39,22 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
     testCompile('org.springframework.boot:spring-boot-starter-test')
-    testCompile('org.springframework.restdocs:spring-restdocs-mockmvc')
+    testCompile('org.springframework.restdocs:spring-restdocs-mockmvc')	
+    compileOnly('org.mapstruct:mapstruct-processor:1.4.2.Final')
+	annotationProcessor('org.mapstruct:mapstruct-processor:1.4.2.Final')   
+	compile('io.springfox:springfox-swagger2:2.9.2') {
+    exclude group: 'org.mapstruct', module: 'mapstruct'
+} 
+
 
     compile group: 'com.h2database', name: 'h2', version: '1.4.197'
-    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
-    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'    
     implementation group: 'org.mapstruct', name: 'mapstruct-jdk8', version: '1.2.0.Final'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.2.0.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.2.0.Final'    
+    compileJava {
+    options.annotationProcessorPath = configurations.annotationProcessor
+    options.setAnnotationProcessorGeneratedSourcesDirectory(file("$projectDir/src/main/java"))
+
+}
+    
 }
