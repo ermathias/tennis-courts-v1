@@ -42,4 +42,12 @@ public class Reservation extends BaseEntity<Long> {
     private ReservationStatus reservationStatus = ReservationStatus.READY_TO_PLAY;
 
     private BigDecimal refundValue;
+
+    public boolean isAvailableToScheduling() {
+        return ReservationStatus.getStatusAvailableToScheduling().contains(this.reservationStatus);
+    }
+
+    public boolean isUnavailableToScheduling() {
+        return ReservationStatus.getStatusUnavailableToScheduling().contains(this.reservationStatus);
+    }
 }
