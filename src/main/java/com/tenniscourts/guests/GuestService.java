@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
-@Service
+@Service("Guest service")
 public class GuestService {
 
     private static final String GUEST_NOT_FOUND = "Guest not found in the system.";

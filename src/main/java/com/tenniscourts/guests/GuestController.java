@@ -23,7 +23,8 @@ public class GuestController extends BaseRestController {
     @ApiOperation("Add a new guest to the system")
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<GuestDTO> addGuest(@Valid @RequestBody NewGuestDTO newGuestDTO) {
-        return ResponseEntity.created(locationByEntity(guestService.addGuest(newGuestDTO).getId())).build();
+        GuestDTO newGuest = guestService.addGuest(newGuestDTO);
+        return ResponseEntity.created(locationByEntity(newGuest.getId())).body(newGuest);
     }
 
     @ApiOperation("List all guests in the system")
