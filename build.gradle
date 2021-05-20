@@ -30,10 +30,11 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-jersey')
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-web-services')
+    compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
     runtime('com.h2database:h2')
     compileOnly('org.projectlombok:lombok')
     annotationProcessor("org.projectlombok:lombok")
-    providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
+    compile("org.springframework.boot:spring-boot-starter-tomcat")
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.restdocs:spring-restdocs-mockmvc')
 
@@ -41,5 +42,6 @@ dependencies {
     compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
     implementation group: 'org.mapstruct', name: 'mapstruct-jdk8', version: '1.2.0.Final'
+    implementation group: 'io.swagger', name: 'swagger-jersey2-jaxrs', version: '1.5.8'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.2.0.Final'
 }
