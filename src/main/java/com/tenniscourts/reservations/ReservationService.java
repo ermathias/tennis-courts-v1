@@ -3,11 +3,13 @@ package com.tenniscourts.reservations;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import com.tenniscourts.reservations.fee.*;
 import org.springframework.stereotype.Service;
 
 import com.tenniscourts.exceptions.EntityNotFoundException;
@@ -109,13 +111,10 @@ public class ReservationService {
     }
 
     public BigDecimal getRefundValue(Reservation reservation) {
-        long hours = ChronoUnit.HOURS.between(LocalDateTime.now(), reservation.getSchedule().getStartDateTime());
+        List<ReservationFee> feeRules = Arrays.asList(new FeeRuleBelowTwoHours(), new FeeRuleGreaterThanTwoHours(),
+                new FeeRuleGreaterThanTwelveHours(), new FeeRuleGreaterThanTwentyFourHours());
 
-        if (hours >= 24) {
-            return reservation.getValue();
-        }
-
-        return BigDecimal.ZERO;
+        return new CalculateReservationRefund(feeRules).verifyApplicabilityAndCalculate(reservation);
     }
 
     /*TODO: This method actually not fully working, find a way to fix the issue when it's throwing the error:
