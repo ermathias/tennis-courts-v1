@@ -42,15 +42,12 @@ public class Schedule extends BaseEntity<Long> {
     @NotNull
     private LocalDateTime endDateTime;
 
-    @OneToMany
-    private List<Reservation> reservations;
+    @OneToMany(mappedBy = "schedule")
+    private List<Reservation> reservations = new ArrayList<>();
 
-    public void addReservation(Reservation reservation) {
-        if (this.reservations == null) {
-            this.reservations = new ArrayList<>();
-        }
-
-        reservation.setSchedule(this);
-        this.reservations.add(reservation);
+    public Schedule(TennisCourt tennisCourt, LocalDateTime startDateTime) {
+        this.tennisCourt = tennisCourt;
+        this.startDateTime = startDateTime;
+        this.endDateTime = startDateTime.plusHours(1);
     }
 }
