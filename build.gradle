@@ -7,6 +7,8 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.16.20'
+        apt "org.projectlombok:lombok:1.16.20"
     }
 }
 
@@ -30,6 +32,7 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-jersey')
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-web-services')
+    compile('org.apache.commons:commons-lang3:3.11')
     runtime('com.h2database:h2')
     compileOnly('org.projectlombok:lombok')
     annotationProcessor("org.projectlombok:lombok")
