@@ -30,9 +30,41 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true, exclude = "reservations")
 public class Schedule extends BaseEntity<Long> {
 
+    public TennisCourt getTennisCourt() {
+        return tennisCourt;
+    }
+
+    public void setTennisCourt(TennisCourt tennisCourt) {
+        this.tennisCourt = tennisCourt;
+    }
+
+    public LocalDateTime getStartDateTime() {
+        return startDateTime;
+    }
+
+    public void setStartDateTime(LocalDateTime startDateTime) {
+        this.startDateTime = startDateTime;
+    }
+
     @ManyToOne
     @NotNull
     private TennisCourt tennisCourt;
+
+    public LocalDateTime getEndDateTime() {
+        return endDateTime;
+    }
+
+    public void setEndDateTime(LocalDateTime endDateTime) {
+        this.endDateTime = endDateTime;
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
 
     @Column
     @NotNull
@@ -42,6 +74,17 @@ public class Schedule extends BaseEntity<Long> {
     @NotNull
     private LocalDateTime endDateTime;
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    @Column
+    @NotNull
+    private long id;
     @OneToMany
     private List<Reservation> reservations;
 

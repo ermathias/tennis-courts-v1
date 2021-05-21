@@ -7,21 +7,69 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import com.tenniscourts.exceptions.BusinessException;
+import com.tenniscourts.guests.Guest;
+import com.tenniscourts.guests.GuestRepository;
+import com.tenniscourts.schedules.Schedule;
+import com.tenniscourts.schedules.ScheduleRepository;
+import org.apache.commons.lang3.Validate;
+import org.springframework.util.CollectionUtils;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Service
 @AllArgsConstructor
 public class ReservationService {
 
-    private final ReservationRepository reservationRepository;
+    private  ReservationRepository reservationRepository;
 
-    private final ReservationMapper reservationMapper;
+    private  ReservationMapper reservationMapper;
+    private  GuestRepository guestRepository;
+    private  ScheduleRepository scheduleRepository;
+
+    public void bulkBookReservations(List<CreateReservationRequestDTO> createReservationRequestDTOS) {
+        Validate.notEmpty(createReservationRequestDTOS, "The list can't empty");
+        createReservationRequestDTOS.forEach(this::bookReservation);
+    }
 
     public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
         throw new UnsupportedOperationException();
+        Validate.notNull(createReservationRequestDTO.getGuestId(), "Guest id can't be null");
+        Validate.notNull(createReservationRequestDTO.getScheduleId(), "Schedule id can't be null");
+
+        Guest guest = guestRepository.findById(createReservationRequestDTO.getGuestId()).orElseThrow(() -> {
+            throw new EntityNotFoundException("Guest not found.");
+        });
+
+        Schedule schedule = scheduleRepository.findById(createReservationRequestDTO.getScheduleId()).orElseThrow(() -> {
+            throw new EntityNotFoundException("Schedule not found");
+        });
+
+        if (!CollectionUtils.isEmpty(schedule.getReservations())) {
+            throw new BusinessException("Schedule is not free");
+        }
+
+        Reservation reservation = Reservation.builder()
+                .guest(guest)
+                .schedule(schedule)
+                .reservationStatus(ReservationStatus.READY_TO_PLAY)
+                .value(BigDecimal.valueOf(10))
+                .build();
+
+        reservationRepository.save(reservation);
+        schedule.addReservation(reservation);
+        scheduleRepository.save(schedule);
+
+        return reservationMapper.map(reservation);
     }
 
     public ReservationDTO findReservation(Long reservationId) {
-        return reservationRepository.findById(reservationId).map(reservationMapper::map).orElseThrow(() -> {
+        return reservationMapper.map(findReservationOrThrow(reservationId));
+    }
+
+    private Reservation findReservationOrThrow(Long reservationId) {
+        return reservationRepository.findById(reservationId).orElseThrow(() -> {
             throw new EntityNotFoundException("Reservation not found.");
         });
     }
@@ -36,6 +84,9 @@ public class ReservationService {
             this.validateCancellation(reservation);
 
             BigDecimal refundValue = getRefundValue(reservation);
+            Schedule schedule = reservation.getSchedule();
+            schedule.setReservations(new ArrayList<>());
+            scheduleRepository.save(schedule);
             return this.updateReservation(reservation, refundValue, ReservationStatus.CANCELLED);
 
         }).orElseThrow(() -> {
@@ -68,8 +119,16 @@ public class ReservationService {
             return reservation.getValue();
         }
 
-        return BigDecimal.ZERO;
+        if (hours >= 12) {
+            return reservation.getValue().multiply(BigDecimal.valueOf(0.75));
+        }
+        if (hours >= 2) {
+            return reservation.getValue().multiply(BigDecimal.valueOf(0.5));
+        }
+
+        return reservation.getValue().multiply(BigDecimal.valueOf(0.25));
     }
+
 
     /*TODO: This method actually not fully working, find a way to fix the issue when it's throwing the error:
             "Cannot reschedule to the same slot.*/
@@ -80,6 +139,7 @@ public class ReservationService {
             throw new IllegalArgumentException("Cannot reschedule to the same slot.");
         }
 
+        previousReservation = cancel(previousReservationId);
         previousReservation.setReservationStatus(ReservationStatus.RESCHEDULED);
         reservationRepository.save(previousReservation);
 
@@ -89,5 +149,21 @@ public class ReservationService {
                 .build());
         newReservation.setPreviousReservation(reservationMapper.map(previousReservation));
         return newReservation;
+    }
+
+    public ReservationDTO markAsCompleted(Long reservationId) {
+        Validate.notNull(reservationId, "Reservation id can't be null");
+        Reservation reservation = findReservationOrThrow(reservationId);
+
+        Validate.isTrue(reservation.getReservationStatus().equals(ReservationStatus.READY_TO_PLAY),
+                "Invalid reservation status change");
+
+        reservation.setReservationStatus(ReservationStatus.COMPLETED);
+        reservation.setRefundValue(reservation.getValue());
+        reservation.setValue(BigDecimal.ZERO);
+
+        reservationRepository.save(reservation);
+
+        return reservationMapper.map(reservation);
     }
 }

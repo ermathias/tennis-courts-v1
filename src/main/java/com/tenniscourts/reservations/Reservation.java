@@ -28,8 +28,32 @@ import java.math.BigDecimal;
 @Builder
 public class Reservation extends BaseEntity<Long> {
 
+    public Guest getGuest() {
+        return guest;
+    }
+
+    public void setGuest(Guest guest) {
+        this.guest = guest;
+    }
+
     @OneToOne
     private Guest guest;
+
+    public Schedule getSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(Schedule schedule) {
+        this.schedule = schedule;
+    }
+
+    public BigDecimal getValue() {
+        return value;
+    }
+
+    public void setValue(BigDecimal value) {
+        this.value = value;
+    }
 
     @ManyToOne
     @NotNull
@@ -38,8 +62,24 @@ public class Reservation extends BaseEntity<Long> {
     @NotNull
     private BigDecimal value;
 
+    public ReservationStatus getReservationStatus() {
+        return reservationStatus;
+    }
+
+    public void setReservationStatus(ReservationStatus reservationStatus) {
+        this.reservationStatus = reservationStatus;
+    }
+
     @NotNull
     private ReservationStatus reservationStatus = ReservationStatus.READY_TO_PLAY;
+
+    public BigDecimal getRefundValue() {
+        return refundValue;
+    }
+
+    public void setRefundValue(BigDecimal refundValue) {
+        this.refundValue = refundValue;
+    }
 
     private BigDecimal refundValue;
 }
