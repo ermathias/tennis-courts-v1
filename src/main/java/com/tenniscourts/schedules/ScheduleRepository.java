@@ -9,12 +9,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-@Repository
-@Transactional
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
-	@Query("select sc from Schedule where sc.tennisCourt=(:id) order by sc.startDateTime")
-    List<Schedule> findByTennisCourt_IdOrderByStartDateTime(@Param ("id") Long id);
-	@Query("select sc from Schedule where sc.startDateTime=(:strtDt) and sc.endDateTime=(:endDt)")
-    List<Schedule> findSchedulesByStartDateTimeEndDateTime(@Param ("strtDt") LocalDateTime startDate, @Param ("endDt") LocalDateTime endDate);
+    List<Schedule> findByTennisCourt_IdOrderByStartDateTime(Long id);
+    List<Schedule> findByStartDateTimeAndEndDateTime(LocalDateTime startDate, LocalDateTime endDate);
 }

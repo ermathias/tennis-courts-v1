@@ -1,6 +1,7 @@
 package com.tenniscourts.schedules;
 
 import lombok.AllArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import com.tenniscourts.exceptions.EntityNotFoundException;
@@ -25,7 +26,7 @@ public class ScheduleService {
     }
 
     public List<ScheduleDTO> findSchedulesByDates(LocalDateTime startDate, LocalDateTime endDate) {
-    	return scheduleMapper.map(scheduleRepository.findSchedulesByStartDateTimeEndDateTime(startDate, endDate));
+    	return scheduleMapper.map(scheduleRepository.findByStartDateTimeAndEndDateTime(startDate, endDate));
     }
 
     public ScheduleDTO findSchedule(Long scheduleId) {

@@ -1,7 +1,6 @@
 package com.tenniscourts.reservations;
 
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -22,10 +21,9 @@ public class ReservationService {
     private final ReservationMapper reservationMapper;
 
     public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) { 
-		ReservationDTO reservationDTO = ReservationDTO.builder().guestId(createReservationRequestDTO.getGuestId())
-				.scheduledId(createReservationRequestDTO.getScheduleId()).build();
+		ReservationDTO reservationDTO = reservationMapper.map(reservationMapper.map(createReservationRequestDTO));
 		reservationDTO.setValue(new BigDecimal(10));//10$ charge
-    	return reservationMapper.map(reservationRepository.saveAndFlush(reservationMapper.map(reservationDTO)));
+		return reservationMapper.map(reservationRepository.saveAndFlush(reservationMapper.map(reservationDTO)));
     }
 
     public ReservationDTO findReservation(Long reservationId) {
