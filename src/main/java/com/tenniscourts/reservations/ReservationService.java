@@ -12,9 +12,9 @@ import java.time.temporal.ChronoUnit;
 @AllArgsConstructor
 public class ReservationService {
 
-    private final ReservationRepository reservationRepository;
+    private ReservationRepository reservationRepository;
 
-    private final ReservationMapper reservationMapper;
+    private  ReservationMapper reservationMapper;
 
     public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
         throw new UnsupportedOperationException();
@@ -64,30 +64,42 @@ public class ReservationService {
     public BigDecimal getRefundValue(Reservation reservation) {
         long hours = ChronoUnit.HOURS.between(LocalDateTime.now(), reservation.getSchedule().getStartDateTime());
 
-        if (hours >= 24) {
-            return reservation.getValue();
-        }
+        LocalTime now = LocalTime.now();
+		if (hours >= 24) {
+			return reservation.getValue();
+		} else if (now.isBefore(LocalTime.MAX) && now.isAfter(LocalTime.NOON)) {
+			return reservation.getValue().multiply(new BigDecimal(25)).divide(new BigDecimal(100));
+		} else if (now.isBefore(LocalTime.NOON) && now.isAfter(LocalTime.of(2, 0))) {
+			return reservation.getValue().multiply(new BigDecimal(50)).divide(new BigDecimal(100));
+		} else if (now.isBefore(LocalTime.of(2, 0)) && now.isAfter(LocalTime.MIN)) {
+			return reservation.getValue().multiply(new BigDecimal(75)).divide(new BigDecimal(100));
+		}
 
-        return BigDecimal.ZERO;
+		return BigDecimal.ZERO;
+
     }
-
-    /*TODO: This method actually not fully working, find a way to fix the issue when it's throwing the error:
-            "Cannot reschedule to the same slot.*/
+    
     public ReservationDTO rescheduleReservation(Long previousReservationId, Long scheduleId) {
-        Reservation previousReservation = cancel(previousReservationId);
 
-        if (scheduleId.equals(previousReservation.getSchedule().getId())) {
-            throw new IllegalArgumentException("Cannot reschedule to the same slot.");
-        }
+		Optional<Reservation> previousReservation = reservationRepository.findById(previousReservationId);
 
-        previousReservation.setReservationStatus(ReservationStatus.RESCHEDULED);
-        reservationRepository.save(previousReservation);
+		if (previousReservation.isPresent()) {
 
-        ReservationDTO newReservation = bookReservation(CreateReservationRequestDTO.builder()
-                .guestId(previousReservation.getGuest().getId())
-                .scheduleId(scheduleId)
-                .build());
-        newReservation.setPreviousReservation(reservationMapper.map(previousReservation));
-        return newReservation;
-    }
+			if (scheduleId.equals(previousReservation.get().getSchedule().getId())) {
+				throw new IllegalArgumentException("Cannot reschedule to the same slot.");
+			} else {
+				Reservation reservation = cancel(previousReservationId);
+				reservation.setReservationStatus(ReservationStatus.RESCHEDULED);
+				reservationRepository.save(reservation);
+
+				ReservationDTO newReservation = bookReservation(CreateReservationRequestDTO.builder()
+						.guestId(reservation.getGuest().getId()).scheduleId(scheduleId).build());
+				newReservation.setPreviousReservation(reservationMapper.map(reservation));
+				return newReservation;
+			}
+
+		}
+		return null;
+
+	}
 }
