@@ -37,7 +37,7 @@ public class ScheduleController extends BaseRestController {
 
     @ApiOperation("Search for a schedule by schedule id")
     @GetMapping(path = "id/{id}")
-    public ResponseEntity<ScheduleDTO> findByScheduleId(Long scheduleId) throws EntityNotFoundException {
+    public ResponseEntity<ScheduleDTO> findByScheduleId(@Valid @PathVariable("id") Long scheduleId) throws EntityNotFoundException {
         return ResponseEntity.ok(scheduleService.findSchedule(scheduleId));
     }
 }

@@ -29,8 +29,8 @@ public class TennisCourtController extends BaseRestController {
     }
 
     @ApiOperation("Get a tennis court by id")
-    @GetMapping
-    public ResponseEntity<TennisCourtDTO> findTennisCourtById(Long tennisCourtId) {
+    @GetMapping(path = "id/{id}")
+    public ResponseEntity<TennisCourtDTO> findTennisCourtById(@PathVariable Long tennisCourtId) {
         return ResponseEntity.ok(tennisCourtService.findTennisCourtById(tennisCourtId));
     }
 
