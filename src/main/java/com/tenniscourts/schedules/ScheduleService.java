@@ -1,6 +1,7 @@
 package com.tenniscourts.schedules;
 
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -10,12 +11,13 @@ import java.util.List;
 @AllArgsConstructor
 public class ScheduleService {
 
+    @Autowired
     private final ScheduleRepository scheduleRepository;
 
+    @Autowired
     private final ScheduleMapper scheduleMapper;
 
     public ScheduleDTO addSchedule(Long tennisCourtId, CreateScheduleRequestDTO createScheduleRequestDTO) {
-        //TODO: implement addSchedule
         return null;
     }
 
