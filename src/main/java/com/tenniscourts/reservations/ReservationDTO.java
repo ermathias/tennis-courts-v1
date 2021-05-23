@@ -1,5 +1,6 @@
 package com.tenniscourts.reservations;
 
+import com.tenniscourts.guests.KiranjyothiPRDTO;
 import com.tenniscourts.schedules.ScheduleDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +23,8 @@ public class ReservationDTO {
     private Long id;
 
     private ScheduleDTO schedule;
+
+    private KiranjyothiPRDTO guest;
 
     private String reservationStatus;
 
