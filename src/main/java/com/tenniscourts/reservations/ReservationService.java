@@ -17,7 +17,7 @@ public class ReservationService {
     private final ReservationMapper reservationMapper;
 
     public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
-        throw new UnsupportedOperationException();
+        return reservationMapper.map(reservationRepository.saveAndFlush(reservationMapper.map(createReservationRequestDTO)));
     }
 
     public ReservationDTO findReservation(Long reservationId) {
@@ -87,6 +87,8 @@ public class ReservationService {
         ReservationDTO newReservation = bookReservation(CreateReservationRequestDTO.builder()
                 .guestId(previousReservation.getGuest().getId())
                 .scheduleId(scheduleId)
+                .reservationStatus(ReservationStatus.READY_TO_PLAY)
+                .value(previousReservation.getRefundValue())
                 .build());
         newReservation.setPreviousReservation(reservationMapper.map(previousReservation));
         return newReservation;
