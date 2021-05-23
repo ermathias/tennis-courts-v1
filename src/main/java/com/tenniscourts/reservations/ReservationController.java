@@ -2,11 +2,14 @@ package com.tenniscourts.reservations;
 
 import com.tenniscourts.config.BaseRestController;
 import lombok.AllArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
 @AllArgsConstructor
 public class ReservationController extends BaseRestController {
 
+	
     private final ReservationService reservationService;
 
     public ResponseEntity<Void> bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
