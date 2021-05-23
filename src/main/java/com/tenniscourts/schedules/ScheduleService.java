@@ -16,7 +16,7 @@ public class ScheduleService {
 
     private static final String TENNIS_COURT_NOT_FOUND = "Tennis Court not found in the system.";
     private static final String SCHEDULE_TENNIS_COURT_IN_THE_PAST = "User trying to schedule tennis court in the past";
-    private static final String SCHEDULE_NOT_FOUND = "Schedule not found in the system.";
+    public static final String SCHEDULE_NOT_FOUND = "Schedule not found in the system.";
 
 
     @Autowired

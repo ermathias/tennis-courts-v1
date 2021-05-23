@@ -12,7 +12,7 @@ import java.util.Optional;
 @Service("Guest service")
 public class GuestService {
 
-    private static final String GUEST_NOT_FOUND = "Guest not found in the system.";
+    public static final String GUEST_NOT_FOUND = "Guest not found in the system.";
 
     @Autowired
     private GuestRepository guestRepository;
