@@ -26,6 +26,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true, exclude = "reservations")
 public class Schedule extends BaseEntity<Long> {
 
+    @ManyToOne
     @NotNull
     private TennisCourt tennisCourt;
 
