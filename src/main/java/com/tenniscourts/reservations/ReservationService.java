@@ -1,12 +1,16 @@
 package com.tenniscourts.reservations;
 
-import com.tenniscourts.exceptions.EntityNotFoundException;
-import lombok.AllArgsConstructor;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import com.tenniscourts.exceptions.EntityNotFoundException;
+
+import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
@@ -16,8 +20,10 @@ public class ReservationService {
 
     private final ReservationMapper reservationMapper;
 
-    public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
-        throw new UnsupportedOperationException();
+    public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) { 
+		ReservationDTO reservationDTO = reservationMapper.map(reservationMapper.map(createReservationRequestDTO));
+		reservationDTO.setValue(new BigDecimal(10));//10$ charge
+		return reservationMapper.map(reservationRepository.saveAndFlush(reservationMapper.map(reservationDTO)));
     }
 
     public ReservationDTO findReservation(Long reservationId) {
@@ -63,9 +69,18 @@ public class ReservationService {
 
     public BigDecimal getRefundValue(Reservation reservation) {
         long hours = ChronoUnit.HOURS.between(LocalDateTime.now(), reservation.getSchedule().getStartDateTime());
-
+        long mins = ChronoUnit.MINUTES.between(LocalDateTime.now(), reservation.getSchedule().getStartDateTime());
+        long advMins_75 = ChronoUnit.MINUTES.between(LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 01)), LocalDateTime.of(LocalDate.now(), LocalTime.of(02, 00)));
+        long advMins_50 = ChronoUnit.MINUTES.between(LocalDateTime.of(LocalDate.now(), LocalTime.of(2, 00)), LocalDateTime.of(LocalDate.now(), LocalTime.of(11, 59)));
+        long advMins_25 = ChronoUnit.MINUTES.between(LocalDateTime.of(LocalDate.now(), LocalTime.of(12, 01)), LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59)));
         if (hours >= 24) {
             return reservation.getValue();
+        } else if (mins >= advMins_25) {
+        	return reservation.getValue().multiply(new BigDecimal(0.75));
+        } else if (mins >= advMins_50) {
+        	return reservation.getValue().multiply(new BigDecimal(0.5));
+        } else if (mins >= advMins_75) {
+        	return reservation.getValue().multiply(new BigDecimal(0.25));
         }
 
         return BigDecimal.ZERO;
