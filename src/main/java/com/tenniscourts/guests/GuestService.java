@@ -23,8 +23,8 @@ public class GuestService {
         return guestMapper.map(guestRepository.findAll());
     }
 
-    public List<GuestDTO> findByName(String name){
-        return guestMapper.map(guestRepository.findByName(name));
+    public List<GuestDTO> findByNameContaining(String name){
+        return guestMapper.map(guestRepository.findByNameContaining(name));
     }
 
     public GuestDTO findById(Long guestId) throws EntityNotFoundException {

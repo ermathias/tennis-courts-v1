@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("api/guests/")
+@RequestMapping("api/guests")
 public class GuestController extends BaseRestController {
 
     @Autowired
@@ -27,13 +27,13 @@ public class GuestController extends BaseRestController {
     }
 
     @ApiOperation("Fetch guests by name")
-    @GetMapping("/{name}")
+    @GetMapping(path = "name/{name}")
     public ResponseEntity<List<GuestDTO>> findByName(@PathVariable String name) {
-        return ResponseEntity.ok(guestService.findByName(name));
+        return ResponseEntity.ok(guestService.findByNameContaining(name));
     }
 
     @ApiOperation("Fetch guest by id")
-    @GetMapping("{id}")
+    @GetMapping(path = "id/{id}")
     public ResponseEntity<GuestDTO> findById(@PathVariable Long id) {
         return ResponseEntity.ok(guestService.findById(id));
     }
