@@ -2,6 +2,7 @@ package com.tenniscourts.guests;
 
 import lombok.*;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 
 @Getter

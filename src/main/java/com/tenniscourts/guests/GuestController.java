@@ -14,24 +14,39 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("api/guests")
+@RequestMapping("api/guests/")
 public class GuestController extends BaseRestController {
 
     @Autowired
     private final GuestService guestService;
 
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Ok" )})
     @ApiOperation("Fetch all the guests")
     @GetMapping
-    public List<GuestDTO> getAllGuests(){
-        return guestService.getAllGuests();
+    public ResponseEntity<List<GuestDTO>> getAll(){
+        return ResponseEntity.ok(guestService.getAll());
     }
 
-    @PostMapping
+    @ApiOperation("Fetch guests by name")
+    @GetMapping("/{name}")
+    public ResponseEntity<List<GuestDTO>> findByName(@PathVariable String name) {
+        return ResponseEntity.ok(guestService.findByName(name));
+    }
+
+    @ApiOperation("Fetch guest by id")
+    @GetMapping("{id}")
+    public ResponseEntity<GuestDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(guestService.findById(id));
+    }
+
     @ApiOperation("Saves a guest to the database")
-    @ApiResponses(value = { @ApiResponse( code = 201, message = "Guest saved" ) } )
-    public ResponseEntity<Void> saveGuest(@Valid @RequestBody GuestDTO guestDTO ) {
-        return ResponseEntity.created(locationByEntity(guestService.saveGuest(guestDTO).getId())).build();
+    @PostMapping("/add")
+    public ResponseEntity<Void> save(@Valid @RequestBody GuestDTO guestDTO ) {
+        return ResponseEntity.created(locationByEntity(guestService.save(guestDTO).getId())).build();
+    }
+
+    @DeleteMapping
+    public void delete(Long guestId){
+        guestService.delete(guestId);
     }
 
 }

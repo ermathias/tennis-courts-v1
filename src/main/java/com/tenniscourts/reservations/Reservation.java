@@ -28,7 +28,7 @@ public class Reservation extends BaseEntity<Long> {
     @OneToOne
     private Guest guest;
 
-    @OneToMany
+    @ManyToOne
     @NotNull
     private Schedule schedule;
 
