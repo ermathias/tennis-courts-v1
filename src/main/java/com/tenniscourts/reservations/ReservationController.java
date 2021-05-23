@@ -3,25 +3,35 @@ package com.tenniscourts.reservations;
 import com.tenniscourts.config.BaseRestController;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @AllArgsConstructor
+@RestController
+@RequestMapping(value = "/reservations")
 public class ReservationController extends BaseRestController {
 
     private final ReservationService reservationService;
 
-    public ResponseEntity<Void> bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
+    @PostMapping
+    public ResponseEntity<Void> bookReservation(@RequestBody CreateReservationRequestDTO createReservationRequestDTO) {
         return ResponseEntity.created(locationByEntity(reservationService.bookReservation(createReservationRequestDTO).getId())).build();
     }
 
+    @GetMapping
     public ResponseEntity<ReservationDTO> findReservation(Long reservationId) {
         return ResponseEntity.ok(reservationService.findReservation(reservationId));
     }
 
-    public ResponseEntity<ReservationDTO> cancelReservation(Long reservationId) {
+
+    @PutMapping(value = "/{reservationId}")
+    public ResponseEntity<ReservationDTO> cancelReservation(@PathVariable Long reservationId) {
         return ResponseEntity.ok(reservationService.cancelReservation(reservationId));
     }
 
-    public ResponseEntity<ReservationDTO> rescheduleReservation(Long reservationId, Long scheduleId) {
-        return ResponseEntity.ok(reservationService.rescheduleReservation(reservationId, scheduleId));
+    @PutMapping
+    public ResponseEntity<ReservationDTO> rescheduleReservation(@RequestBody @Valid UpdateReservationRequestDTO updateReservationRequestDTO) {
+        return ResponseEntity.ok(reservationService.rescheduleReservation(updateReservationRequestDTO.getReservationId(), updateReservationRequestDTO.getScheduleId()));
     }
 }
