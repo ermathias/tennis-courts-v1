@@ -18,4 +18,32 @@ public class CreateScheduleRequestDTO {
     @NotNull
     private LocalDateTime startDateTime;
 
+	/**
+	 * @return the tennisCourtId
+	 */
+	public Long getTennisCourtId() {
+		return tennisCourtId;
+	}
+
+	/**
+	 * @param tennisCourtId the tennisCourtId to set
+	 */
+	public void setTennisCourtId(Long tennisCourtId) {
+		this.tennisCourtId = tennisCourtId;
+	}
+
+	/**
+	 * @return the startDateTime
+	 */
+	public LocalDateTime getStartDateTime() {
+		return startDateTime;
+	}
+
+	/**
+	 * @param startDateTime the startDateTime to set
+	 */
+	public void setStartDateTime(LocalDateTime startDateTime) {
+		this.startDateTime = startDateTime;
+	}
+
 }
