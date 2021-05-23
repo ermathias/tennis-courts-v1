@@ -1,6 +1,7 @@
 package com.tenniscourts.schedules;
 
 import com.tenniscourts.config.BaseRestController;
+import com.tenniscourts.exceptions.EntityNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +35,9 @@ public class ScheduleController extends BaseRestController {
         return ResponseEntity.ok(scheduleService.findAllByStartDateTimeAndEndDateTime(LocalDateTime.of(startDate, LocalTime.of(0, 0)), LocalDateTime.of(endDate, LocalTime.of(23, 59))));
     }
 
+    @ApiOperation("Search for a schedule by schedule id")
     @GetMapping(path = "id/{id}")
-    public ResponseEntity<ScheduleDTO> findByScheduleId(Long scheduleId) {
+    public ResponseEntity<ScheduleDTO> findByScheduleId(Long scheduleId) throws EntityNotFoundException {
         return ResponseEntity.ok(scheduleService.findSchedule(scheduleId));
     }
 }

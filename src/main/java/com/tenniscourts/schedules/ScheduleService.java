@@ -41,7 +41,7 @@ public class ScheduleService {
 
     private Schedule buildSchedule(TennisCourt tennisCourt, CreateScheduleRequestDTO dto){
         final Long NUMBER_ONE = 1L;
-       return new Schedule.ScheduleBuilder()
+        return new Schedule.ScheduleBuilder()
                 .tennisCourt(tennisCourt)
                 .startDateTime(dto.getStartDateTime())
                 .endDateTime(dto.getStartDateTime().plusHours(NUMBER_ONE))
@@ -52,12 +52,18 @@ public class ScheduleService {
         return scheduleMapper.map(scheduleRepository.findAllByStartDateTimeAndEndDateTime(startDate, endDate));
     }
 
-    public ScheduleDTO findSchedule(Long scheduleId) {
-        //TODO: implement
-        return null;
+    public ScheduleDTO findSchedule(Long scheduleId) throws EntityNotFoundException {
+        try{
+            if(!scheduleRepository.findById(scheduleId).isPresent())
+                throw new EntityNotFoundException("Schedule does not exist");
+        } catch (Throwable t) {
+            throw new EntityNotFoundException(t.getMessage());
+        }
+        return scheduleMapper.map(scheduleRepository.findById(scheduleId).get());
     }
 
     public List<ScheduleDTO> findSchedulesByTennisCourtId(Long tennisCourtId) {
+
         return scheduleMapper.map(scheduleRepository.findByTennisCourt_IdOrderByStartDateTime(tennisCourtId));
     }
 }
