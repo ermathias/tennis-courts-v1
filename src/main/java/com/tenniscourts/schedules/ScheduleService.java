@@ -1,5 +1,8 @@
 package com.tenniscourts.schedules;
 
+import com.tenniscourts.exceptions.EntityNotFoundException;
+import com.tenniscourts.tenniscourts.TennisCourt;
+import com.tenniscourts.tenniscourts.TennisCourtRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,15 +18,38 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
 
     @Autowired
+    private final TennisCourtRepository tennisCourtRepository;
+
+    @Autowired
     private final ScheduleMapper scheduleMapper;
 
-    public ScheduleDTO addSchedule(Long tennisCourtId, CreateScheduleRequestDTO createScheduleRequestDTO) {
-        return null;
+    public ScheduleDTO addSchedule(Long tennisCourtId, CreateScheduleRequestDTO createScheduleRequestDTO) throws EntityNotFoundException {
+        Schedule newSchedule;
+        try{
+            if(!tennisCourtRepository.existsById(tennisCourtId)){
+                throw new EntityNotFoundException("Tennis court does not exist");
+            }
+        } catch (Throwable t){
+            throw new EntityNotFoundException(t.getMessage());
+        }
+
+        TennisCourt tennisCourt = tennisCourtRepository.findById(tennisCourtId).get();
+        newSchedule = buildSchedule(tennisCourt, createScheduleRequestDTO);
+
+        return scheduleMapper.map(scheduleRepository.save(newSchedule));
     }
 
-    public List<ScheduleDTO> findSchedulesByDates(LocalDateTime startDate, LocalDateTime endDate) {
-        //TODO: implement
-        return null;
+    private Schedule buildSchedule(TennisCourt tennisCourt, CreateScheduleRequestDTO dto){
+        final Long NUMBER_ONE = 1L;
+       return new Schedule.ScheduleBuilder()
+                .tennisCourt(tennisCourt)
+                .startDateTime(dto.getStartDateTime())
+                .endDateTime(dto.getStartDateTime().plusHours(NUMBER_ONE))
+                .build();
+    }
+
+    public List<ScheduleDTO> findAllByStartDateTimeAndEndDateTime(LocalDateTime startDate, LocalDateTime endDate) {
+        return scheduleMapper.map(scheduleRepository.findAllByStartDateTimeAndEndDateTime(startDate, endDate));
     }
 
     public ScheduleDTO findSchedule(Long scheduleId) {
