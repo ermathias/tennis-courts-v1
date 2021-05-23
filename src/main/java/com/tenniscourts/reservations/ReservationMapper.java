@@ -7,12 +7,14 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ReservationMapper {
 
-    Reservation map(ReservationDTO source);
+	Reservation map(ReservationDTO source);
 
-    @InheritInverseConfiguration
-    ReservationDTO map(Reservation source);
+	@InheritInverseConfiguration
+	ReservationDTO map(Reservation source);
 
-    @Mapping(target = "guest.id", source = "guestId")
-    @Mapping(target = "schedule.id", source = "scheduleId")
-    Reservation map(CreateReservationRequestDTO source);
+	@Mapping(target = "guest.id", source = "guestId")
+
+	@Mapping(target = "schedule.id", source = "scheduleId")
+	Reservation map(CreateReservationRequestDTO source);
+
 }

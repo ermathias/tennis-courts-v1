@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -31,7 +32,7 @@ public class Reservation extends BaseEntity<Long> {
     @OneToOne
     private Guest guest;
 
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.ALL)
     @NotNull
     private Schedule schedule;
 
