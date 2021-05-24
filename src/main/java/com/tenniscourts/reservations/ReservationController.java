@@ -2,6 +2,7 @@ package com.tenniscourts.reservations;
 
 import com.tenniscourts.config.BaseRestController;
 import com.tenniscourts.exceptions.EntityNotFoundException;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@ApiOperation("CRUD Api for reservations")
+@Api(value = "API for reservations")
 @RequestMapping("api/reservations")
 public class ReservationController extends BaseRestController {
 

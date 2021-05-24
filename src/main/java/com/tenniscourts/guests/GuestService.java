@@ -35,7 +35,12 @@ public class GuestService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public GuestDTO save(GuestDTO guestDTO){
+    public GuestDTO save(GuestDTO guestDTO) throws EntityNotFoundException {
+        if(!guestDTO.getId().equals(null)){
+            if(!guestRepository.findById(guestDTO.getId()).isPresent()){
+                throw new EntityNotFoundException("Couldn't update guest\nCaused by: Guest not found");
+            }
+        }
         return guestMapper.map(guestRepository.save(guestMapper.map(guestDTO)));
     }
 
