@@ -10,4 +10,6 @@ public interface TennisCourtMapper {
 
     @InheritInverseConfiguration
     TennisCourt map(TennisCourtDTO source);
+
+    TennisCourt map(CreateTennisCourtRequestDTO tennisCourt);
 }
