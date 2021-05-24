@@ -39,6 +39,7 @@ public class Reservation extends BaseEntity<Long> {
     private BigDecimal value;
 
     @NotNull
+    @Builder.Default
     private ReservationStatus reservationStatus = ReservationStatus.READY_TO_PLAY;
 
     private BigDecimal refundValue;

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,5 +23,12 @@ public class CreateReservationRequestDTO {
 
     @NotNull
     private Long scheduleId;
+
+    @NotNull
+    private BigDecimal value;
+
+    @NotNull
+    @Builder.Default
+    private ReservationStatus reservationStatus = ReservationStatus.READY_TO_PLAY;
 
 }
