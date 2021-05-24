@@ -1,27 +1,53 @@
 package com.tenniscourts.reservations;
 
 import com.tenniscourts.config.BaseRestController;
+import com.tenniscourts.exceptions.EntityNotFoundException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @AllArgsConstructor
+@RestController
+@Api(value = "API for reservations")
+@RequestMapping("api/reservations")
 public class ReservationController extends BaseRestController {
 
+    @Autowired
     private final ReservationService reservationService;
 
-    public ResponseEntity<Void> bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
+    @ApiOperation("Adds a new reservation")
+    @PostMapping("add")
+    public ResponseEntity<Void> bookReservation(@Valid @RequestBody CreateReservationRequestDTO createReservationRequestDTO) {
         return ResponseEntity.created(locationByEntity(reservationService.bookReservation(createReservationRequestDTO).getId())).build();
     }
 
-    public ResponseEntity<ReservationDTO> findReservation(Long reservationId) {
+    @ApiOperation("Search for a reservation by reservation id")
+    @GetMapping(path = "find/{id}")
+    public ResponseEntity<ReservationDTO> findReservation(@PathVariable("id") Long reservationId) throws EntityNotFoundException {
         return ResponseEntity.ok(reservationService.findReservation(reservationId));
     }
 
-    public ResponseEntity<ReservationDTO> cancelReservation(Long reservationId) {
+    @ApiOperation("Get all reservations")
+    @GetMapping
+    public ResponseEntity<List<ReservationDTO>> findAllReservations(){
+        return ResponseEntity.ok(reservationService.findAllReservations());
+    }
+
+    @ApiOperation("Cancel a reservation")
+    @GetMapping("cancelreservation/{id}")
+    public ResponseEntity<ReservationDTO> cancelReservation(@PathVariable Long reservationId) throws EntityNotFoundException{
         return ResponseEntity.ok(reservationService.cancelReservation(reservationId));
     }
 
-    public ResponseEntity<ReservationDTO> rescheduleReservation(Long reservationId, Long scheduleId) {
+    @ApiOperation("Reschedule a reservation")
+    @PutMapping("{reservationId}/{scheduleId}")
+    public ResponseEntity<ReservationDTO> rescheduleReservation(@PathVariable("reservationId") Long reservationId,@PathVariable("scheduleId")  Long scheduleId) {
         return ResponseEntity.ok(reservationService.rescheduleReservation(reservationId, scheduleId));
     }
 }
