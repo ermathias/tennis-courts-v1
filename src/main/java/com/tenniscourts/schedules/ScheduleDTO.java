@@ -14,7 +14,7 @@ public class ScheduleDTO {
 
     private Long id;
 
-    private TennisCourtDTO tennisCourt;
+    // private TennisCourtDTO tennisCourt;
 
     @NotNull
     private Long tennisCourtId;
