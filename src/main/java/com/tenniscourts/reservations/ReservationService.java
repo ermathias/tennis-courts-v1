@@ -1,13 +1,15 @@
 package com.tenniscourts.reservations;
 
+import com.google.common.reflect.TypeToken;
 import com.tenniscourts.exceptions.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import org.mapstruct.Mapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -19,6 +21,15 @@ public class ReservationService {
 
     public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
         return reservationMapper.map(reservationRepository.save(reservationMapper.map(createReservationRequestDTO)));
+
+//        List<Reservation> reservations = createReservationRequestDTO
+//            .stream().map(x -> reservationMapper.map(x))
+//            .collect(Collectors.toList());
+//        reservations = reservationRepository.saveAll(reservations);
+//        List<ReservationDTO> reservationsDTO = reservations.stream()
+//                .map(x -> reservationMapper.map(x))
+//                .collect(Collectors.toList());
+
     }
 
     public ReservationDTO findReservation(Long reservationId) {

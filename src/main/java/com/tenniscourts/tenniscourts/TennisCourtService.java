@@ -30,9 +30,11 @@ public class TennisCourtService {
     public List<TennisCourtDTO> findTennisCourtByName(String name) {
         List<TennisCourt> tennisCourts = tennisCourtRepository.findByName(name);
         List<TennisCourtDTO> tennisCourtDTOList = new ArrayList();
+
         if(tennisCourts.isEmpty()){
             throw new EntityNotFoundException("Tennis Court not found.");
         }
+
         for (TennisCourt tennisCourt: tennisCourts)
         {
             TennisCourtDTO tennisCourtDTO = tennisCourtMapper.map(tennisCourt);
