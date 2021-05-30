@@ -53,4 +53,60 @@ public class Schedule extends BaseEntity<Long> {
         reservation.setSchedule(this);
         this.reservations.add(reservation);
     }
+
+	/**
+	 * @return the tennisCourt
+	 */
+	public TennisCourt getTennisCourt() {
+		return tennisCourt;
+	}
+
+	/**
+	 * @param tennisCourt the tennisCourt to set
+	 */
+	public void setTennisCourt(TennisCourt tennisCourt) {
+		this.tennisCourt = tennisCourt;
+	}
+
+	/**
+	 * @return the startDateTime
+	 */
+	public LocalDateTime getStartDateTime() {
+		return startDateTime;
+	}
+
+	/**
+	 * @param startDateTime the startDateTime to set
+	 */
+	public void setStartDateTime(LocalDateTime startDateTime) {
+		this.startDateTime = startDateTime;
+	}
+
+	/**
+	 * @return the endDateTime
+	 */
+	public LocalDateTime getEndDateTime() {
+		return endDateTime;
+	}
+
+	/**
+	 * @param endDateTime the endDateTime to set
+	 */
+	public void setEndDateTime(LocalDateTime endDateTime) {
+		this.endDateTime = endDateTime;
+	}
+
+	/**
+	 * @return the reservations
+	 */
+	public List<Reservation> getReservations() {
+		return reservations;
+	}
+
+	/**
+	 * @param reservations the reservations to set
+	 */
+	public void setReservations(List<Reservation> reservations) {
+		this.reservations = reservations;
+	}
 }

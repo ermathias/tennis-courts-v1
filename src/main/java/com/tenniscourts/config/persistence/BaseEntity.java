@@ -47,4 +47,102 @@ public class BaseEntity<ID> implements Serializable {
     @CreatedDate
     private LocalDateTime dateCreate;
 
+	/**
+	 * @return the id
+	 */
+	public ID getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(ID id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the ipNumberUpdate
+	 */
+	public String getIpNumberUpdate() {
+		return ipNumberUpdate;
+	}
+
+	/**
+	 * @param ipNumberUpdate the ipNumberUpdate to set
+	 */
+	public void setIpNumberUpdate(String ipNumberUpdate) {
+		this.ipNumberUpdate = ipNumberUpdate;
+	}
+
+	/**
+	 * @return the userCreate
+	 */
+	public Long getUserCreate() {
+		return userCreate;
+	}
+
+	/**
+	 * @param userCreate the userCreate to set
+	 */
+	public void setUserCreate(Long userCreate) {
+		this.userCreate = userCreate;
+	}
+
+	/**
+	 * @return the userUpdate
+	 */
+	public Long getUserUpdate() {
+		return userUpdate;
+	}
+
+	/**
+	 * @param userUpdate the userUpdate to set
+	 */
+	public void setUserUpdate(Long userUpdate) {
+		this.userUpdate = userUpdate;
+	}
+
+	/**
+	 * @return the dateUpdate
+	 */
+	public LocalDateTime getDateUpdate() {
+		return dateUpdate;
+	}
+
+	/**
+	 * @param dateUpdate the dateUpdate to set
+	 */
+	public void setDateUpdate(LocalDateTime dateUpdate) {
+		this.dateUpdate = dateUpdate;
+	}
+
+	/**
+	 * @return the ipNumberCreate
+	 */
+	public String getIpNumberCreate() {
+		return ipNumberCreate;
+	}
+
+	/**
+	 * @param ipNumberCreate the ipNumberCreate to set
+	 */
+	public void setIpNumberCreate(String ipNumberCreate) {
+		this.ipNumberCreate = ipNumberCreate;
+	}
+
+	/**
+	 * @return the dateCreate
+	 */
+	public LocalDateTime getDateCreate() {
+		return dateCreate;
+	}
+
+	/**
+	 * @param dateCreate the dateCreate to set
+	 */
+	public void setDateCreate(LocalDateTime dateCreate) {
+		this.dateCreate = dateCreate;
+	}
+
 }

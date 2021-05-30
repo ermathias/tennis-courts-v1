@@ -36,10 +36,14 @@ dependencies {
     providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.restdocs:spring-restdocs-mockmvc')
+    
+    // For Swagger Implementation
+    implementation("io.springfox:springfox-boot-starter:3.0.0")
+	implementation("io.springfox:springfox-swagger-ui:2.9.2")
 
     compile group: 'com.h2database', name: 'h2', version: '1.4.197'
-    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
-    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+    //compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    //compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
     implementation group: 'org.mapstruct', name: 'mapstruct-jdk8', version: '1.2.0.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.2.0.Final'
 }
