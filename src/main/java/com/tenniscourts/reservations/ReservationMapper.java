@@ -4,6 +4,8 @@ import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface ReservationMapper {
 
@@ -11,6 +13,8 @@ public interface ReservationMapper {
 
     @InheritInverseConfiguration
     ReservationDTO map(Reservation source);
+
+    List<ReservationDTO> map(List<Reservation> source);
 
     @Mapping(target = "guest.id", source = "guestId")
     @Mapping(target = "schedule.id", source = "scheduleId")
