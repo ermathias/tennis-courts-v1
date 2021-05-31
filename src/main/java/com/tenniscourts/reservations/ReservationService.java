@@ -40,7 +40,6 @@ public class ReservationService {
         reservation.setGuest(guest);
         reservation.setSchedule(schedule);
         reservation.setValue(reservationAmount);
-        reservation.setRefundValue(reservationAmount);
         return reservationMapper.map(reservationRepository.saveAndFlush(reservation));
     }
 
