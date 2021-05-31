@@ -14,5 +14,6 @@ public interface ReservationMapper {
 
     @Mapping(target = "guest.id", source = "guestId")
     @Mapping(target = "schedule.id", source = "scheduleId")
+    @Mapping(target = "value", source = "reservationValue")
     Reservation map(CreateReservationRequestDTO source);
 }

@@ -45,6 +45,7 @@ public class Schedule extends BaseEntity<Long> {
     @OneToMany
     private List<Reservation> reservations;
 
+    // TODO: Fix this method in wrong place.
     public void addReservation(Reservation reservation) {
         if (this.reservations == null) {
             this.reservations = new ArrayList<>();
