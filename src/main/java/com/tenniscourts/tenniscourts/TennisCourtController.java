@@ -23,7 +23,7 @@ public class TennisCourtController extends BaseRestController {
         return ResponseEntity.created(locationByEntity(tennisCourtService.addTennisCourt(tennisCourtDTO).getId())).build();
     }
 
-    @GetMapping(value = "/{tennisCourtId}")
+    @GetMapping(value = "/tennis-court/{tennisCourtId}")
     @ApiOperation("Find a tennis court by id")
     @ApiResponse(code = 200, message = "Ok")
     @ApiParam(name = "includeSchedules", value = "Flag to include schedules related to the tennis court")

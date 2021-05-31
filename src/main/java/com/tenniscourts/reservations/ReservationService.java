@@ -33,13 +33,10 @@ public class ReservationService {
 
     public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
         Guest guest = guestMapper.map(guestService.findGuestById(createReservationRequestDTO.getGuestId()));
-        BigDecimal reservationAmount =  new BigDecimal(10);
-        System.out.println(guest);
         Schedule schedule = scheduleMapper.map(scheduleService.findSchedule(createReservationRequestDTO.getScheduleId()));
         Reservation reservation = new Reservation();
         reservation.setGuest(guest);
         reservation.setSchedule(schedule);
-        reservation.setValue(reservationAmount);
         return reservationMapper.map(reservationRepository.saveAndFlush(reservation));
     }
 
