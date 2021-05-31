@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @AllArgsConstructor
 @RestController
 @RequestMapping("/reservations")
@@ -19,18 +17,20 @@ public class ReservationController extends BaseRestController {
         return ResponseEntity.created(locationByEntity(reservationService.bookReservation(createReservationRequestDTO).getId())).build();
     }
 
-    @GetMapping("find")
-    public ResponseEntity<ReservationDTO> findReservation(Long reservationId) {
+    @GetMapping("find/{reservationId}")
+    public ResponseEntity<ReservationDTO> findReservation(@PathVariable ("reservationId") Long reservationId) {
         return ResponseEntity.ok(reservationService.findReservation(reservationId));
     }
 
-    @GetMapping("cancel")
-    public ResponseEntity<ReservationDTO> cancelReservation(Long reservationId) {
+    @GetMapping("/cancel/{reservationId}")
+    public ResponseEntity<ReservationDTO> cancelReservation(@PathVariable ("reservationId") Long reservationId) {
         return ResponseEntity.ok(reservationService.cancelReservation(reservationId));
     }
 
-    @PutMapping
-    public ResponseEntity<ReservationDTO> rescheduleReservation(Long reservationId, Long scheduleId) {
+    @PutMapping()
+    public ResponseEntity<ReservationDTO> rescheduleReservation(
+            @RequestParam(name = "reservationId") Long reservationId,
+            @RequestParam(name = "scheduleId") Long scheduleId) {
         return ResponseEntity.ok(reservationService.rescheduleReservation(reservationId, scheduleId));
     }
 }

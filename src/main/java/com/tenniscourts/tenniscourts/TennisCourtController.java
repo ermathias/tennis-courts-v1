@@ -17,25 +17,22 @@ public class TennisCourtController extends BaseRestController {
     private final TennisCourtService tennisCourtService;
     private final ScheduleService scheduleService;
 
-    //TODO: implement swagger
     @GetMapping("/id/{tennisCourtId}")
     public ResponseEntity<TennisCourtDTO> findTennisCourtById(@PathVariable ("tennisCourtId") Long tennisCourtId) {
         return ResponseEntity.ok(tennisCourtService.findTennisCourtById(tennisCourtId));
     }
 
-    //TODO: implement swagger
     @GetMapping("/name/{tennisCourtName}")
     public ResponseEntity<List<TennisCourtDTO>> findTennisCourtByName(@PathVariable ("tennisCourtName") String tennisCourtName) {
         return ResponseEntity.ok(tennisCourtService.findTennisCourtByName(tennisCourtName));
     }
 
-    //TODO: implement swagger
     @PostMapping
     public ResponseEntity<Void> addTennisCourt(@RequestBody TennisCourtDTO tennisCourtDTO) {
         return ResponseEntity.created(locationByEntity(tennisCourtService.addTennisCourt(tennisCourtDTO).getId())).build();
     }
 
-    //TODO: implement rest and swagger
+    @GetMapping("/schedules/{tennisCourtId}")
     public ResponseEntity<TennisCourtDTO> findTennisCourtWithSchedulesById(Long tennisCourtId) {
         return ResponseEntity.ok(tennisCourtService.findTennisCourtWithSchedulesById(tennisCourtId));
     }

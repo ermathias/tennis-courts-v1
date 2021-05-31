@@ -1,6 +1,7 @@
 package com.tenniscourts.reservations;
 
 import com.google.common.reflect.TypeToken;
+import com.tenniscourts.exceptions.BusinessException;
 import com.tenniscourts.exceptions.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,16 +21,11 @@ public class ReservationService {
     private final ReservationMapper reservationMapper;
 
     public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
-        return reservationMapper.map(reservationRepository.save(reservationMapper.map(createReservationRequestDTO)));
+        if  (BigDecimal.TEN.equals(createReservationRequestDTO.getReservationValue())){
+            return reservationMapper.map(reservationRepository.save(reservationMapper.map(createReservationRequestDTO)));
 
-//        List<Reservation> reservations = createReservationRequestDTO
-//            .stream().map(x -> reservationMapper.map(x))
-//            .collect(Collectors.toList());
-//        reservations = reservationRepository.saveAll(reservations);
-//        List<ReservationDTO> reservationsDTO = reservations.stream()
-//                .map(x -> reservationMapper.map(x))
-//                .collect(Collectors.toList());
-
+        }
+        throw new IllegalArgumentException("Reservation value should be $10.");
     }
 
     public ReservationDTO findReservation(Long reservationId) {
@@ -44,7 +40,6 @@ public class ReservationService {
 
     private Reservation cancel(Long reservationId) {
         return reservationRepository.findById(reservationId).map(reservation -> {
-
             this.validateCancellation(reservation);
 
             BigDecimal refundValue = getRefundValue(reservation);
@@ -64,6 +59,7 @@ public class ReservationService {
     }
 
     private void validateCancellation(Reservation reservation) {
+       //FIXME: THis verification is always being set because there is no statusReservation
         if (!ReservationStatus.READY_TO_PLAY.equals(reservation.getReservationStatus())) {
             throw new IllegalArgumentException("Cannot cancel/reschedule because it's not in ready to play status.");
         }
@@ -80,11 +76,24 @@ public class ReservationService {
             return reservation.getValue();
         }
 
+        if (hours >= 12 && hours < 24) {
+            return new BigDecimal(0.75).multiply(reservation.getValue());
+        }
+
+        if (hours >= 2 && hours < 12) {
+            return new BigDecimal(0.50).multiply(reservation.getValue());
+        }
+
+        long minuts = ChronoUnit.MINUTES.between(LocalDateTime.now(), reservation.getSchedule().getStartDateTime());
+
+        if (minuts >= 1 && minuts < 120) {
+            return new BigDecimal(0.25).multiply(reservation.getValue());
+        }
+
         return BigDecimal.ZERO;
     }
 
-    /*TODO: This method actually not fully working, find a way to fix the issue when it's throwing the error:
-            "Cannot reschedule to the same slot.*/
+
     public ReservationDTO rescheduleReservation(Long previousReservationId, Long scheduleId) {
         Reservation previousReservation = cancel(previousReservationId);
 
@@ -98,8 +107,9 @@ public class ReservationService {
         ReservationDTO newReservation = bookReservation(CreateReservationRequestDTO.builder()
                 .guestId(previousReservation.getGuest().getId())
                 .scheduleId(scheduleId)
+                .reservationValue(BigDecimal.valueOf(10))
                 .build());
         newReservation.setPreviousReservation(reservationMapper.map(previousReservation));
-        return newReservation;
+        return reservationMapper.map(reservationRepository.save(reservationMapper.map(newReservation)));
     }
 }
