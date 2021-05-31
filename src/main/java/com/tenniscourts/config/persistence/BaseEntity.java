@@ -3,6 +3,7 @@ package com.tenniscourts.config.persistence;
 import com.tenniscourts.audit.CustomAuditEntityListener;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
 @Setter
 @EqualsAndHashCode
 @EntityListeners(CustomAuditEntityListener.class)
+@NoArgsConstructor
 public class BaseEntity<ID> implements Serializable {
 
     @Id
@@ -46,5 +48,10 @@ public class BaseEntity<ID> implements Serializable {
     @Column
     @CreatedDate
     private LocalDateTime dateCreate;
+    
+    public BaseEntity(ID id) {
+    	this.id = id;
+    }
+    
 
 }
