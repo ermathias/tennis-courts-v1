@@ -46,5 +46,4 @@ public class BaseEntity<ID> implements Serializable {
     @Column
     @CreatedDate
     private LocalDateTime dateCreate;
-
 }

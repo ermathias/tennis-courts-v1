@@ -1,6 +1,7 @@
 package com.tenniscourts.schedules;
 
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -10,13 +11,18 @@ import java.util.List;
 @AllArgsConstructor
 public class ScheduleService {
 
-    private final ScheduleRepository scheduleRepository;
+    @Autowired
+    ScheduleRepository scheduleRepository;
 
-    private final ScheduleMapper scheduleMapper;
+    @Autowired
+    ScheduleMapper scheduleMapper;
 
     public ScheduleDTO addSchedule(Long tennisCourtId, CreateScheduleRequestDTO createScheduleRequestDTO) {
         //TODO: implement addSchedule
-        return null;
+        ScheduleDTO scheduleDto = new ScheduleDTO();
+        scheduleDto.setTennisCourtId(tennisCourtId);
+        scheduleDto.setStartDateTime(createScheduleRequestDTO.getStartDateTime());
+        return scheduleMapper.map(scheduleRepository.saveAndFlush(scheduleMapper.map(scheduleDto)));
     }
 
     public List<ScheduleDTO> findSchedulesByDates(LocalDateTime startDate, LocalDateTime endDate) {
@@ -31,5 +37,9 @@ public class ScheduleService {
 
     public List<ScheduleDTO> findSchedulesByTennisCourtId(Long tennisCourtId) {
         return scheduleMapper.map(scheduleRepository.findByTennisCourt_IdOrderByStartDateTime(tennisCourtId));
+    }
+
+    public Schedule findScheduleId(Long scheduleId) {
+        return scheduleRepository.findScheduleById(scheduleId);
     }
 }
