@@ -16,11 +16,19 @@ public class TennisCourtController extends BaseRestController {
 
     //TODO: implement rest and swagger
     public ResponseEntity<TennisCourtDTO> findTennisCourtById(Long tennisCourtId) {
-        return ResponseEntity.ok(tennisCourtService.findTennisCourtById(tennisCourtId));
+        try {
+            return ResponseEntity.ok(tennisCourtService.findTennisCourtById(tennisCourtId));
+        } catch (Throwable throwable) {
+            return null;
+        }
     }
 
     //TODO: implement rest and swagger
     public ResponseEntity<TennisCourtDTO> findTennisCourtWithSchedulesById(Long tennisCourtId) {
-        return ResponseEntity.ok(tennisCourtService.findTennisCourtWithSchedulesById(tennisCourtId));
+        try {
+            return ResponseEntity.ok(tennisCourtService.findTennisCourtWithSchedulesById(tennisCourtId));
+        } catch (Throwable throwable) {
+            return null;
+        }
     }
 }

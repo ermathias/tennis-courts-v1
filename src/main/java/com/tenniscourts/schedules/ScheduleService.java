@@ -14,19 +14,17 @@ public class ScheduleService {
 
     private final ScheduleMapper scheduleMapper;
 
-    public ScheduleDTO addSchedule(Long tennisCourtId, CreateScheduleRequestDTO createScheduleRequestDTO) {
-        //TODO: implement addSchedule
-        return null;
+    public ScheduleDTO addSchedule(Long tennisCourtId, ScheduleDTO scheduleDTO) {
+        scheduleRepository.save(scheduleMapper.map(scheduleDTO));
+        return scheduleDTO;
     }
 
     public List<ScheduleDTO> findSchedulesByDates(LocalDateTime startDate, LocalDateTime endDate) {
-        //TODO: implement
         return null;
     }
 
     public ScheduleDTO findSchedule(Long scheduleId) {
-        //TODO: implement
-        return null;
+        return scheduleMapper.map(scheduleRepository.findById(scheduleId).get());
     }
 
     public List<ScheduleDTO> findSchedulesByTennisCourtId(Long tennisCourtId) {

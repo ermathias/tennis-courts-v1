@@ -19,13 +19,13 @@ public class TennisCourtService {
         return tennisCourtMapper.map(tennisCourtRepository.saveAndFlush(tennisCourtMapper.map(tennisCourt)));
     }
 
-    public TennisCourtDTO findTennisCourtById(Long id) {
+    public TennisCourtDTO findTennisCourtById(Long id) throws Throwable {
         return tennisCourtRepository.findById(id).map(tennisCourtMapper::map).orElseThrow(() -> {
             throw new EntityNotFoundException("Tennis Court not found.");
         });
     }
 
-    public TennisCourtDTO findTennisCourtWithSchedulesById(Long tennisCourtId) {
+    public TennisCourtDTO findTennisCourtWithSchedulesById(Long tennisCourtId) throws Throwable {
         TennisCourtDTO tennisCourtDTO = findTennisCourtById(tennisCourtId);
         tennisCourtDTO.setTennisCourtSchedules(scheduleService.findSchedulesByTennisCourtId(tennisCourtId));
         return tennisCourtDTO;
