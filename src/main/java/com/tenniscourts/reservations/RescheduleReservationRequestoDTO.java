@@ -7,16 +7,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@Data
-public class CreateReservationRequestDTO {
-
-    @NotNull
-    private Long guestId;
-
-    @NotNull
-    private Long scheduleId;
+public class RescheduleReservationRequestoDTO {
+	
+	@NotNull
+	private Long reservationId;
+	
+	@NotNull
+	private Long scheduleId;
 
 }
