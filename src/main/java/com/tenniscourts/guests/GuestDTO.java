@@ -1,6 +1,5 @@
-package com.tenniscourts.tenniscourts;
+package com.tenniscourts.guests;
 
-import com.tenniscourts.schedules.ScheduleDTO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +9,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @Getter
 @Setter
@@ -18,15 +16,13 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TennisCourtDTO {
+public class GuestDTO {
 
     @ApiModelProperty(name = "id")
     private Long id;
 
-    @ApiModelProperty(name = "name", required = true)
-    @NotNull
+    @ApiModelProperty(name = "name", required = true, value = "Roger")
+    @NotNull(message = "Name cannot be null")
     private String name;
-
-    private List<ScheduleDTO> tennisCourtSchedules;
 
 }
