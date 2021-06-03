@@ -17,6 +17,11 @@ public class ReservationService {
     private final ReservationMapper reservationMapper;
 
     public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
+    	reservationRepository.createReservation(createReservationRequestDTO);
+    	ReservationDTO.builder()
+    	.createReservationRequestDTO.getGuestId()
+    	.createReservationRequestDTO.getScheduleId()
+    	.build();
         throw new UnsupportedOperationException();
     }
 
