@@ -1,5 +1,8 @@
 package com.tenniscourts.schedules;
 
+import com.tenniscourts.exceptions.EntityNotFoundException;
+import com.tenniscourts.tenniscourts.TennisCourt;
+import com.tenniscourts.tenniscourts.TennisCourtRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,19 +17,37 @@ public class ScheduleService {
 
     private final ScheduleMapper scheduleMapper;
 
-    public ScheduleDTO addSchedule(Long tennisCourtId, CreateScheduleRequestDTO createScheduleRequestDTO) {
-        //TODO: implement addSchedule
-        return null;
+    private final TennisCourtRepository tennisCourtRepository;
+
+    public ScheduleDTO addSchedule(CreateScheduleRequestDTO createScheduleRequestDTO) {
+        return scheduleMapper.map(scheduleRepository.saveAndFlush(createSchedule(createScheduleRequestDTO)));
+    }
+
+    private Schedule createSchedule(CreateScheduleRequestDTO createScheduleRequestDTO) {
+        Long tennisCourtId = createScheduleRequestDTO.getTennisCourtId();
+        TennisCourt court = tennisCourtRepository.findById(tennisCourtId).orElseThrow(() -> {
+            throw new EntityNotFoundException("Tennis Court not found.");
+        });
+
+        return Schedule.builder()
+                .tennisCourt(court)
+                .startDateTime(createScheduleRequestDTO.getStartDateTime())
+                .endDateTime(createScheduleRequestDTO.getStartDateTime().plusHours(1L))
+                .build();
     }
 
     public List<ScheduleDTO> findSchedulesByDates(LocalDateTime startDate, LocalDateTime endDate) {
-        //TODO: implement
-        return null;
+        return scheduleMapper.map(scheduleRepository.findSchedulesByStartDateTimeEndDateTime(startDate, endDate));
     }
 
     public ScheduleDTO findSchedule(Long scheduleId) {
-        //TODO: implement
-        return null;
+        return scheduleMapper.map(findScheduleEntity(scheduleId));
+    }
+
+    public Schedule findScheduleEntity(Long scheduleId) {
+        return scheduleRepository.findById(scheduleId).orElseThrow(() -> {
+            throw new EntityNotFoundException("Scheduler not found.");
+        });
     }
 
     public List<ScheduleDTO> findSchedulesByTennisCourtId(Long tennisCourtId) {
