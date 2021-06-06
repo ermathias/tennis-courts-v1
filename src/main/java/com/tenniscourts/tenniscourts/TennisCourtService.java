@@ -5,6 +5,9 @@ import com.tenniscourts.schedules.ScheduleService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class TennisCourtService {
@@ -29,5 +32,9 @@ public class TennisCourtService {
         TennisCourtDTO tennisCourtDTO = findTennisCourtById(tennisCourtId);
         tennisCourtDTO.setTennisCourtSchedules(scheduleService.findSchedulesByTennisCourtId(tennisCourtId));
         return tennisCourtDTO;
+    }
+
+    public List<TennisCourtDTO> findAllTennisCourts() {
+        return tennisCourtRepository.findAll().stream().map(tennisCourtMapper::map).collect(Collectors.toList());
     }
 }
