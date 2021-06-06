@@ -1,5 +1,6 @@
 package com.tenniscourts.schedules;
 
+import com.tenniscourts.guests.GuestDTO;
 import com.tenniscourts.tenniscourts.TennisCourtDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
