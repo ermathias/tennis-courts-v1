@@ -24,6 +24,7 @@ public class ScheduleService {
 
     private final ScheduleMapper scheduleMapper;
 
+    //6. As a Tennis Court Admin, I want to be able to create schedule slots for a given tennis court
     public ScheduleDTO addSchedule(Long tennisCourtId, CreateScheduleRequestDTO createScheduleRequestDTO) {
     	Schedule schedule = scheduleMapper.map(createScheduleRequestDTO);
     	List<Schedule> schedules = scheduleRepository.checkTennisCourtAvailability(tennisCourtId, schedule.getStartDateTime(), schedule.getStartDateTime().plusMinutes(59));
@@ -38,6 +39,7 @@ public class ScheduleService {
         return null;
     }
     
+    //2. As a User I want to be able to see what time slots are free
     public List<ScheduleDTO> findFreeSlots(Long tennisCourtId, String startDateStr, String endDateStr) {
     	DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_PATTERN);
     	LocalDateTime startDate = LocalDateTime.parse(startDateStr, formatter);
@@ -51,10 +53,10 @@ public class ScheduleService {
     	List<ScheduleDTO> freeSlots = new ArrayList<>();
     	
     	Calendar calendarEndDate = Calendar.getInstance();
-    	calendarEndDate.set(endDate.getYear(), endDate.getMonthValue(), endDate.getDayOfMonth(), Constants.CLOSING_TIME, 0);
+    	calendarEndDate.set(endDate.getYear(), endDate.getMonthValue(), endDate.getDayOfMonth(), endDate.getHour(), endDate.getMinute());
     	
     	Calendar calendarStartDate = Calendar.getInstance();
-    	calendarStartDate.set(startDate.getYear(), startDate.getMonthValue(), startDate.getDayOfMonth(), Constants.OPENING_TIME, 0);
+    	calendarStartDate.set(startDate.getYear(), startDate.getMonthValue(), startDate.getDayOfMonth(), startDate.getHour(), startDate.getMinute());
     	while (calendarStartDate.getTimeInMillis() < calendarEndDate.getTimeInMillis()) {
     		
 	        LocalDateTime startDateTime = LocalDateTime.of(calendarStartDate.get(Calendar.YEAR), calendarStartDate.get(Calendar.MONTH), calendarStartDate.get(Calendar.DAY_OF_MONTH),
@@ -67,7 +69,7 @@ public class ScheduleService {
         		if (schedules.isEmpty()) {
         			addFreeSchedule(tennisCourtId, startDateTime, endDateTime, freeSlots);
         		}
-        		if (isScheduleTimeAvailable(schedules, startDateTime)) {
+        		if (isScheduleTimeAvailable(schedules, startDateTime, calendarStartDate)) {
         			addFreeSchedule(tennisCourtId, startDateTime, endDateTime, freeSlots);
         		}
     		}
@@ -76,7 +78,7 @@ public class ScheduleService {
     	return freeSlots;
     }
     
-    private boolean isScheduleTimeAvailable(List<Schedule> schedules, LocalDateTime startDateTime) {
+    private boolean isScheduleTimeAvailable(List<Schedule> schedules, LocalDateTime startDateTime, Calendar calendar) {
     	boolean isAvailable = false;
 		for (Schedule schedule : schedules) {
 			if (startDateTime.isBefore(schedule.getStartDateTime().minusMinutes(59)) || startDateTime.isAfter(schedule.getEndDateTime().minusMinutes(1))) {

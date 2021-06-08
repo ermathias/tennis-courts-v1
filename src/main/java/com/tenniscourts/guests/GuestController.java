@@ -18,6 +18,7 @@ import com.tenniscourts.config.BaseRestController;
 
 import lombok.AllArgsConstructor;
 
+//5. As a Tennis Court Admin, I want to be able to Create/Update/Delete/Find by id/Find by name/List all the guests
 @AllArgsConstructor
 @RestController
 @RequestMapping("guests")

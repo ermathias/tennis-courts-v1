@@ -36,7 +36,7 @@ public class ReservationController extends BaseRestController {
     }
 
     @DeleteMapping(value = "{reservationId}")
-    public ResponseEntity<ReservationDTO> cancelReservation(Long reservationId) {
+    public ResponseEntity<ReservationDTO> cancelReservation(@PathVariable Long reservationId) {
         return ResponseEntity.ok(reservationService.cancelReservation(reservationId));
     }
     

@@ -29,6 +29,10 @@ public class ReservationMapperImpl implements ReservationMapper {
 		return reservationDTO;
 	}
 
+	/*7. As a Tennis Court Admin, I want to charge a reservation deposit of $10 to the user, charged per court, 
+		which is refunded upon completion of their match, so that Users don’t abuse my schedule*/
+	
+	//10. As a Tennis Court Admin, I want to keep 100% of the reservation deposit if the User does not show up for their reservation
 	@Override
 	public Reservation map(CreateReservationRequestDTO source, Schedule schedule) {
 		Guest guest = new Guest();
