@@ -1,9 +1,11 @@
 package com.tenniscourts.reservations;
 
-import com.tenniscourts.schedules.Schedule;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.mockito.InjectMocks;
@@ -11,8 +13,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import com.tenniscourts.schedules.Schedule;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @SpringBootTest
