@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tenniscourts.tenniscourts.TennisCourt;
+import com.tenniscourts.tenniscourts.TennisCourtDTO;
 import com.tenniscourts.utils.Constants;
 
 public class ScheduleMapperImpl implements ScheduleMapper {
@@ -17,8 +18,10 @@ public class ScheduleMapperImpl implements ScheduleMapper {
 
 	@Override
 	public ScheduleDTO map(Schedule source) {
-		ScheduleDTO scheduleDTO = new ScheduleDTO();
-		scheduleDTO.setId(source.getId());
+		TennisCourt tennisCourt = source.getTennisCourt();
+		TennisCourtDTO tennisCourtDTO = new TennisCourtDTO(tennisCourt.getId(), tennisCourt.getName(), new ArrayList<>());
+		ScheduleDTO scheduleDTO = new ScheduleDTO(source.getId(), tennisCourtDTO, tennisCourtDTO.getId(), source.getStartDateTime(),
+				source.getEndDateTime());
 		return scheduleDTO;
 	}
 

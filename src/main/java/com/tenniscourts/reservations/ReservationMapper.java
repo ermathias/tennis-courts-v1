@@ -7,6 +7,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.springframework.stereotype.Service;
 
+import com.tenniscourts.schedules.Schedule;
+
 @Service
 @Mapper(componentModel = "spring")
 public interface ReservationMapper {
@@ -20,5 +22,5 @@ public interface ReservationMapper {
     	@Mapping(target = "guest.id", source = "guestId"),
     	@Mapping(target = "schedule.id", source = "scheduleId")
 	})
-    Reservation map(CreateReservationRequestDTO source);
+    Reservation map(CreateReservationRequestDTO source, Schedule schedule);
 }

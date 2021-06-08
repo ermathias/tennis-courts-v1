@@ -46,7 +46,7 @@ public class ScheduleController extends BaseRestController {
 
     @GetMapping(value = "{scheduleId}")
     public ResponseEntity<ScheduleDTO> findByScheduleId(Long scheduleId) {
-        return ResponseEntity.ok(scheduleService.findSchedule(scheduleId));
+        return ResponseEntity.ok(scheduleService.findDTOById(scheduleId));
     }
     
 }

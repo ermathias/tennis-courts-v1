@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.tenniscourts.exceptions.BusinessException;
+import com.tenniscourts.exceptions.EntityNotFoundException;
 import com.tenniscourts.tenniscourts.TennisCourtDTO;
 import com.tenniscourts.utils.Constants;
 
@@ -77,10 +78,23 @@ public class ScheduleService {
 		tennisCourtDTO.setId(tennisCourtId);
 		freeSlots.add(new ScheduleDTO(null, tennisCourtDTO, tennisCourtDTO.getId(), startDateTime, endDateTime));
     }
+    
+    public ScheduleDTO findDTOById(Long scheduleId) {
+   	 return scheduleRepository.findById(scheduleId).map(scheduleMapper::map).orElseThrow(() -> {
+            throw new EntityNotFoundException("Schedule not found.");
+        });
+   }
 
-    public ScheduleDTO findSchedule(Long scheduleId) {
-        //TODO: implement
-        return null;
+    public Schedule findById(Long scheduleId) {
+    	return scheduleRepository.findById(scheduleId).orElseThrow(() -> {
+            throw new EntityNotFoundException("Schedule not found.");
+        });
+    }
+    
+    public ScheduleDTO update(Schedule schedule) {
+    	Schedule newSchedule = findById(schedule.getId());
+    	newSchedule.setReservations(schedule.getReservations());
+    	return scheduleMapper.map(scheduleRepository.saveAndFlush(newSchedule));
     }
 
     public List<ScheduleDTO> findSchedulesByTennisCourtId(Long tennisCourtId) {

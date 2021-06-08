@@ -7,6 +7,7 @@ import java.time.temporal.ChronoUnit;
 import org.springframework.stereotype.Service;
 
 import com.tenniscourts.exceptions.EntityNotFoundException;
+import com.tenniscourts.schedules.Schedule;
 import com.tenniscourts.schedules.ScheduleService;
 
 import lombok.AllArgsConstructor;
@@ -16,11 +17,14 @@ import lombok.AllArgsConstructor;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    
+    private final ScheduleService scheduleService;
 
     private final ReservationMapper reservationMapper;
 
     public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
-    	 return reservationMapper.map(reservationRepository.saveAndFlush(reservationMapper.map(createReservationRequestDTO)));
+    	Schedule schedule = scheduleService.findById(createReservationRequestDTO.getScheduleId());
+    	return reservationMapper.map(reservationRepository.saveAndFlush(reservationMapper.map(createReservationRequestDTO, schedule)));
     }
 
     public ReservationDTO findReservation(Long reservationId) {
@@ -59,6 +63,7 @@ public class ReservationService {
             throw new IllegalArgumentException("Cannot cancel/reschedule because it's not in ready to play status.");
         }
 
+        LocalDateTime now = LocalDateTime.now();
         if (reservation.getSchedule().getStartDateTime().isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("Can cancel/reschedule only future dates.");
         }

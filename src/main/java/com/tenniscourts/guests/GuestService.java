@@ -28,10 +28,10 @@ public class GuestService {
     }
     
     public Guest findById(Long guestId) {
-   	 return guestRepository.findById(guestId).orElseThrow(() -> {
+    	return guestRepository.findById(guestId).orElseThrow(() -> {
             throw new EntityNotFoundException("Guest not found.");
         });
-   }
+    }
     
     public Page<GuestDTO> findByName(String guestName, Integer page, Integer linesPerPage, String orderBy, String direction) {
     	PageRequest pageable = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
