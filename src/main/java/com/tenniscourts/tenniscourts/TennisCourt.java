@@ -23,7 +23,8 @@ import javax.validation.constraints.NotNull;
 @ToString
 public class TennisCourt extends BaseEntity<Long> {
 
-    @Column
+	private static final long serialVersionUID = 1L;
+	@Column
     @NotNull
     private String name;
 }

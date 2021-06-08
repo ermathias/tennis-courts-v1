@@ -1,21 +1,23 @@
 package com.tenniscourts.reservations;
 
-import com.tenniscourts.config.persistence.BaseEntity;
-import com.tenniscourts.guests.Guest;
-import com.tenniscourts.schedules.Schedule;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.math.BigDecimal;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
+
+import com.tenniscourts.config.persistence.BaseEntity;
+import com.tenniscourts.guests.Guest;
+import com.tenniscourts.schedules.Schedule;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @Entity
@@ -28,11 +30,12 @@ import java.math.BigDecimal;
 @Builder
 public class Reservation extends BaseEntity<Long> {
 
-    @OneToOne
+	private static final long serialVersionUID = 1L;
+
+	@OneToOne
     private Guest guest;
 
     @ManyToOne
-    @NotNull
     private Schedule schedule;
 
     @NotNull
