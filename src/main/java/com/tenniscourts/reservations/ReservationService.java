@@ -1,12 +1,18 @@
 package com.tenniscourts.reservations;
 
+import com.tenniscourts.exceptions.BusinessException;
 import com.tenniscourts.exceptions.EntityNotFoundException;
+import com.tenniscourts.schedules.Schedule;
+import com.tenniscourts.schedules.ScheduleService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -16,14 +22,32 @@ public class ReservationService {
 
     private final ReservationMapper reservationMapper;
 
+    private final ScheduleService scheduleService;
+
+    @Transactional
     public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
-        throw new UnsupportedOperationException();
+        Schedule schedule = scheduleService.getSchedule(createReservationRequestDTO.getScheduleId());
+        if (!scheduleService.availableSchedule(schedule)) {
+            throw new BusinessException("Schedule is not available.");
+        }
+
+        Reservation reservation = reservationMapper.map(createReservationRequestDTO);
+        reservation.getSchedule().addReservation(reservation);
+        reservation.setValue(BigDecimal.TEN);
+        Reservation reservationSaved = reservationRepository.saveAndFlush(reservation);
+
+        return reservationMapper.map(reservationSaved);
     }
+
 
     public ReservationDTO findReservation(Long reservationId) {
         return reservationRepository.findById(reservationId).map(reservationMapper::map).orElseThrow(() -> {
             throw new EntityNotFoundException("Reservation not found.");
         });
+    }
+
+    public List<ReservationDTO> findAllReservation() {
+        return reservationMapper.map(reservationRepository.findAll());
     }
 
     public ReservationDTO cancelReservation(Long reservationId) {
@@ -66,9 +90,11 @@ public class ReservationService {
 
         if (hours >= 24) {
             return reservation.getValue();
+        } else {
+            return reservation.getRefundValue();
         }
 
-        return BigDecimal.ZERO;
+//        return BigDecimal.ZERO;
     }
 
     /*TODO: This method actually not fully working, find a way to fix the issue when it's throwing the error:
