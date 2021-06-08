@@ -11,13 +11,14 @@ import org.springframework.stereotype.Service;
 import com.tenniscourts.exceptions.BusinessException;
 import com.tenniscourts.exceptions.EntityNotFoundException;
 import com.tenniscourts.tenniscourts.TennisCourtDTO;
-import com.tenniscourts.utils.Constants;
 
 import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
 public class ScheduleService {
+	
+	private static final String DATE_PATTERN = "yyyy-MM-dd";
 
     private final ScheduleRepository scheduleRepository;
 
@@ -25,7 +26,7 @@ public class ScheduleService {
 
     public ScheduleDTO addSchedule(Long tennisCourtId, CreateScheduleRequestDTO createScheduleRequestDTO) {
     	Schedule schedule = scheduleMapper.map(createScheduleRequestDTO);
-    	List<Schedule> schedules = scheduleRepository.checkTennisCourtAvailability(tennisCourtId, schedule.getStartDateTime());
+    	List<Schedule> schedules = scheduleRepository.checkTennisCourtAvailability(tennisCourtId, schedule.getStartDateTime(), schedule.getStartDateTime().plusMinutes(59));
     	if (!schedules.isEmpty()) {
     		throw new BusinessException("That court has been already scheduled at the selected hour");
     	}
@@ -38,7 +39,7 @@ public class ScheduleService {
     }
     
     public List<ScheduleDTO> findFreeSlots(Long tennisCourtId, String startDateStr, String endDateStr) {
-    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_PATTERN);
+    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
     	LocalDateTime startDate = LocalDateTime.parse(startDateStr, formatter);
     	LocalDateTime endDate = LocalDateTime.parse(endDateStr, formatter);
     	LocalDateTime endDateTime = LocalDateTime.parse(startDateStr, formatter);

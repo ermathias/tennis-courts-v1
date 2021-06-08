@@ -7,9 +7,10 @@ import java.util.List;
 
 import com.tenniscourts.tenniscourts.TennisCourt;
 import com.tenniscourts.tenniscourts.TennisCourtDTO;
-import com.tenniscourts.utils.Constants;
 
 public class ScheduleMapperImpl implements ScheduleMapper {
+	
+	private static final String DATE_PATTERN = "yyyy-MM-dd HH:mm";
 
 	@Override
 	public Schedule map(ScheduleDTO source) {
@@ -35,7 +36,7 @@ public class ScheduleMapperImpl implements ScheduleMapper {
 	public Schedule map(CreateScheduleRequestDTO source) {
 		TennisCourt tennisCourt = new TennisCourt();
 		tennisCourt.setId(source.getTennisCourtId());
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_PATTERN);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
     	LocalDateTime startDateTime = LocalDateTime.parse(source.getStartDateTime(), formatter);
 		Schedule schedule = new Schedule(tennisCourt, startDateTime, startDateTime.plusHours(1), new ArrayList<>());
 		return schedule;

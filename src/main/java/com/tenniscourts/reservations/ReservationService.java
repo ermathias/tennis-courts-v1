@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.tenniscourts.exceptions.EntityNotFoundException;
@@ -41,6 +44,7 @@ public class ReservationService {
         return reservationRepository.findById(reservationId).map(reservation -> {
 
             this.validateCancellation(reservation);
+            
 
             BigDecimal refundValue = getRefundValue(reservation);
             return this.updateReservation(reservation, refundValue, ReservationStatus.CANCELLED);
@@ -63,7 +67,6 @@ public class ReservationService {
             throw new IllegalArgumentException("Cannot cancel/reschedule because it's not in ready to play status.");
         }
 
-        LocalDateTime now = LocalDateTime.now();
         if (reservation.getSchedule().getStartDateTime().isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("Can cancel/reschedule only future dates.");
         }
@@ -74,9 +77,24 @@ public class ReservationService {
 
         if (hours >= 24) {
             return reservation.getValue();
+        } else if (hours < 24 && hours >= 12) {
+        	BigDecimal refundValue = new BigDecimal(reservation.getValue().doubleValue() * 0.25);
+        	return refundValue;
+        } else if (hours < 12 && hours >= 2) {
+        	BigDecimal refundValue = new BigDecimal(reservation.getValue().doubleValue() * 0.5);
+        	return refundValue;
+        }  else if (hours < 2 && hours >= 0) {
+        	BigDecimal refundValue = new BigDecimal(reservation.getValue().doubleValue() * 0.75);
+        	return refundValue;
         }
 
         return BigDecimal.ZERO;
+    }
+    
+    public Page<ReservationDTO> findAll(Integer page, Integer linesPerPage, String orderBy, String direction) {
+    	PageRequest pageable = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+    	Page<Reservation> reservations = reservationRepository.findAll(pageable);
+    	return reservations.map(reservation -> reservationMapper.map(reservation));
     }
 
     /*TODO: This method actually not fully working, find a way to fix the issue when it's throwing the error:

@@ -9,53 +9,31 @@ import com.tenniscourts.reservations.ReservationMapper;
 import com.tenniscourts.reservations.ReservationMapperImpl;
 import com.tenniscourts.schedules.ScheduleMapper;
 import com.tenniscourts.schedules.ScheduleMapperImpl;
-import com.tenniscourts.tenniscourts.TennisCourt;
-import com.tenniscourts.tenniscourts.TennisCourtDTO;
 import com.tenniscourts.tenniscourts.TennisCourtMapper;
+import com.tenniscourts.tenniscourts.TennisCourtMapperImpl;
 
+//Configuration class meant to provida Mapper instances required by the application
 @Configuration
 public class MapperConfiguration {
 	
-	private ReservationMapper reservationMapper;
-	private ScheduleMapper scheduleMapper;
-	private TennisCourtMapper tennisCourtMapper;
-	private GuestMapper guestMapper;
-	
 	@Bean
 	public GuestMapper instantiateGuestMapper() {
-		guestMapper = new GuestMapperImpl();
-		return guestMapper;
+		return new GuestMapperImpl();
 	}
 
 	@Bean
 	public ReservationMapper instantiateReservationMapper() {
-		reservationMapper = new ReservationMapperImpl();
-		return reservationMapper;
+		return new ReservationMapperImpl();
 	}
 	
 	@Bean
 	public ScheduleMapper instantiateScheduleMapper() {
-		scheduleMapper = new ScheduleMapperImpl();
-		return scheduleMapper;
+		return new ScheduleMapperImpl();
 	}
 	
 	@Bean
 	public TennisCourtMapper instantiateTennisCourtMapper() {
-		tennisCourtMapper = new TennisCourtMapper() {
-			
-			@Override
-			public TennisCourt map(TennisCourtDTO source) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public TennisCourtDTO map(TennisCourt source) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-		};
-		return tennisCourtMapper;
+		return new TennisCourtMapperImpl();
 	}
 
 }

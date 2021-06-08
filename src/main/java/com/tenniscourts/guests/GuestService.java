@@ -37,13 +37,13 @@ public class GuestService {
     	PageRequest pageable = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
     	Page<Guest> guests = guestRepository.findByNameContainingIgnoreCase(guestName, pageable);
     	return guests.map(guest -> guestMapper.map(guest));
-   }
+    }
     
     public Page<GuestDTO> findAll(Integer page, Integer linesPerPage, String orderBy, String direction) {
     	PageRequest pageable = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
     	Page<Guest> guests = guestRepository.findAll(pageable);
     	return guests.map(guest -> guestMapper.map(guest));
-   }
+    }
     
     public void delete(Long guestId) {
     	findById(guestId);

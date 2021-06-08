@@ -32,7 +32,7 @@ public class ReservationMapperImpl implements ReservationMapper {
 	public Reservation map(CreateReservationRequestDTO source, Schedule schedule) {
 		Guest guest = new Guest();
 		guest.setId(source.getGuestId());
-		Reservation reservation = new Reservation(guest, schedule, new BigDecimal(0.0), ReservationStatus.READY_TO_PLAY, new BigDecimal(10.0));
+		Reservation reservation = new Reservation(guest, schedule, new BigDecimal(60.0), ReservationStatus.READY_TO_PLAY, new BigDecimal(0.0));
 		return reservation;
 	}
 

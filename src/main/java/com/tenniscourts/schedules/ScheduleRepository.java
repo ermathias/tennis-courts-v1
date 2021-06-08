@@ -14,6 +14,8 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     List<Schedule> findByTennisCourt_IdAndStartDateTimeBetween(Long tennisCourtId, LocalDateTime startDate, LocalDateTime endDate);
     
     @Query("SELECT s FROM Schedule s WHERE (s.tennisCourt.id = :#{#tennisCourtId}) "
-			+ "AND :#{#dateTime} BETWEEN s.startDateTime AND s.endDateTime")	
-    List<Schedule> checkTennisCourtAvailability(@Param("tennisCourtId") Long tennisCourtId, @Param("dateTime") LocalDateTime dateTime);
+			+ "AND (:#{#dateTime} BETWEEN s.startDateTime AND DATEADD(MINUTE, -1, s.endDateTime) "
+			+ "OR :#{#dateTimePlus} BETWEEN s.startDateTime AND s.endDateTime)")	
+    List<Schedule> checkTennisCourtAvailability(@Param("tennisCourtId") Long tennisCourtId, @Param("dateTime") LocalDateTime dateTime,
+    		@Param("dateTimePlus") LocalDateTime dateTimePlus);
 }
