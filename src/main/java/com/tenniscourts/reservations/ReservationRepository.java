@@ -1,5 +1,6 @@
 package com.tenniscourts.reservations;
 
+import com.tenniscourts.tenniscourts.TennisCourt;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;

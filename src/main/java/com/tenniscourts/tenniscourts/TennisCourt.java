@@ -1,5 +1,6 @@
 package com.tenniscourts.tenniscourts;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tenniscourts.config.persistence.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -25,5 +26,6 @@ public class TennisCourt extends BaseEntity<Long> {
 
     @Column
     @NotNull
+    @JsonProperty("@name")
     private String name;
 }
