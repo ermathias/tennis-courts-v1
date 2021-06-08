@@ -3,6 +3,8 @@ package com.tenniscourts.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.tenniscourts.guests.GuestMapper;
+import com.tenniscourts.guests.GuestMapperImpl;
 import com.tenniscourts.reservations.ReservationMapper;
 import com.tenniscourts.reservations.ReservationMapperImpl;
 import com.tenniscourts.schedules.ScheduleMapper;
@@ -17,6 +19,13 @@ public class MapperConfiguration {
 	private ReservationMapper reservationMapper;
 	private ScheduleMapper scheduleMapper;
 	private TennisCourtMapper tennisCourtMapper;
+	private GuestMapper guestMapper;
+	
+	@Bean
+	public GuestMapper instantiateGuestMapper() {
+		guestMapper = new GuestMapperImpl();
+		return guestMapper;
+	}
 
 	@Bean
 	public ReservationMapper instantiateReservationMapper() {

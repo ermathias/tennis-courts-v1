@@ -7,6 +7,7 @@ import java.time.temporal.ChronoUnit;
 import org.springframework.stereotype.Service;
 
 import com.tenniscourts.exceptions.EntityNotFoundException;
+import com.tenniscourts.schedules.ScheduleService;
 
 import lombok.AllArgsConstructor;
 

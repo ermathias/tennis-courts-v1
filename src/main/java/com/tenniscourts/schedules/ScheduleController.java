@@ -36,9 +36,17 @@ public class ScheduleController extends BaseRestController {
     		@RequestParam(value="endDate", defaultValue="") LocalDate endDate) {
         return ResponseEntity.ok(scheduleService.findSchedulesByDates(LocalDateTime.of(startDate, LocalTime.of(0, 0)), LocalDateTime.of(endDate, LocalTime.of(23, 59))));
     }
+    
+    @GetMapping(value = "freeSlots/{tennisCourtId}")
+    public ResponseEntity<List<ScheduleDTO>> freeSlots(Long tennisCourtId,
+    		@RequestParam(value="startDate", defaultValue="") String startDate,
+    		@RequestParam(value="endDate", defaultValue="") String endDate) {
+        return ResponseEntity.ok(scheduleService.findFreeSlots(tennisCourtId, startDate, endDate));
+    }
 
     @GetMapping(value = "{scheduleId}")
     public ResponseEntity<ScheduleDTO> findByScheduleId(Long scheduleId) {
         return ResponseEntity.ok(scheduleService.findSchedule(scheduleId));
     }
+    
 }
