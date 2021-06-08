@@ -8,6 +8,7 @@ import com.tenniscourts.schedules.Schedule;
 import com.tenniscourts.schedules.ScheduleDTO;
 import com.tenniscourts.tenniscourts.TennisCourt;
 import com.tenniscourts.tenniscourts.TennisCourtDTO;
+import com.tenniscourts.utils.Constants;
 
 public class ReservationMapperImpl implements ReservationMapper {
 
@@ -32,7 +33,7 @@ public class ReservationMapperImpl implements ReservationMapper {
 	public Reservation map(CreateReservationRequestDTO source, Schedule schedule) {
 		Guest guest = new Guest();
 		guest.setId(source.getGuestId());
-		Reservation reservation = new Reservation(guest, schedule, new BigDecimal(60.0), ReservationStatus.READY_TO_PLAY, new BigDecimal(0.0));
+		Reservation reservation = new Reservation(guest, schedule, new BigDecimal(Constants.HOUR_VALUE + Constants.TAX_VALUE), ReservationStatus.READY_TO_PLAY, new BigDecimal(0.0));
 		return reservation;
 	}
 

@@ -45,7 +45,6 @@ public class ReservationService {
 
             this.validateCancellation(reservation);
             
-
             BigDecimal refundValue = getRefundValue(reservation);
             return this.updateReservation(reservation, refundValue, ReservationStatus.CANCELLED);
 

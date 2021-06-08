@@ -53,13 +53,13 @@ public class GuestController extends BaseRestController {
     }
 
     @DeleteMapping(value = "{guestId}")
-    public ResponseEntity<Void> update(Long guestId) {
+    public ResponseEntity<Void> delete(Long guestId) {
     	guestService.delete(guestId);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping
-    public ResponseEntity<GuestDTO> delete(@Valid @RequestBody CreateUpdateGuestRequestDTO createUpdateGuestRequestDTO) {
+    public ResponseEntity<GuestDTO> update(@Valid @RequestBody CreateUpdateGuestRequestDTO createUpdateGuestRequestDTO) {
         return ResponseEntity.ok(guestService.update(createUpdateGuestRequestDTO));
     }
 

@@ -48,8 +48,8 @@ public class ReservationController extends BaseRestController {
         return ResponseEntity.ok(reservationService.findAll(page, linesPerPage, orderBy, direction));
     }
 
-    @PutMapping
-    public ResponseEntity<ReservationDTO> rescheduleReservation(Long reservationId, Long scheduleId) {
+    @PutMapping(value = "{reservationId}/{scheduleId}")
+    public ResponseEntity<ReservationDTO> rescheduleReservation(@PathVariable Long reservationId, @PathVariable Long scheduleId) {
         return ResponseEntity.ok(reservationService.rescheduleReservation(reservationId, scheduleId));
     }
 }

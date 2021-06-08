@@ -6,19 +6,19 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.tenniscourts.exceptions.BusinessException;
 import com.tenniscourts.exceptions.EntityNotFoundException;
 import com.tenniscourts.tenniscourts.TennisCourtDTO;
+import com.tenniscourts.utils.Constants;
 
 import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
 public class ScheduleService {
-	
-	private static final String DATE_PATTERN = "yyyy-MM-dd";
 
     private final ScheduleRepository scheduleRepository;
 
@@ -39,39 +39,54 @@ public class ScheduleService {
     }
     
     public List<ScheduleDTO> findFreeSlots(Long tennisCourtId, String startDateStr, String endDateStr) {
-    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
+    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_PATTERN);
     	LocalDateTime startDate = LocalDateTime.parse(startDateStr, formatter);
     	LocalDateTime endDate = LocalDateTime.parse(endDateStr, formatter);
-    	LocalDateTime endDateTime = LocalDateTime.parse(startDateStr, formatter);
+    	
+    	if (startDate.isAfter(endDate)) {
+    		throw new DataIntegrityViolationException("Start date cannot be higher than the end date.");
+    	}
     	
     	List<Schedule> schedules = scheduleRepository.findByTennisCourt_IdAndStartDateTimeBetween(tennisCourtId, startDate, endDate);
     	List<ScheduleDTO> freeSlots = new ArrayList<>();
     	
     	Calendar calendarEndDate = Calendar.getInstance();
-    	calendarEndDate.set(endDate.getYear(), endDate.getMonthValue(), endDate.getDayOfMonth(), endDate.getHour(), endDate.getMinute());
+    	calendarEndDate.set(endDate.getYear(), endDate.getMonthValue(), endDate.getDayOfMonth(), Constants.CLOSING_TIME, 0);
     	
-    	Calendar calendarEndDateTime = Calendar.getInstance();
-    	calendarEndDateTime.set(endDateTime.getYear(), endDateTime.getMonthValue(), endDateTime.getDayOfMonth(), endDateTime.getHour(), endDateTime.getMinute());
-    	while (calendarEndDateTime.getTimeInMillis() < calendarEndDate.getTimeInMillis()) {
-    		LocalDateTime startDateTime = LocalDateTime.from(endDateTime);
-    		LocalDateTime endDateTimePlus = endDateTime.plusHours(1);
-    		if (calendarEndDateTime.get(Calendar.HOUR) >= 23) {
-    			calendarEndDateTime.add(Calendar.DAY_OF_MONTH, 1);
-    		}
-    		calendarEndDateTime.add(Calendar.HOUR, 1);
+    	Calendar calendarStartDate = Calendar.getInstance();
+    	calendarStartDate.set(startDate.getYear(), startDate.getMonthValue(), startDate.getDayOfMonth(), Constants.OPENING_TIME, 0);
+    	while (calendarStartDate.getTimeInMillis() < calendarEndDate.getTimeInMillis()) {
     		
-    		System.out.println(endDateTimePlus.getHour());
-    		if (schedules.isEmpty()) {
-    			addFreeSchedule(tennisCourtId, startDateTime, endDateTimePlus, freeSlots);
-    		}
-    		for (Schedule schedule : schedules) {
-    			if (!endDateTimePlus.isAfter(schedule.getStartDateTime()) && !endDateTimePlus.isBefore(schedule.getEndDateTime())) {
-    				addFreeSchedule(tennisCourtId, startDateTime, endDateTimePlus, freeSlots);
-    			}
+	        LocalDateTime startDateTime = LocalDateTime.of(calendarStartDate.get(Calendar.YEAR), calendarStartDate.get(Calendar.MONTH), calendarStartDate.get(Calendar.DAY_OF_MONTH),
+	        		calendarStartDate.get(Calendar.HOUR_OF_DAY), calendarStartDate.get(Calendar.MINUTE));
+    		calendarStartDate.add(Calendar.HOUR_OF_DAY, 1);
+    		LocalDateTime endDateTime = LocalDateTime.of(calendarStartDate.get(Calendar.YEAR), calendarStartDate.get(Calendar.MONTH), calendarStartDate.get(Calendar.DAY_OF_MONTH),
+	        		calendarStartDate.get(Calendar.HOUR_OF_DAY), calendarStartDate.get(Calendar.MINUTE));
+    		
+    		if (calendarStartDate.get(Calendar.HOUR_OF_DAY) >= Constants.OPENING_TIME + 1 && calendarStartDate.get(Calendar.HOUR_OF_DAY) <= Constants.CLOSING_TIME) {
+        		if (schedules.isEmpty()) {
+        			addFreeSchedule(tennisCourtId, startDateTime, endDateTime, freeSlots);
+        		}
+        		if (isScheduleTimeAvailable(schedules, startDateTime)) {
+        			addFreeSchedule(tennisCourtId, startDateTime, endDateTime, freeSlots);
+        		}
     		}
     	}
     	
     	return freeSlots;
+    }
+    
+    private boolean isScheduleTimeAvailable(List<Schedule> schedules, LocalDateTime startDateTime) {
+    	boolean isAvailable = false;
+		for (Schedule schedule : schedules) {
+			if (startDateTime.isBefore(schedule.getStartDateTime().minusMinutes(59)) || startDateTime.isAfter(schedule.getEndDateTime().minusMinutes(1))) {
+				isAvailable = true;
+			} else {
+				isAvailable = false;
+				break;
+			}
+		}
+		return isAvailable;
     }
     
     private void addFreeSchedule(Long tennisCourtId, LocalDateTime startDateTime, LocalDateTime endDateTime, List<ScheduleDTO> freeSlots) {
