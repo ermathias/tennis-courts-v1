@@ -1,6 +1,8 @@
 package com.tenniscourts.reservations;
 
 import com.tenniscourts.exceptions.EntityNotFoundException;
+import com.tenniscourts.schedules.Schedule;
+import com.tenniscourts.schedules.ScheduleRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +18,29 @@ public class ReservationService {
 
     private final ReservationMapper reservationMapper;
 
+    private final ScheduleRepository scheduleRepository;
+
     public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
-        throw new UnsupportedOperationException();
+        Schedule schedule = scheduleRepository
+                .findById(createReservationRequestDTO.getScheduleId())
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Schedule with id %s not found",
+                        createReservationRequestDTO.getScheduleId())));
+
+        // since every reservation takes one hour, if a schedule contains that number of reservations, it is full.
+        if (isFull(schedule)) {
+            throw new IllegalStateException(String.format("Schedule with id %s is already full of reservations",
+                    createReservationRequestDTO.getScheduleId()));
+        }
+
+        Reservation reservation = reservationMapper.map(createReservationRequestDTO);
+
+        reservation.setValue(BigDecimal.valueOf(10));
+        reservationRepository.save(reservation);
+
+        schedule.addReservation(reservation);
+        scheduleRepository.save(schedule);
+
+        return reservationMapper.map(reservation);
     }
 
     public ReservationDTO findReservation(Long reservationId) {
@@ -71,13 +94,15 @@ public class ReservationService {
         return BigDecimal.ZERO;
     }
 
-    /*TODO: This method actually not fully working, find a way to fix the issue when it's throwing the error:
-            "Cannot reschedule to the same slot.*/
     public ReservationDTO rescheduleReservation(Long previousReservationId, Long scheduleId) {
         Reservation previousReservation = cancel(previousReservationId);
 
         if (scheduleId.equals(previousReservation.getSchedule().getId())) {
-            throw new IllegalArgumentException("Cannot reschedule to the same slot.");
+
+            previousReservation.setReservationStatus(ReservationStatus.READY_TO_PLAY);
+            previousReservation.setValue(previousReservation.getRefundValue());
+
+            return reservationMapper.map(reservationRepository.save(previousReservation));
         }
 
         previousReservation.setReservationStatus(ReservationStatus.RESCHEDULED);
@@ -89,5 +114,17 @@ public class ReservationService {
                 .build());
         newReservation.setPreviousReservation(reservationMapper.map(previousReservation));
         return newReservation;
+    }
+
+    private boolean isFull(Schedule schedule) {
+        boolean result = false;
+        long playableHours = ChronoUnit.HOURS.between(schedule.getStartDateTime(), schedule.getEndDateTime());
+        if (schedule.getReservations().size() == playableHours && schedule.getReservations()
+                .stream()
+                .allMatch(a -> a.getReservationStatus() == ReservationStatus.READY_TO_PLAY)) {
+            result = true;
+        }
+
+        return result;
     }
 }

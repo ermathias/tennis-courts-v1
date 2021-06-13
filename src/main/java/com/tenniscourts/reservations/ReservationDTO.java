@@ -29,7 +29,8 @@ public class ReservationDTO {
 
     private BigDecimal refundValue;
 
-    private BigDecimal value;
+    // hardcoded this to 10
+    private BigDecimal value = BigDecimal.valueOf(10);
 
     @NotNull
     private Long scheduledId;
