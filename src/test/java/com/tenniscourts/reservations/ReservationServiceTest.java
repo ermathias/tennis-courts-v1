@@ -31,6 +31,48 @@ public class ReservationServiceTest {
 
         schedule.setStartDateTime(startDateTime);
 
-        Assert.assertEquals(reservationService.getRefundValue(Reservation.builder().schedule(schedule).value(new BigDecimal(10L)).build()), new BigDecimal(10));
+        Assert.assertEquals(
+                reservationService
+                        .getRefundValue(Reservation.builder().schedule(schedule).value(new BigDecimal(10L)).build()),
+                new BigDecimal(10));
+    }
+
+    @Test
+    public void getRefundValue75Refund() {
+        Schedule schedule = new Schedule();
+
+        LocalDateTime startDateTime = LocalDateTime.now().plusHours(13);
+
+        schedule.setStartDateTime(startDateTime);
+
+        Assert.assertEquals(""+
+                reservationService
+                        .getRefundValue(Reservation.builder().schedule(schedule).value(new BigDecimal(10L)).build()), "7.50");
+    }
+
+    @Test
+    public void getRefundValue50Refund() {
+        Schedule schedule = new Schedule();
+
+        LocalDateTime startDateTime = LocalDateTime.now().plusHours(8);
+
+        schedule.setStartDateTime(startDateTime);
+
+        Assert.assertEquals(""+
+                reservationService
+                        .getRefundValue(Reservation.builder().schedule(schedule).value(new BigDecimal(10L)).build()),"5.0");
+    }
+
+    @Test
+    public void getRefundValue25Refund() {
+        Schedule schedule = new Schedule();
+
+        LocalDateTime startDateTime = LocalDateTime.now().plusHours(1);
+
+        schedule.setStartDateTime(startDateTime);
+
+        Assert.assertEquals(""+
+                reservationService
+                        .getRefundValue(Reservation.builder().schedule(schedule).value(new BigDecimal(10L)).build()), "2.50");
     }
 }
