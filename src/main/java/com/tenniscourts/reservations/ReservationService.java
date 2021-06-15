@@ -38,13 +38,13 @@ public class ReservationService {
         return reservationMapper.map(this.reservationRepository.save(reservation));
     }
 
-    public ReservationDTO findReservation(Long reservationId) {
+    public ReservationDTO findReservationById(Long reservationId) {
         return reservationRepository.findById(reservationId).map(reservationMapper::map).orElseThrow(() -> {
             throw new EntityNotFoundException("Reservation not found.");
         });
     }
 
-    public ReservationDTO cancelReservation(Long reservationId) {
+    public ReservationDTO cancelReservationById(Long reservationId) {
         return reservationMapper.map(this.cancel(reservationId));
     }
 

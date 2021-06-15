@@ -6,14 +6,11 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
-import org.glassfish.jersey.server.Uri;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.URI;
 
 @AllArgsConstructor
 @RestController
@@ -34,14 +31,14 @@ public class ReservationController extends BaseRestController {
     @ApiOperation("Find an existing reservation by id")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "OK") })
     public ResponseEntity<ReservationDTO> findReservation(@PathVariable Long reservationId) {
-        return ResponseEntity.ok(reservationService.findReservation(reservationId));
+        return ResponseEntity.ok(reservationService.findReservationById(reservationId));
     }
 
     @DeleteMapping(path = UriConstants.RESERVATION_ID_VARIABLE)
     @ApiOperation("Cancel an existing reservation by id")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Reservation cancelled successfully") })
     public ResponseEntity<ReservationDTO> cancelReservation(@PathVariable Long reservationId) {
-        return ResponseEntity.ok(reservationService.cancelReservation(reservationId));
+        return ResponseEntity.ok(reservationService.cancelReservationById(reservationId));
     }
 
     @PutMapping(path = UriConstants.RESCHEDULE_PATH + UriConstants.RESERVATION_ID_VARIABLE + UriConstants.SCHEDULE_ID_VARIABLE)
