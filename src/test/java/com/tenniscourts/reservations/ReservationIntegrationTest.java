@@ -1,11 +1,8 @@
 package com.tenniscourts.reservations;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tenniscourts.UriConstants;
-import com.tenniscourts.schedules.Schedule;
 import com.tenniscourts.schedules.ScheduleRepository;
-import com.tenniscourts.tenniscourts.TennisCourt;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -14,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -56,7 +54,7 @@ public class ReservationIntegrationTest
 
         // When
 
-        mockMvc.perform(post(UriConstants.RESERVATION_PATH + UriConstants.BOOK_PATH).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(RestDocumentationRequestBuilders.post(UriConstants.RESERVATION_PATH + UriConstants.BOOK_PATH).contentType(MediaType.APPLICATION_JSON)
                 .content(this.objectMapper.writeValueAsString(createReservationRequestDTO)))
                 // Then
 
