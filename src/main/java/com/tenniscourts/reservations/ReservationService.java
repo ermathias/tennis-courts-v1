@@ -31,7 +31,7 @@ public class ReservationService {
                         .orElseThrow(() -> new EntityNotFoundException("Guest with provided id has not been found")
                         ))
                 .reservationStatus(ReservationStatus.READY_TO_PLAY)
-                .value(BigDecimal.TEN)
+                .value(createReservationRequestDTO.getValue() != null ? createReservationRequestDTO.getValue() : BigDecimal.TEN)
                 .refundValue(BigDecimal.TEN)
                 .build();
 
@@ -104,6 +104,7 @@ public class ReservationService {
         ReservationDTO newReservation = bookReservation(CreateReservationRequestDTO.builder()
                 .guestId(previousReservation.getGuest().getId())
                 .scheduleId(scheduleId)
+                .value(previousReservation.getValue())
                 .build());
         newReservation.setPreviousReservation(reservationMapper.map(previousReservation));
         return newReservation;
