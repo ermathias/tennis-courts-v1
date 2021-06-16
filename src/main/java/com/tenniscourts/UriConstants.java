@@ -19,6 +19,8 @@ public final class UriConstants
 
     public static final String RESERVATION_PATH = "/reservation";
 
+    public static final String SCHEDULE_PATH = "/schedule";
+
     public static final String GUEST_ID_VARIABLE = "/{guestId}";
 
     public static final String GUEST_NAME_VARIABLE = "/{guestName}";
@@ -26,4 +28,7 @@ public final class UriConstants
     public static final String RESERVATION_ID_VARIABLE = "/{reservationId}";
 
     public static final String SCHEDULE_ID_VARIABLE = "/{scheduleId}";
+
+    public static final String START_DATE_VARIABLE = "/{startDate}";
+    public static final String END_DATE_VARIABLE = "/{endDate}";
 }
