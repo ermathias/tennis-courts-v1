@@ -31,9 +31,6 @@ public class ReservationIntegrationTest
     private ReservationController reservationController;
 
     @Autowired
-    private ScheduleRepository scheduleRepository;
-
-    @Autowired
     private ObjectMapper objectMapper;
 
     @Before
