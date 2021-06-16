@@ -21,6 +21,10 @@ public final class UriConstants
 
     public static final String SCHEDULE_PATH = "/schedule";
 
+    public static final String TENNIS_COURT_PATH = "/tennis-court";
+
+    public static final String WITH_SCHEDULES_PATH = "/with-schedules";
+
     public static final String GUEST_ID_VARIABLE = "/{guestId}";
 
     public static final String GUEST_NAME_VARIABLE = "/{guestName}";
@@ -30,5 +34,8 @@ public final class UriConstants
     public static final String SCHEDULE_ID_VARIABLE = "/{scheduleId}";
 
     public static final String START_DATE_VARIABLE = "/{startDate}";
+
     public static final String END_DATE_VARIABLE = "/{endDate}";
+
+    public static final String TENNIS_COURT_ID_VARIABLE = "/{tennisCourtId}";
 }
