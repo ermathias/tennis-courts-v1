@@ -1,6 +1,8 @@
 package com.tenniscourts.reservations;
 
 import com.tenniscourts.exceptions.EntityNotFoundException;
+import com.tenniscourts.guests.GuestRepository;
+import com.tenniscourts.schedules.ScheduleRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,21 +14,37 @@ import java.time.temporal.ChronoUnit;
 @AllArgsConstructor
 public class ReservationService {
 
+    private final GuestRepository guestRepository;
+
     private final ReservationRepository reservationRepository;
+
+    private final ScheduleRepository scheduleRepository;
 
     private final ReservationMapper reservationMapper;
 
     public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
-        throw new UnsupportedOperationException();
+        Reservation reservation = Reservation.builder()
+                .schedule(this.scheduleRepository.findById(createReservationRequestDTO.getScheduleId())
+                        .orElseThrow(() -> new EntityNotFoundException("Schedule with provided id has not been found")
+                        ))
+                .guest(this.guestRepository.findById(createReservationRequestDTO.getGuestId())
+                        .orElseThrow(() -> new EntityNotFoundException("Guest with provided id has not been found")
+                        ))
+                .reservationStatus(ReservationStatus.READY_TO_PLAY)
+                .value(createReservationRequestDTO.getValue() != null ? createReservationRequestDTO.getValue() : BigDecimal.TEN)
+                .refundValue(BigDecimal.TEN)
+                .build();
+
+        return reservationMapper.map(this.reservationRepository.save(reservation));
     }
 
-    public ReservationDTO findReservation(Long reservationId) {
+    public ReservationDTO findReservationById(Long reservationId) {
         return reservationRepository.findById(reservationId).map(reservationMapper::map).orElseThrow(() -> {
             throw new EntityNotFoundException("Reservation not found.");
         });
     }
 
-    public ReservationDTO cancelReservation(Long reservationId) {
+    public ReservationDTO cancelReservationById(Long reservationId) {
         return reservationMapper.map(this.cancel(reservationId));
     }
 
@@ -71,8 +89,6 @@ public class ReservationService {
         return BigDecimal.ZERO;
     }
 
-    /*TODO: This method actually not fully working, find a way to fix the issue when it's throwing the error:
-            "Cannot reschedule to the same slot.*/
     public ReservationDTO rescheduleReservation(Long previousReservationId, Long scheduleId) {
         Reservation previousReservation = cancel(previousReservationId);
 
@@ -86,6 +102,7 @@ public class ReservationService {
         ReservationDTO newReservation = bookReservation(CreateReservationRequestDTO.builder()
                 .guestId(previousReservation.getGuest().getId())
                 .scheduleId(scheduleId)
+                .value(previousReservation.getValue())
                 .build());
         newReservation.setPreviousReservation(reservationMapper.map(previousReservation));
         return newReservation;
