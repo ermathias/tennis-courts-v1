@@ -28,7 +28,7 @@ public class GuestService {
 
     public List<GuestDTO> handleFindGuestsByName(String guestName)
     {
-        return this.guestMapper.map(this.guestRepository.findAllByNameLike(guestName));
+        return this.guestMapper.map(this.guestRepository.findAllByNameStartsWith(guestName));
     }
 
     public GuestDTO handleCreateGuest(CreateGuestRequestDTO createGuestRequestDTO)
