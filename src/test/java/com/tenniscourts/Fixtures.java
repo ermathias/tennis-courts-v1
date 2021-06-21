@@ -68,7 +68,7 @@ public class Fixtures {
         return reservations;
     }
 
-    public static com.tenniscourts.model.TennisCourt buildTennisCourt() {
+    public static TennisCourt buildTennisCourt() {
         return TennisCourt.builder()
                 .name("Paul")
                 .build();

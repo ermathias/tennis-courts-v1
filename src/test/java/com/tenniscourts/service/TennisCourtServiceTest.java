@@ -37,7 +37,7 @@ public class TennisCourtServiceTest {
         TennisCourtDTO tennisCourtDTO = Fixtures.buildTennisCourtDTO();
         given(tennisCourtService.findTennisCourtById(tennisCourtDTO.getId())).willReturn(tennisCourtDTO);
 
-        TennisCourtDTO tennisCourtDTO1 = tennisCourtService.addTennisCourt(tennisCourtDTO);
+        TennisCourtDTO tennisCourtDTO1 = tennisCourtService.findTennisCourtById(tennisCourtDTO.getId());
         Assert.assertEquals(tennisCourtDTO.getName(),tennisCourtDTO1.getName());
     }
 
@@ -47,7 +47,7 @@ public class TennisCourtServiceTest {
         TennisCourtDTO tennisCourtDTO = Fixtures.buildTennisCourtDTO();
         given(tennisCourtService.findTennisCourtWithSchedulesById(tennisCourtDTO.getId())).willReturn(tennisCourtDTO);
 
-        TennisCourtDTO tennisCourtDTO1 = tennisCourtService.addTennisCourt(tennisCourtDTO);
+        TennisCourtDTO tennisCourtDTO1 = tennisCourtService.findTennisCourtWithSchedulesById(tennisCourtDTO.getId());
         Assert.assertEquals(tennisCourtDTO.getName(),tennisCourtDTO1.getName());
     }
 }

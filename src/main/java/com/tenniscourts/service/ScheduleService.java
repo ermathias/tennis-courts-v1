@@ -26,7 +26,6 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final ScheduleMapper scheduleMapper;
     private final TennisCourtRepository tennisCourtRepository;
-    final ZoneOffset zoneOffset = ZoneOffset.UTC;
 
     public ScheduleDTO addSchedule(@NonNull Long tennisCourtId, @NonNull CreateScheduleRequestDTO createScheduleRequestDTO) {
 
