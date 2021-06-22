@@ -73,15 +73,23 @@ public class ReservationService {
 
     public BigDecimal getRefundValue(Reservation reservation) {
         long hours = ChronoUnit.HOURS.between(LocalDateTime.now(), reservation.getSchedule().getStartDateTime());
+        long minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), reservation.getSchedule().getStartDateTime());
 
         if (hours >= 24) {
-            return reservation.getValue();
+            return reservation.getRefundValue();
         }
-
+        if (hours > 12) {
+            return reservation.getRefundValue().multiply(BigDecimal.valueOf(0.75));
+        }
+        if (hours > 2) {
+            return reservation.getRefundValue().multiply(BigDecimal.valueOf(0.5));
+        }
+        if (minutes > 1) {
+            return reservation.getRefundValue().multiply(BigDecimal.valueOf(0.25));
+        }
         return BigDecimal.ZERO;
     }
 
-    // works for me
     public ReservationDTO rescheduleReservation(Long previousReservationId, Long scheduleId) {
         Reservation previousReservation = cancel(previousReservationId);
 
