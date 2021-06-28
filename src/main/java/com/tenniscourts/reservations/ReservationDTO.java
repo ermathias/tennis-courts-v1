@@ -36,4 +36,5 @@ public class ReservationDTO {
 
     @NotNull
     private Long guestId;
+
 }

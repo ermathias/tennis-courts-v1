@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,7 +21,7 @@ public class CreateReservationRequestDTO {
     @NotNull
     private Long guestId;
 
-    @NotNull
-    private Long scheduleId;
+    @NotNull(message = "Schedule ids must not be null")
+    private List<Long> scheduleIds;
 
 }
