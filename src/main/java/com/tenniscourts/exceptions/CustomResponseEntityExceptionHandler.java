@@ -84,6 +84,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
                                         constraintViolation.getMessage())
                         .collect(Collectors.joining()));
         return buildResponseEntity(errorDetails, BAD_REQUEST);
+
     }
 
     private ResponseEntity<Object> buildResponseEntity(ErrorDetails error, HttpStatus status) {

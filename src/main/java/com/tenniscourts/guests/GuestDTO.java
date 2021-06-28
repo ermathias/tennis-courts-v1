@@ -1,6 +1,5 @@
-package com.tenniscourts.tenniscourts;
+package com.tenniscourts.guests;
 
-import com.tenniscourts.schedules.ScheduleDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +8,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @Getter
 @Setter
@@ -17,14 +15,11 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TennisCourtDTO {
+public class GuestDTO {
 
     private Long id;
 
-    @NotNull
+    @NotNull(message = "Name cannot be null")
     private String name;
-
-    private List<ScheduleDTO> tennisCourtSchedules;
-
 
 }
