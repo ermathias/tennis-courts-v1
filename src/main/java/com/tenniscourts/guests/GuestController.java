@@ -34,6 +34,7 @@ public class GuestController extends BaseRestController {
         return ResponseEntity.ok(guestService.findGuestById(guestId));
     }
 
+    @ApiOperation(value = "Find Guest by Name")
     @GetMapping(value = "/search-name/{guestName}")
     public ResponseEntity<GuestDTO> findGuestByName(@PathVariable String guestName) {
         return ResponseEntity.ok(guestService.findGuestByName(guestName));

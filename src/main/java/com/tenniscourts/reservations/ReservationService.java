@@ -1,9 +1,7 @@
 package com.tenniscourts.reservations;
 
 import com.tenniscourts.exceptions.EntityNotFoundException;
-import com.tenniscourts.guests.GuestDTO;
-import com.tenniscourts.guests.GuestMapper;
-import com.tenniscourts.guests.GuestService;
+import com.tenniscourts.guests.*;
 import com.tenniscourts.schedules.ScheduleMapper;
 import com.tenniscourts.schedules.ScheduleRepository;
 import com.tenniscourts.schedules.ScheduleService;
@@ -29,6 +27,8 @@ public class ReservationService {
 
     private final GuestService guestService;
 
+    private final GuestRepository guestRepository;
+
     private final GuestMapper guestMapper;
 
     public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
@@ -38,11 +38,13 @@ public class ReservationService {
 
     public Reservation bookReservationForDB(CreateReservationRequestDTO createReservationRequestDTO) {
         Reservation obj = new Reservation();
-        GuestDTO guest = guestService.findGuestById(createReservationRequestDTO.getGuestId());
+        Guest guest = guestRepository.findById(createReservationRequestDTO.getGuestId()).orElseThrow(() -> {
+            throw new EntityNotFoundException("Guest not found.");
+        });
         obj.setId(null);
         obj.setReservationStatus(ReservationStatus.READY_TO_PLAY);
         obj.setValue(new BigDecimal(110.00));
-        obj.setGuest(guestMapper.map(guest));
+        obj.setGuest(guest);
         obj.setSchedule(scheduleMapper.map(scheduleService.findSchedule(createReservationRequestDTO.getScheduleId())));
         return reservationRepository.save(obj);
     }
