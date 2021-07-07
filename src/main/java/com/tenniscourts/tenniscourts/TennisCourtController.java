@@ -4,7 +4,10 @@ import com.tenniscourts.config.BaseRestController;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 
+@Api("Entry Point")
 @AllArgsConstructor
+@RestController
+@RequestMapping("/tennis-court")
 public class TennisCourtController extends BaseRestController {
 
     private final TennisCourtService tennisCourtService;
