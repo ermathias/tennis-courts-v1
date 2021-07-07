@@ -79,6 +79,10 @@ public class ReservationService {
     private Reservation confirmGame(Long reservationId) {
         return reservationRepository.findById(reservationId).map(reservation -> {
 
+            if(reservation.getSchedule().getStartDateTime().isAfter(LocalDateTime.now())){
+                throw new IllegalArgumentException("You Can't confirm a match from a future date");
+            }
+
             this.validateCancellationOrConfirmGamePlayed(reservation, 2);
 
             BigDecimal refundValue = new BigDecimal(10);
@@ -133,7 +137,7 @@ public class ReservationService {
         return BigDecimal.ZERO;
     }
 
-    //TASK DONE user can insert the same Schedule without causing error in the Reservation register
+    //TASK DONE user can insert the same Schedule without breaking the Reservation register
     public ReservationDTO rescheduleReservation(Long previousReservationId, Long scheduleId) {
         Reservation previousReservation = reservationMapper.map(findReservation(previousReservationId));
 

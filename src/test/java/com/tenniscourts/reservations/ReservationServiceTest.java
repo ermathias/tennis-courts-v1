@@ -26,7 +26,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @SpringBootTest
 @RunWith(MockitoJUnitRunner.class)
 @ContextConfiguration(classes = ReservationService.class)
