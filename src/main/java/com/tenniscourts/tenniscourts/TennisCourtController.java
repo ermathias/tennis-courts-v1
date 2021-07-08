@@ -5,16 +5,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@Api("Entry Point")
+@Api("Tennis Court")
 @AllArgsConstructor
 @RestController
 @RequestMapping("/tennis-court")
@@ -29,17 +25,17 @@ public class TennisCourtController extends BaseRestController {
         return ResponseEntity.created(locationByEntity(tennisCourtService.addTennisCourt(tennisCourtDTO).getId())).build();
     }
 
-    @GetMapping(value = "/find", params = "tennisCourtId", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/find/{tennisCourtId}")
     @ApiOperation(value="Find Tennis Court by ID")
     @ApiResponse(code = 200, message = "Tennis Court found")
-    public ResponseEntity<TennisCourtDTO> findTennisCourtById(Long tennisCourtId) {
+    public ResponseEntity<TennisCourtDTO> findTennisCourtById(@PathVariable("tennisCourtId") Long tennisCourtId) {
         return ResponseEntity.ok(tennisCourtService.findTennisCourtById(tennisCourtId));
     }
 
-    @GetMapping(value = "/find-with-schedule", params = "tennisCourtId", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/find-with-schedule/{tennisCourtId}")
     @ApiOperation(value="Find with schedule")
     @ApiResponse(code = 200, message = "Tennis Court with schedule found")
-    public ResponseEntity<TennisCourtDTO> findTennisCourtWithSchedulesById(Long tennisCourtId) {
+    public ResponseEntity<TennisCourtDTO> findTennisCourtWithSchedulesById(@PathVariable("tennisCourtId") Long tennisCourtId) {
         return ResponseEntity.ok(tennisCourtService.findTennisCourtWithSchedulesById(tennisCourtId));
     }
 }
