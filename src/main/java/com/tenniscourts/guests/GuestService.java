@@ -4,7 +4,7 @@ package com.tenniscourts.guests;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
+import com.tenniscourts.exceptions.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 

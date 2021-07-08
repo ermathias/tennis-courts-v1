@@ -40,7 +40,7 @@ public class GuestController extends BaseRestController {
         return ResponseEntity.ok(guestService.findAllGuests());
     }
 
-    @GetMapping(value = "/search", params = "guestName")
+    @GetMapping(value = "/find", params = "guestName")
     @ApiOperation(value="Find Guest(s) by name")
     @ApiResponse(code = 200, message = "Guest(s) found")
     public ResponseEntity<List<GuestDTO>> findGuestByName(String guestName) {
@@ -50,7 +50,7 @@ public class GuestController extends BaseRestController {
     @PutMapping(value = "/update/{guestId}")
     @ApiOperation(value="Update a Guest")
     @ApiResponse(code = 200, message = "Guest updated")
-    public ResponseEntity<GuestDTO> updateGuest(@Valid @RequestBody GuestDTO guestDTO) {
+    public ResponseEntity<GuestDTO> updateGuest(@RequestBody GuestDTO guestDTO) {
         return ResponseEntity.ok(guestService.updateGuest(guestDTO));
     }
 
