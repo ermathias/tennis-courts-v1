@@ -1,8 +1,5 @@
 package com.tenniscourts.guests;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 
 import com.tenniscourts.exceptions.EntityNotFoundException;
 import org.junit.Assert;
@@ -17,6 +14,8 @@ import org.springframework.test.context.ContextConfiguration;
 
 import java.util.Objects;
 import java.util.Optional;
+
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @RunWith(MockitoJUnitRunner.class)
@@ -76,5 +75,26 @@ public class GuestServiceTest {
         GuestDTO savedGuestDTO = guestService.addGuest(requestGuestDTO);
 
         Assert.assertTrue(Objects.nonNull(savedGuestDTO.getId()));
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void test_deleteGuestById_expect_EntityNotFoundException() {
+        when(guestRepository.findById(GUEST_ID)).thenReturn(Optional.empty());
+
+        guestService.deleteGuestById(GUEST_ID);
+    }
+
+    @Test
+    public void test_deleteGuestById_expect_entity_deleted() {
+
+        Guest guest = new Guest();
+        guest.setName(GUEST_NAME);
+        guest.setId(GUEST_ID);
+
+        when(guestRepository.findById(GUEST_ID)).thenReturn(Optional.of(guest));
+
+        guestService.deleteGuestById(GUEST_ID);
+
+        verify(guestRepository, times(1)).delete(guest);
     }
 }

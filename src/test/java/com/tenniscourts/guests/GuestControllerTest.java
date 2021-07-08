@@ -46,21 +46,6 @@ public class GuestControllerTest {
         this.mockMvc = MockMvcBuilders.standaloneSetup(guestController).build();
     }
 
-//    @Test
-//    public void test_addGuest_expect_created_status() throws Exception {
-//        GuestDTO guest = new GuestDTO();
-//        guest.setName(GUEST_NAME);
-//
-//        ObjectMapper mapper = new ObjectMapper();
-//        ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
-//
-//        String requestJson = writer.writeValueAsString(guest);
-//
-//        this.mockMvc.perform(MockMvcRequestBuilders.post("/guest/add")
-//                .contentType(MediaType.APPLICATION_JSON).content(requestJson))
-//                .andExpect(MockMvcResultMatchers.status().isCreated());
-//    }
-
     @Test
     public void test_findAllGuests__expect_ok_status() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/guest/find"))
