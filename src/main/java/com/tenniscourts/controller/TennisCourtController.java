@@ -40,7 +40,7 @@ public class TennisCourtController extends BaseRestController {
             @ApiResponse(code = 400, message = "Bad request. Check your input"),
             @ApiResponse(code = 500, message = "An error has occurred in getting a tennis court")
     })
-    @RequestMapping(value = "/api/tennis-court/get", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/api/tennis-court/get", method = RequestMethod.GET)
     public ResponseEntity<TennisCourtDTO> findTennisCourtById(@RequestParam Long tennisCourtId) {
         return ResponseEntity.ok(tennisCourtService.findTennisCourtById(tennisCourtId));
     }
@@ -51,7 +51,7 @@ public class TennisCourtController extends BaseRestController {
             @ApiResponse(code = 400, message = "Bad request. Check your input"),
             @ApiResponse(code = 500, message = "An error has occurred in creating a tennis court")
     })
-    @RequestMapping(value = "/api/tennis-court/get-schedules", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/api/tennis-court/get-schedules", method = RequestMethod.GET)
     public ResponseEntity<TennisCourtDTO> findTennisCourtWithSchedulesById(@RequestParam Long tennisCourtId) {
         return ResponseEntity.ok(tennisCourtService.findTennisCourtWithSchedulesById(tennisCourtId));
     }

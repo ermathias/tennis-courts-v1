@@ -1,5 +1,6 @@
 package com.tenniscourts.service;
 
+import com.tenniscourts.dto.ScheduleDTO;
 import com.tenniscourts.dto.TennisCourtDTO;
 import com.tenniscourts.exceptions.EntityNotFoundException;
 import com.tenniscourts.mapper.TennisCourtMapper;
@@ -39,6 +40,17 @@ public class TennisCourtService {
 
     public List<TennisCourtDTO> findAllTennisCourt() {
         return tennisCourtMapper.map(tennisCourtRepository.findAll());
+    }
+
+    public List<ScheduleDTO> findFreeSlots() {
+
+        List<TennisCourtDTO> allTennisCourt = findAllTennisCourt();
+        for (TennisCourtDTO tennisCourtDto : allTennisCourt){
+            tennisCourtDto.getTennisCourtSchedules();
+        }
+        //TODO: implement free slots;
+        return null;
+
     }
 
 }

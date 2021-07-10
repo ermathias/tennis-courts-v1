@@ -22,23 +22,20 @@ public class ScheduleService {
 
     private final ScheduleMapper scheduleMapper;
 
-    private final TennisCourtService tennisCourtService;
-
 
     public ScheduleService(final ScheduleRepository scheduleRepository,
-                           final ScheduleMapper scheduleMapper,
-                           final TennisCourtService tennisCourtService){
+                           final ScheduleMapper scheduleMapper){
         this.scheduleRepository = scheduleRepository;
         this.scheduleMapper = scheduleMapper;
-        this.tennisCourtService = tennisCourtService;
     }
 
     public ScheduleDTO addSchedule(Long tennisCourtId, CreateScheduleRequestDTO createScheduleRequestDTO) {
         ScheduleDTO addedSchedule;
 
-        TennisCourtDTO tennisCourtDTO = tennisCourtService.findTennisCourtById(tennisCourtId);
+        List<Schedule> schedules =  scheduleRepository.findByTennisCourt_IdOrderByStartDateTime(tennisCourtId);
+        List<ScheduleDTO> scheduleDTOList=  scheduleMapper.map(schedules);
         boolean tennisCourtIsFree = true;
-        for (ScheduleDTO scheduleDTO : tennisCourtDTO.getTennisCourtSchedules()){
+        for (ScheduleDTO scheduleDTO : scheduleDTOList){
             if (scheduleDTO.getStartDateTime().isEqual(createScheduleRequestDTO.getStartDateTime())){
                 tennisCourtIsFree = false;
             }
@@ -47,7 +44,7 @@ public class ScheduleService {
         if (tennisCourtIsFree) {
             Schedule schedule = new Schedule();
             TennisCourt tennisCourt = new TennisCourt();
-            tennisCourt.setId(tennisCourtDTO.getId());
+            tennisCourt.setId(tennisCourtId);
             schedule.setTennisCourt(tennisCourt);
             schedule.setStartDateTime(createScheduleRequestDTO.getStartDateTime());
             schedule.setEndDateTime(createScheduleRequestDTO.getStartDateTime().plusHours(1));

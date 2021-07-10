@@ -59,7 +59,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    public void getRefundValueFullRefund() {
+    public void getRefundValueFullRefundTest() {
         Schedule schedule = new Schedule();
 
         LocalDateTime startDateTime = LocalDateTime.now().plusDays(2);
@@ -70,7 +70,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    public void bookReservation() {
+    public void bookReservationTest() {
         CreateReservationRequestDTO createReservationRequestDTO = new CreateReservationRequestDTO();
         createReservationRequestDTO.setGuestId(1L);
         createReservationRequestDTO.setScheduleId(1L);
@@ -104,7 +104,7 @@ public class ReservationServiceTest {
 
 
     @Test
-    public void cancelReservation() {
+    public void cancelReservationTest() {
 
         ReservationDTO reservationDTOMock = new ReservationDTO();
         reservationDTOMock.setValue(new BigDecimal(45));
