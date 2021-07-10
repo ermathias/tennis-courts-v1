@@ -2,7 +2,7 @@ package com.tenniscourts.controller;
 
 import com.tenniscourts.config.AbstractTest;
 import com.tenniscourts.config.WebTestConfig;
-import com.tenniscourts.dto.ReservationDTO;
+import com.tenniscourts.dto.GuestDTO;
 import com.tenniscourts.dto.ScheduleDTO;
 import com.tenniscourts.service.GuestService;
 import com.tenniscourts.service.ReservationService;
@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = WebTestConfig.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-public class ReservationControllerTest extends AbstractTest {
+public class GuestControllerTest extends AbstractTest {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -46,79 +46,43 @@ public class ReservationControllerTest extends AbstractTest {
     @MockBean
     private GuestService guestService;
 
-
     @Test
-    public void should_create_reservation() throws Exception {
+    public void should_add_guest() throws Exception {
 
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         MediaType MEDIA_TYPE_JSON = new MediaType("application", "json");
 
-        ReservationDTO reservationDTO = new ReservationDTO();
-        reservationDTO.setId(1L);
-        when(reservationService.bookReservation(any())).thenReturn(reservationDTO);
+        GuestDTO guestDTO = new GuestDTO();
+        guestDTO.setId(1L);
+        when(guestService.create(any())).thenReturn(guestDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/reservation/add")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/guests/add")
                 .accept(MEDIA_TYPE_JSON)
                 .contentType(MEDIA_TYPE_JSON)
-                .content(createReservationRequestJson()))
+                .content(createScheduleRequestJson()))
                 .andExpect(status().isCreated());
 
     }
 
+
     @Test
-    public void should_find_reservation_by_id() throws Exception {
+    public void should_get_guest_by_id() throws Exception {
 
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         MediaType MEDIA_TYPE_JSON = new MediaType("application", "json");
 
-        ReservationDTO reservationDTO = new ReservationDTO();
-        reservationDTO.setId(1L);
-        when(reservationService.findReservation(any())).thenReturn(reservationDTO);
+        GuestDTO guestDTO = new GuestDTO();
+        guestDTO.setId(1L);
+        when(guestService.findById(any())).thenReturn(guestDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/reservation/get")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/guests/get")
                 .accept(MEDIA_TYPE_JSON)
                 .contentType(MEDIA_TYPE_JSON)
-                .param("reservationId", "1"))
+                .param("guestId", "1" ))
                 .andExpect(status().isOk());
 
     }
 
 
-    @Test
-    public void should_delete_reservation_by_id() throws Exception {
-
-        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        MediaType MEDIA_TYPE_JSON = new MediaType("application", "json");
-
-        ReservationDTO reservationDTO = new ReservationDTO();
-        reservationDTO.setId(1L);
-        when(reservationService.cancelReservation(any())).thenReturn(reservationDTO);
-
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/reservation/delete")
-                .accept(MEDIA_TYPE_JSON)
-                .contentType(MEDIA_TYPE_JSON)
-                .param("reservationId", "1"))
-                .andExpect(status().isOk());
-
-    }
-
-    @Test
-    public void should_modify_reservation() throws Exception {
-
-        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        MediaType MEDIA_TYPE_JSON = new MediaType("application", "json");
-
-        ReservationDTO reservationDTO = new ReservationDTO();
-        reservationDTO.setId(1L);
-        when(reservationService.cancelReservation(any())).thenReturn(reservationDTO);
-
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/reservation/modify")
-                .accept(MEDIA_TYPE_JSON)
-                .contentType(MEDIA_TYPE_JSON)
-                .param("reservationId", "1")
-                .param("scheduleId", "1"))
-                .andExpect(status().isOk());
-
-    }
 
 }

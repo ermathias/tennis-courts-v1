@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/reservation")
 public class ReservationController extends BaseRestController {
 
     private final ReservationService reservationService;
@@ -30,7 +29,7 @@ public class ReservationController extends BaseRestController {
             @ApiResponse(code = 400, message = "Bad request. Check your input"),
             @ApiResponse(code = 500, message = "An error has occurred in creating the reservation")
     })
-    @RequestMapping(value = "/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/api/reservation/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> bookReservation(@RequestBody CreateReservationRequestDTO createReservationRequestDTO) {
         return ResponseEntity.created(locationByEntity(reservationService.bookReservation(createReservationRequestDTO).getId())).build();
     }
@@ -41,7 +40,7 @@ public class ReservationController extends BaseRestController {
             @ApiResponse(code = 400, message = "Bad request. Check your input"),
             @ApiResponse(code = 500, message = "An error has occurred in getting a reservation by ID")
     })
-    @RequestMapping(value = "/get", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/reservation/get", method = RequestMethod.GET)
     public ResponseEntity<ReservationDTO> findReservation(@RequestParam Long reservationId) {
         return ResponseEntity.ok(reservationService.findReservation(reservationId));
     }
@@ -52,7 +51,7 @@ public class ReservationController extends BaseRestController {
             @ApiResponse(code = 400, message = "Bad request. Check your input"),
             @ApiResponse(code = 500, message = "An error has occurred in deleting a reservation")
     })
-    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/api/reservation/delete", method = RequestMethod.DELETE)
     public ResponseEntity<ReservationDTO> cancelReservation(@RequestParam Long reservationId) {
         return ResponseEntity.ok(reservationService.cancelReservation(reservationId));
     }
@@ -63,7 +62,7 @@ public class ReservationController extends BaseRestController {
             @ApiResponse(code = 400, message = "Bad request. Check your input"),
             @ApiResponse(code = 500, message = "An error has occurred in deleting a reservation")
     })
-    @RequestMapping(value = "/modify", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/reservation/modify", method = RequestMethod.PUT)
     public ResponseEntity<ReservationDTO> rescheduleReservation(@RequestParam Long reservationId, @RequestParam Long scheduleId) {
         return ResponseEntity.ok(reservationService.rescheduleReservation(reservationId, scheduleId));
     }

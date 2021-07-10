@@ -4,6 +4,7 @@ import com.tenniscourts.config.AbstractTest;
 import com.tenniscourts.config.WebTestConfig;
 import com.tenniscourts.dto.ScheduleDTO;
 import com.tenniscourts.dto.TennisCourtDTO;
+import com.tenniscourts.service.GuestService;
 import com.tenniscourts.service.ReservationService;
 import com.tenniscourts.service.ScheduleService;
 import com.tenniscourts.service.TennisCourtService;
@@ -42,6 +43,9 @@ public class TennisCourtControllerTest extends AbstractTest {
     @MockBean
     private ScheduleService scheduleService;
 
+    @MockBean
+    private GuestService guestService;
+
 
     @Test
     public void should_create_tennis_court() throws Exception {
@@ -53,7 +57,7 @@ public class TennisCourtControllerTest extends AbstractTest {
         tennisCourtDTO.setId(1L);
         when(tennisCourtService.addTennisCourt(any())).thenReturn(tennisCourtDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/tennis-court/add")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/tennis-court/add")
                 .accept(MEDIA_TYPE_JSON)
                 .contentType(MEDIA_TYPE_JSON)
                 .content(createTennisCourtRequestJson()))
@@ -71,7 +75,7 @@ public class TennisCourtControllerTest extends AbstractTest {
         tennisCourtDTO.setId(1L);
         when(tennisCourtService.findTennisCourtById(any())).thenReturn(tennisCourtDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/tennis-court/get")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/tennis-court/get")
                 .accept(MEDIA_TYPE_JSON)
                 .contentType(MEDIA_TYPE_JSON)
                 .param("tennisCourtId", "1"))
@@ -92,7 +96,7 @@ public class TennisCourtControllerTest extends AbstractTest {
 
         when(tennisCourtService.findTennisCourtById(any())).thenReturn(tennisCourtDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/tennis-court/get-schedules")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/tennis-court/get-schedules")
                 .accept(MEDIA_TYPE_JSON)
                 .contentType(MEDIA_TYPE_JSON)
                 .param("tennisCourtId", "1"))

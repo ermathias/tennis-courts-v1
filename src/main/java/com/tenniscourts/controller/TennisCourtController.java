@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/tennis-court")
 public class TennisCourtController extends BaseRestController {
 
     private final TennisCourtService tennisCourtService;
@@ -30,7 +29,7 @@ public class TennisCourtController extends BaseRestController {
             @ApiResponse(code = 400, message = "Bad request. Check your input"),
             @ApiResponse(code = 500, message = "An error has occurred in creating a tennis court")
     })
-    @RequestMapping(value = "/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/api/tennis-court/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> addTennisCourt(@RequestBody TennisCourtDTO tennisCourtDTO) {
         return ResponseEntity.created(locationByEntity(tennisCourtService.addTennisCourt(tennisCourtDTO).getId())).build();
     }
@@ -41,7 +40,7 @@ public class TennisCourtController extends BaseRestController {
             @ApiResponse(code = 400, message = "Bad request. Check your input"),
             @ApiResponse(code = 500, message = "An error has occurred in getting a tennis court")
     })
-    @RequestMapping(value = "/get", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/api/tennis-court/get", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TennisCourtDTO> findTennisCourtById(@RequestParam Long tennisCourtId) {
         return ResponseEntity.ok(tennisCourtService.findTennisCourtById(tennisCourtId));
     }
@@ -52,7 +51,7 @@ public class TennisCourtController extends BaseRestController {
             @ApiResponse(code = 400, message = "Bad request. Check your input"),
             @ApiResponse(code = 500, message = "An error has occurred in creating a tennis court")
     })
-    @RequestMapping(value = "/get-schedules", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/api/tennis-court/get-schedules", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TennisCourtDTO> findTennisCourtWithSchedulesById(@RequestParam Long tennisCourtId) {
         return ResponseEntity.ok(tennisCourtService.findTennisCourtWithSchedulesById(tennisCourtId));
     }

@@ -20,7 +20,6 @@ import java.time.LocalTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/schedule")
 public class ScheduleController extends BaseRestController {
 
     private final ScheduleService scheduleService;
@@ -35,7 +34,7 @@ public class ScheduleController extends BaseRestController {
             @ApiResponse(code = 400, message = "Bad request. Check your input"),
             @ApiResponse(code = 500, message = "An error has occurred in adding the schedule to a tennis court")
     })
-    @RequestMapping(value = "/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/api/schedule/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> addScheduleTennisCourt(@RequestBody CreateScheduleRequestDTO createScheduleRequestDTO) {
         return ResponseEntity.created(locationByEntity(scheduleService.addSchedule(createScheduleRequestDTO.getTennisCourtId(), createScheduleRequestDTO).getId())).build();
     }
@@ -46,7 +45,7 @@ public class ScheduleController extends BaseRestController {
             @ApiResponse(code = 400, message = "Bad request. Check your input"),
             @ApiResponse(code = 500, message = "An error has occurred in getting a schedule by dates")
     })
-    @RequestMapping(value = "/get-by-dates", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/schedule/get-by-dates", method = RequestMethod.GET)
     public ResponseEntity<List<ScheduleDTO>> findSchedulesByDates(@RequestParam
                                                                       @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate startDate,
                                                                   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) @RequestParam LocalDate endDate) {
@@ -59,7 +58,7 @@ public class ScheduleController extends BaseRestController {
             @ApiResponse(code = 400, message = "Bad request. Check your input"),
             @ApiResponse(code = 500, message = "An error has occurred in getting a schedule by ID")
     })
-    @RequestMapping(value = "/get", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/schedule/get", method = RequestMethod.GET)
     public ResponseEntity<ScheduleDTO> findByScheduleId(@RequestParam Long scheduleId) {
         return ResponseEntity.ok(scheduleService.findSchedule(scheduleId));
     }

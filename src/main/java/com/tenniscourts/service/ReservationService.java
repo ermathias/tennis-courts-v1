@@ -15,15 +15,32 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 @Service
-@AllArgsConstructor
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
 
     private final ReservationMapper reservationMapper;
 
+    private final GuestService guestService;
+
+    private final ScheduleService scheduleService;
+
+    public ReservationService(final ReservationMapper reservationMapper,
+                              final ReservationRepository reservationRepository,
+                              final GuestService guestService,
+                              final ScheduleService scheduleService){
+        this.reservationRepository =reservationRepository;
+        this.reservationMapper = reservationMapper;
+        this.guestService = guestService;
+        this.scheduleService = scheduleService;
+    }
+
     public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
-        throw new UnsupportedOperationException();
+
+        Reservation reservation = this.reservationMapper.map(createReservationRequestDTO);
+
+        return reservationMapper.map(reservationRepository.save(reservation));
+
     }
 
     public ReservationDTO findReservation(Long reservationId) {

@@ -3,9 +3,13 @@ package com.tenniscourts.service;
 import com.tenniscourts.dto.TennisCourtDTO;
 import com.tenniscourts.exceptions.EntityNotFoundException;
 import com.tenniscourts.mapper.TennisCourtMapper;
+import com.tenniscourts.model.TennisCourt;
 import com.tenniscourts.repository.TennisCourtRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -32,4 +36,9 @@ public class TennisCourtService {
         tennisCourtDTO.setTennisCourtSchedules(scheduleService.findSchedulesByTennisCourtId(tennisCourtId));
         return tennisCourtDTO;
     }
+
+    public List<TennisCourtDTO> findAllTennisCourt() {
+        return tennisCourtMapper.map(tennisCourtRepository.findAll());
+    }
+
 }

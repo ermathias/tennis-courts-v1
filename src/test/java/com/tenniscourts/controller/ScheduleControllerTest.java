@@ -3,6 +3,7 @@ package com.tenniscourts.controller;
 import com.tenniscourts.config.AbstractTest;
 import com.tenniscourts.config.WebTestConfig;
 import com.tenniscourts.dto.ScheduleDTO;
+import com.tenniscourts.service.GuestService;
 import com.tenniscourts.service.ReservationService;
 import com.tenniscourts.service.ScheduleService;
 import com.tenniscourts.service.TennisCourtService;
@@ -41,6 +42,9 @@ public class ScheduleControllerTest extends AbstractTest {
     @MockBean
     private ScheduleService scheduleService;
 
+    @MockBean
+    private GuestService guestService;
+
     @Test
     public void should_add_schedule() throws Exception {
 
@@ -51,7 +55,7 @@ public class ScheduleControllerTest extends AbstractTest {
         scheduleDTO.setId(1L);
         when(scheduleService.addSchedule(any(), any())).thenReturn(scheduleDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/schedule/add")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/schedule/add")
                 .accept(MEDIA_TYPE_JSON)
                 .contentType(MEDIA_TYPE_JSON)
                 .content(createScheduleRequestJson()))
@@ -70,7 +74,7 @@ public class ScheduleControllerTest extends AbstractTest {
         scheduleDTO.setId(1L);
         when(scheduleService.findSchedule(any())).thenReturn(scheduleDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/schedule/get")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/schedule/get")
                 .accept(MEDIA_TYPE_JSON)
                 .contentType(MEDIA_TYPE_JSON)
                 .param("scheduleId", "1" ))
@@ -88,7 +92,7 @@ public class ScheduleControllerTest extends AbstractTest {
         List<ScheduleDTO> listScheduleDTO = new ArrayList<>();
         when(scheduleService.findSchedulesByDates(any(),any())).thenReturn(listScheduleDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/schedule/get-by-dates")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/schedule/get-by-dates")
                 .accept(MEDIA_TYPE_JSON)
                 .contentType(MEDIA_TYPE_JSON)
                 .param("startDate", "2021-07-12T11:17" )
