@@ -55,7 +55,7 @@ public class ReservationServiceTest {
     @Before
     public void setup(){
         reservationService = new ReservationService(
-                reservationMapper, reservationRepository,guestService, scheduleService);
+                reservationRepository,reservationMapper,guestService, scheduleService);
     }
 
     @Test

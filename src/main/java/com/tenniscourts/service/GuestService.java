@@ -5,19 +5,17 @@ import com.tenniscourts.exceptions.EntityNotFoundException;
 import com.tenniscourts.mapper.GuestMapper;
 import com.tenniscourts.model.Guest;
 import com.tenniscourts.repository.GuestRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class GuestService {
 
     private final GuestRepository guestRepository;
 
     private final GuestMapper guestMapper;
 
-    public GuestService(final GuestRepository guestRepository, final GuestMapper guestMapper){
-        this.guestRepository = guestRepository;
-        this.guestMapper = guestMapper;
-    }
 
     public GuestDTO create(GuestDTO guestDTO) {
 

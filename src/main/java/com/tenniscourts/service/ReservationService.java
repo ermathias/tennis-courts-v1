@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 @Service
+@AllArgsConstructor
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
@@ -25,15 +26,6 @@ public class ReservationService {
 
     private final ScheduleService scheduleService;
 
-    public ReservationService(final ReservationMapper reservationMapper,
-                              final ReservationRepository reservationRepository,
-                              final GuestService guestService,
-                              final ScheduleService scheduleService){
-        this.reservationRepository =reservationRepository;
-        this.reservationMapper = reservationMapper;
-        this.guestService = guestService;
-        this.scheduleService = scheduleService;
-    }
 
     public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
 

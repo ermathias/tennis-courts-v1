@@ -9,6 +9,7 @@ import com.tenniscourts.mapper.ScheduleMapper;
 import com.tenniscourts.model.Schedule;
 import com.tenniscourts.model.TennisCourt;
 import com.tenniscourts.repository.ScheduleRepository;
+import lombok.AllArgsConstructor;
 import org.hibernate.query.criteria.internal.BasicPathUsageException;
 import org.springframework.stereotype.Service;
 
@@ -16,18 +17,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
 
     private final ScheduleMapper scheduleMapper;
-
-
-    public ScheduleService(final ScheduleRepository scheduleRepository,
-                           final ScheduleMapper scheduleMapper){
-        this.scheduleRepository = scheduleRepository;
-        this.scheduleMapper = scheduleMapper;
-    }
 
     public ScheduleDTO addSchedule(Long tennisCourtId, CreateScheduleRequestDTO createScheduleRequestDTO) {
         ScheduleDTO addedSchedule;
