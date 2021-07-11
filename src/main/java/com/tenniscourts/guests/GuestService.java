@@ -45,9 +45,25 @@ public class GuestService {
 
 	}
 
-	public GuestDTO retrieveGuestByName(GuestDTO guestName) {
+	public GuestDTO retrieveGuestByName(GuestDTO guestDTO) {
 
-		return guestRepository.findByName(guestName.getName()).map(guest -> {
+		return guestRepository.findByName(guestDTO.getName()).map(guest -> {
+
+			return mapper.map(guest, GuestDTO.class);
+
+		}).orElseThrow(() -> {
+			throw new EntityNotFoundException("Guest not found.");
+		});
+
+	}
+
+	public GuestDTO update(Long guestId, GuestDTO guestDTO) {
+
+		return guestRepository.findById(guestId).map(guest -> {
+
+			guestDTO.setId(guestId);
+
+			guest = guestRepository.save(mapper.map(guestDTO, Guest.class));
 
 			return mapper.map(guest, GuestDTO.class);
 
