@@ -4,6 +4,7 @@ import com.tenniscourts.config.BaseRestController;
 import com.tenniscourts.dto.CreateReservationRequestDTO;
 import com.tenniscourts.dto.GuestDTO;
 import com.tenniscourts.dto.ReservationDTO;
+import com.tenniscourts.dto.ScheduleDTO;
 import com.tenniscourts.service.GuestService;
 import com.tenniscourts.service.ReservationService;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +13,8 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class GuestController extends BaseRestController {
@@ -65,6 +68,30 @@ public class GuestController extends BaseRestController {
     @RequestMapping(value = "/api/guests/delete", method = RequestMethod.DELETE)
     public ResponseEntity<GuestDTO> cancelGuest(@RequestParam Long guestId) {
         return ResponseEntity.ok(guestService.cancel(guestId));
+    }
+
+
+    @ApiOperation("Modify guest")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "A guest has been successfully changed"),
+            @ApiResponse(code = 400, message = "Bad request. Check your input"),
+            @ApiResponse(code = 500, message = "An error has occurred in modifying a guest")
+    })
+    @RequestMapping(value = "/api/guests/modify", method = RequestMethod.PUT)
+    public ResponseEntity<GuestDTO> modifyGuest(@RequestBody GuestDTO guestDTO) {
+        return ResponseEntity.ok(guestService.modify(guestDTO));
+    }
+
+
+    @ApiOperation("Get all guests")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "A list of all guest has been successfully returned"),
+            @ApiResponse(code = 400, message = "Bad request. Check your input"),
+            @ApiResponse(code = 500, message = "An error has occurred in getting the list of guests")
+    })
+    @RequestMapping(value = "/api/guests/get-all", method = RequestMethod.GET)
+    public ResponseEntity<List<GuestDTO>> findAllGuests() {
+        return ResponseEntity.ok(guestService.findAll());
     }
 
 

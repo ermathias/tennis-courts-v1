@@ -8,6 +8,9 @@ import com.tenniscourts.repository.GuestRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 public class GuestService {
@@ -23,6 +26,20 @@ public class GuestService {
 
         return guestMapper.map(guestRepository.save(guest));
 
+    }
+
+    public GuestDTO modify(GuestDTO guestDTO) {
+        Optional<Guest> guest = this.guestRepository.findById(guestDTO.getId());
+        GuestDTO result;
+        if (guest.isPresent()){
+            guest.get().setName(guestDTO.getName());
+            result = guestMapper.map(guestRepository.saveAndFlush(guest.get()));
+        } else {
+            throw new
+                    EntityNotFoundException
+                    ("Cannot modify Guest with ID provided as it does not exist.");
+        }
+        return result;
     }
 
     public GuestDTO findById(Long guestId) {
@@ -45,6 +62,12 @@ public class GuestService {
         Guest guest = guestRepository.getOne(guestId);
         this.guestRepository.delete(guest);
         return guestMapper.map(guest);
+    }
+
+
+    public List<GuestDTO> findAll() {
+        List<Guest> guests = guestRepository.findAll();
+        return guestMapper.map(guests);
     }
 
 

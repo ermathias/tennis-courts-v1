@@ -83,6 +83,61 @@ public class GuestControllerTest extends AbstractTest {
 
     }
 
+    @Test
+    public void should_get_guest_by_name() throws Exception {
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        MediaType MEDIA_TYPE_JSON = new MediaType("application", "json");
+
+        GuestDTO guestDTO = new GuestDTO();
+        guestDTO.setId(1L);
+        when(guestService.findById(any())).thenReturn(guestDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/guests/get-by-name")
+                .accept(MEDIA_TYPE_JSON)
+                .contentType(MEDIA_TYPE_JSON)
+                .param("name", "Rogerer Federer" ))
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void should_cancel_guest_by_id() throws Exception {
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        MediaType MEDIA_TYPE_JSON = new MediaType("application", "json");
+
+        GuestDTO guestDTO = new GuestDTO();
+        guestDTO.setId(1L);
+        when(guestService.cancel(any())).thenReturn(guestDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/guests/delete")
+                .accept(MEDIA_TYPE_JSON)
+                .contentType(MEDIA_TYPE_JSON)
+                .param("guestId", "1" ))
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void should_modify_guest() throws Exception {
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        MediaType MEDIA_TYPE_JSON = new MediaType("application", "json");
+
+        GuestDTO guestDTO = new GuestDTO();
+        guestDTO.setId(1L);
+        when(guestService.create(any())).thenReturn(guestDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/guests/modify")
+                .accept(MEDIA_TYPE_JSON)
+                .contentType(MEDIA_TYPE_JSON)
+                .content(createScheduleRequestJson()))
+                .andExpect(status().isOk());
+
+
+    }
+
 
 
 }
