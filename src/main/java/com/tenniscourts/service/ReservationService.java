@@ -7,7 +7,9 @@ import com.tenniscourts.mapper.ReservationMapper;
 import com.tenniscourts.model.Reservation;
 import com.tenniscourts.repository.ReservationRepository;
 import com.tenniscourts.model.ReservationStatus;
+import com.tenniscourts.util.Consts;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -15,7 +17,6 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 @Service
-@AllArgsConstructor
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
@@ -26,10 +27,37 @@ public class ReservationService {
 
     private final ScheduleService scheduleService;
 
+    private int reservationDeposit;
 
-    public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
+    private int reservationFee;
+
+     public  ReservationService(final ReservationRepository reservationRepository,
+                                final ReservationMapper reservationMapper,
+                                final GuestService guestService,
+                                final ScheduleService scheduleService,
+                                final @Value("${reservation.deposit}") int reservationDeposit,
+                                final @Value("${reservation.fee}") int reservationFee) {
+         this.reservationMapper = reservationMapper;
+         this.reservationRepository =reservationRepository;
+         this.guestService = guestService;
+         this.scheduleService = scheduleService;
+         this.reservationDeposit = reservationDeposit;
+         this.reservationFee = reservationFee;
+     }
+
+
+
+        public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
 
         Reservation reservation = this.reservationMapper.map(createReservationRequestDTO);
+
+        BigDecimal deposit = new BigDecimal(reservationDeposit);
+
+        BigDecimal fee = new BigDecimal(reservationFee);
+
+        BigDecimal value = fee.add(deposit);
+
+        reservation.setValue(value);
 
         return reservationMapper.map(reservationRepository.save(reservation));
 
@@ -79,7 +107,7 @@ public class ReservationService {
     public BigDecimal getRefundValue(Reservation reservation) {
         long hours = ChronoUnit.HOURS.between(LocalDateTime.now(), reservation.getSchedule().getStartDateTime());
 
-        if (hours >= 24) {
+        if (hours >= Consts.ONE_DAY) {
             return reservation.getValue();
         }
 

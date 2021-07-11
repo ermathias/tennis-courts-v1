@@ -51,11 +51,10 @@ public class ReservationServiceTest {
     private ScheduleService scheduleService;
 
 
-
     @Before
     public void setup(){
         reservationService = new ReservationService(
-                reservationRepository,reservationMapper,guestService, scheduleService);
+                reservationRepository,reservationMapper,guestService, scheduleService, 10, 50);
     }
 
     @Test

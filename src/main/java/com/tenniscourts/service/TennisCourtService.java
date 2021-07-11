@@ -38,19 +38,4 @@ public class TennisCourtService {
         return tennisCourtDTO;
     }
 
-    public List<TennisCourtDTO> findAllTennisCourt() {
-        return tennisCourtMapper.map(tennisCourtRepository.findAll());
-    }
-
-    public List<ScheduleDTO> findFreeSlots() {
-
-        List<TennisCourtDTO> allTennisCourt = findAllTennisCourt();
-        for (TennisCourtDTO tennisCourtDto : allTennisCourt){
-            tennisCourtDto.getTennisCourtSchedules();
-        }
-        //TODO: implement free slots;
-        return null;
-
-    }
-
 }

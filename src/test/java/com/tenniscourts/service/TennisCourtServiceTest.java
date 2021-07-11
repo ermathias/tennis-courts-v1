@@ -47,9 +47,6 @@ public class TennisCourtServiceTest {
 
     @Test
     public void addTennisCourt() {
-      //  public TennisCourtDTO addTennisCourt(TennisCourtDTO tennisCourt) {
-      //      return tennisCourtMapper.map(tennisCourtRepository.saveAndFlush(tennisCourtMapper.map(tennisCourt)));
-      //  }
         TennisCourtDTO tennisCourtDTO = new TennisCourtDTO();
         tennisCourtDTO.setId(1L);
         tennisCourtDTO.setName("Wimbledon");

@@ -1,5 +1,6 @@
 package com.tenniscourts.repository;
 
+import com.tenniscourts.model.ReservationStatus;
 import com.tenniscourts.model.Schedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

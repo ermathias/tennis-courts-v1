@@ -62,4 +62,16 @@ public class ScheduleController extends BaseRestController {
     public ResponseEntity<ScheduleDTO> findByScheduleId(@RequestParam Long scheduleId) {
         return ResponseEntity.ok(scheduleService.findSchedule(scheduleId));
     }
+
+
+    @ApiOperation("Find free slots")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "A list of free slots has been successfully retrieved"),
+            @ApiResponse(code = 400, message = "Bad request. Check your input"),
+            @ApiResponse(code = 500, message = "An error has occurred in getting a list of free slots")
+    })
+    @RequestMapping(value = "/api/schedule/get-free-slots", method = RequestMethod.GET)
+    public ResponseEntity<List<ScheduleDTO>> findFreeSlots() {
+        return ResponseEntity.ok(scheduleService.findFreeSlots());
+    }
 }
