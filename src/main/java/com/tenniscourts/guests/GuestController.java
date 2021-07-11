@@ -24,7 +24,7 @@ public class GuestController extends BaseRestController {
 	}
 
 	@GetMapping(value = "/v1/guest/retrieve")
-	public ResponseEntity<List<GuestDTO>> findGuests() {
-		return ResponseEntity.ok(guestService.findGuests());
+	public ResponseEntity<List<GuestDTO>> retrieveGuests() {
+		return ResponseEntity.ok(guestService.retrieveGuests());
 	}
 }
