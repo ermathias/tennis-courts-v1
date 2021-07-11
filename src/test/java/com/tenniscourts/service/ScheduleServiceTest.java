@@ -49,7 +49,7 @@ public class ScheduleServiceTest {
     @Before
     public void setup(){
         scheduleService = new ScheduleService(
-                scheduleRepository, scheduleMapper);
+                scheduleRepository, scheduleMapper, 6);
     }
 
     @Test

@@ -11,21 +11,39 @@ import com.tenniscourts.model.ReservationStatus;
 import com.tenniscourts.model.Schedule;
 import com.tenniscourts.model.TennisCourt;
 import com.tenniscourts.repository.ScheduleRepository;
+import com.tenniscourts.util.Consts;
 import lombok.AllArgsConstructor;
 import org.hibernate.query.criteria.internal.BasicPathUsageException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
-@AllArgsConstructor
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
 
     private final ScheduleMapper scheduleMapper;
+
+    private final @Value("${schedule.max.weeks}") int scheduleMaxWeeks;
+
+    private final LocalDateTime currentDate;
+
+    private final LocalDateTime endDateForScheduling;
+
+    public ScheduleService(final ScheduleRepository scheduleRepository,
+                           final ScheduleMapper scheduleMapper,
+                           final @Value("${reservation.deposit}") int scheduleMaxWeeks){
+        this.scheduleMapper =scheduleMapper;
+        this.scheduleRepository = scheduleRepository;
+        this.scheduleMaxWeeks = scheduleMaxWeeks;
+        currentDate = LocalDateTime.now();
+        endDateForScheduling = currentDate.plusWeeks(scheduleMaxWeeks);
+    }
 
     public ScheduleDTO addSchedule(Long tennisCourtId, CreateScheduleRequestDTO createScheduleRequestDTO) {
         ScheduleDTO addedSchedule;
@@ -45,7 +63,7 @@ public class ScheduleService {
             tennisCourt.setId(tennisCourtId);
             schedule.setTennisCourt(tennisCourt);
             schedule.setStartDateTime(createScheduleRequestDTO.getStartDateTime());
-            schedule.setEndDateTime(createScheduleRequestDTO.getStartDateTime().plusHours(1));
+            schedule.setEndDateTime(createScheduleRequestDTO.getStartDateTime().plusHours(Consts.ONE_HOUR));
             addedSchedule = scheduleMapper.map(scheduleRepository.save(schedule));
         } else {
             throw new BusinessException("Tennis Court has been already booked for this date");
@@ -62,13 +80,15 @@ public class ScheduleService {
 
     }
 
-    public List<ScheduleDTO> findFreeSlotsByDates(LocalDateTime startDate, LocalDateTime endDate) {
+    public List<ScheduleDTO> findFreeSlotsByDates(LocalDateTime startDate, LocalDateTime endDate, Long scheduleId) {
         List<Schedule> freeSchedules = new ArrayList<>();
         List<Schedule> schedules = scheduleRepository.findSchedulesBetweenDates(startDate,endDate);
 
         for (Schedule schedule : schedules){
             if (checkReservationIsNotReadyToPlay(schedule.getReservations())){
-                freeSchedules.add(schedule);
+                if (scheduleId == null || scheduleId != schedule.getId()){
+                    freeSchedules.add(schedule);
+                }
             }
         }
 
@@ -100,10 +120,20 @@ public class ScheduleService {
 
     public List<ScheduleDTO> findFreeSlots() {
 
-         LocalDateTime startDate = LocalDateTime.now();
-         LocalDateTime  endDate = startDate.plusWeeks(2);
-
-         return findFreeSlotsByDates(startDate,endDate);
+         return findFreeSlotsByDates(currentDate,endDateForScheduling, null);
 
     }
+
+    public List<ScheduleDTO> findFreeSlots(Long currentScheduleId) {
+
+        return findFreeSlotsByDates(currentDate,endDateForScheduling, currentScheduleId);
+
+    }
+
+    public void addReservationToSchedule(Long scheduleId, Reservation reservation) {
+       Optional<Schedule> schedule = scheduleRepository.findById(scheduleId);
+       schedule.get().addReservation(reservation);
+       scheduleRepository.saveAndFlush(schedule.get());
+    }
+
 }

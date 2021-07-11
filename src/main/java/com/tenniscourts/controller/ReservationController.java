@@ -58,9 +58,9 @@ public class ReservationController extends BaseRestController {
 
     @ApiOperation("Reschedule reservation by ID")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "A reservation has been successfully deleted"),
+            @ApiResponse(code = 200, message = "A reservation has been successfully rescheduled"),
             @ApiResponse(code = 400, message = "Bad request. Check your input"),
-            @ApiResponse(code = 500, message = "An error has occurred in deleting a reservation")
+            @ApiResponse(code = 500, message = "An error has occurred in rescheduling a reservation")
     })
     @RequestMapping(value = "/api/reservation/modify", method = RequestMethod.PUT)
     public ResponseEntity<ReservationDTO> rescheduleReservation(@RequestParam Long reservationId, @RequestParam Long scheduleId) {

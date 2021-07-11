@@ -2,21 +2,27 @@ package com.tenniscourts.service;
 
 import com.tenniscourts.dto.CreateReservationRequestDTO;
 import com.tenniscourts.dto.ReservationDTO;
+import com.tenniscourts.dto.ScheduleDTO;
+import com.tenniscourts.exceptions.BusinessException;
 import com.tenniscourts.exceptions.EntityNotFoundException;
+import com.tenniscourts.exceptions.ReservationException;
 import com.tenniscourts.mapper.ReservationMapper;
 import com.tenniscourts.model.Reservation;
+import com.tenniscourts.model.Schedule;
 import com.tenniscourts.repository.ReservationRepository;
 import com.tenniscourts.model.ReservationStatus;
 import com.tenniscourts.util.Consts;
-import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @Service
+@Slf4j
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
@@ -58,6 +64,10 @@ public class ReservationService {
         BigDecimal value = fee.add(deposit);
 
         reservation.setValue(value);
+
+        Reservation reservationSaved = reservationRepository.save(reservation);
+
+        scheduleService.addReservationToSchedule(createReservationRequestDTO.getScheduleId(), reservationSaved);
 
         return reservationMapper.map(reservationRepository.save(reservation));
 
@@ -114,13 +124,17 @@ public class ReservationService {
         return BigDecimal.ZERO;
     }
 
-    /*TODO: This method actually not fully working, find a way to fix the issue when it's throwing the error:
-            "Cannot reschedule to the same slot.*/
     public ReservationDTO rescheduleReservation(Long previousReservationId, Long scheduleId) {
         Reservation previousReservation = cancel(previousReservationId);
 
         if (scheduleId.equals(previousReservation.getSchedule().getId())) {
-            throw new IllegalArgumentException("Cannot reschedule to the same slot.");
+            log.warn("Cannot reschedule to the same slot. We will pick up the next free slot");
+            List<ScheduleDTO> freeSlots = scheduleService.findFreeSlots(scheduleId);
+            if (freeSlots.isEmpty()){
+                throw new ReservationException("There is not free slot for the next 6 weeks");
+            } else {
+                scheduleId = freeSlots.get(0).getId();
+            }
         }
 
         previousReservation.setReservationStatus(ReservationStatus.RESCHEDULED);
