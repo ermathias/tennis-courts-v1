@@ -3,6 +3,7 @@ package com.tenniscourts.guests;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,6 +52,13 @@ public class GuestController extends BaseRestController {
 	public ResponseEntity<GuestDTO> update(@PathVariable Long guestId, @RequestBody GuestDTO guestDTO) {
 
 		return ResponseEntity.ok(guestService.update(guestId, guestDTO));
+
+	}
+	
+	@DeleteMapping(value = "/v1/guest/{guestId}/delete")
+	public ResponseEntity<GuestDTO> delete(@PathVariable Long guestId) {
+
+		return ResponseEntity.ok(guestService.delete(guestId));
 
 	}
 }

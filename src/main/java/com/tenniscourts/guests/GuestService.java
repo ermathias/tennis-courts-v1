@@ -73,4 +73,18 @@ public class GuestService {
 
 	}
 
+	public GuestDTO delete(Long guestId) {
+
+		return guestRepository.findById(guestId).map(guest -> {
+
+			guestRepository.delete(guest);
+
+			return mapper.map(guest, GuestDTO.class);
+
+		}).orElseThrow(() -> {
+			throw new EntityNotFoundException("Guest not found.");
+		});
+
+	}
+
 }
