@@ -18,6 +18,7 @@ public class GuestMapperImpl implements GuestMapper{
         }
 
 		GuestDTO guestDTO = new GuestDTO();
+		guestDTO.setId(source.getId());
 		guestDTO.setName(source.getName());
         return guestDTO;
 	}
