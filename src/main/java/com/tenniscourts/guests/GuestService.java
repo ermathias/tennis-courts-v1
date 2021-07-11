@@ -18,7 +18,7 @@ public class GuestService {
 
 	private ModelMapper mapper = new ModelMapper();
 
-	public GuestDTO createGuest(GuestDTO guestDTO) {
+	public GuestDTO create(GuestDTO guestDTO) {
 
 		Guest guest = guestRepository.save(mapper.map(guestDTO, Guest.class));
 
@@ -26,14 +26,14 @@ public class GuestService {
 
 	}
 
-	public List<GuestDTO> retrieveGuests() {
+	public List<GuestDTO> retrieve() {
 
 		return guestRepository.findAll().stream().map(guest -> mapper.map(guest, GuestDTO.class))
 				.collect(Collectors.toList());
 
 	}
 
-	public GuestDTO retrieveGuestById(Long guestId) {
+	public GuestDTO retrieveById(Long guestId) {
 
 		return guestRepository.findById(guestId).map(guest -> {
 
@@ -45,7 +45,7 @@ public class GuestService {
 
 	}
 
-	public GuestDTO retrieveGuestByName(GuestDTO guestDTO) {
+	public GuestDTO retrieveByName(GuestDTO guestDTO) {
 
 		return guestRepository.findByName(guestDTO.getName()).map(guest -> {
 

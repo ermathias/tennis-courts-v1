@@ -21,30 +21,30 @@ public class GuestController extends BaseRestController {
 	private final GuestService guestService;
 
 	@PostMapping(value = "/v1/guest/create")
-	public ResponseEntity<Void> createGuest(@RequestBody GuestDTO guestDTO) {
+	public ResponseEntity<Void> create(@RequestBody GuestDTO guestDTO) {
 
-		return ResponseEntity.created(locationByEntity(guestService.createGuest(guestDTO).getId())).build();
+		return ResponseEntity.created(locationByEntity(guestService.create(guestDTO).getId())).build();
 
 	}
 
 	@GetMapping(value = "/v1/guest/retrieve")
-	public ResponseEntity<List<GuestDTO>> retrieveGuests() {
+	public ResponseEntity<List<GuestDTO>> retrieve() {
 
-		return ResponseEntity.ok(guestService.retrieveGuests());
+		return ResponseEntity.ok(guestService.retrieve());
 
 	}
 
 	@GetMapping(value = "/v1/guest/{guestId}/retrieve")
-	public ResponseEntity<GuestDTO> retrieveGuestById(@PathVariable Long guestId) {
+	public ResponseEntity<GuestDTO> retrieveById(@PathVariable Long guestId) {
 
-		return ResponseEntity.ok(guestService.retrieveGuestById(guestId));
+		return ResponseEntity.ok(guestService.retrieveById(guestId));
 
 	}
 
 	@PostMapping(value = "/v1/guest/retrieveByName")
-	public ResponseEntity<GuestDTO> retrieveGuestByName(@RequestBody GuestDTO guestDTO) {
+	public ResponseEntity<GuestDTO> retrieveByName(@RequestBody GuestDTO guestDTO) {
 
-		return ResponseEntity.ok(guestService.retrieveGuestByName(guestDTO));
+		return ResponseEntity.ok(guestService.retrieveByName(guestDTO));
 
 	}
 
@@ -54,7 +54,7 @@ public class GuestController extends BaseRestController {
 		return ResponseEntity.ok(guestService.update(guestId, guestDTO));
 
 	}
-	
+
 	@DeleteMapping(value = "/v1/guest/{guestId}/delete")
 	public ResponseEntity<GuestDTO> delete(@PathVariable Long guestId) {
 
