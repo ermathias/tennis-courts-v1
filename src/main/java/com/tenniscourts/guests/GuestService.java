@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.tenniscourts.exceptions.EntityNotFoundException;
+
 import lombok.AllArgsConstructor;
 
 @Service
@@ -14,19 +16,33 @@ public class GuestService {
 
 	private final GuestRepository guestRepository;
 
-	private ModelMapper modelmapper = new ModelMapper();
+	private ModelMapper mapper = new ModelMapper();
 
 	public GuestDTO createGuest(GuestDTO guestDTO) {
 
-		Guest guest = guestRepository.save(modelmapper.map(guestDTO, Guest.class));
+		Guest guest = guestRepository.save(mapper.map(guestDTO, Guest.class));
 
-		return modelmapper.map(guest, GuestDTO.class);
+		return mapper.map(guest, GuestDTO.class);
 
 	}
 
 	public List<GuestDTO> retrieveGuests() {
-		return guestRepository.findAll().stream().map(guest -> modelmapper.map(guest, GuestDTO.class))
+
+		return guestRepository.findAll().stream().map(guest -> mapper.map(guest, GuestDTO.class))
 				.collect(Collectors.toList());
+
+	}
+
+	public GuestDTO retrieveGuestById(Long guestId) {
+
+		return guestRepository.findById(guestId).map(guest -> {
+
+			return mapper.map(guest, GuestDTO.class);
+
+		}).orElseThrow(() -> {
+			throw new EntityNotFoundException("Guest not found.");
+		});
+
 	}
 
 }

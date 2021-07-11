@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,5 +27,10 @@ public class GuestController extends BaseRestController {
 	@GetMapping(value = "/v1/guest/retrieve")
 	public ResponseEntity<List<GuestDTO>> retrieveGuests() {
 		return ResponseEntity.ok(guestService.retrieveGuests());
+	}
+
+	@PostMapping(value = "/v1/guest/{guestId}/retrieve")
+	public ResponseEntity<Object> retrieveGuestById(@PathVariable Long guestId) {
+		return ResponseEntity.ok(guestService.retrieveGuestById(guestId));
 	}
 }
