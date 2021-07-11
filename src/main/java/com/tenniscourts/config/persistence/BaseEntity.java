@@ -1,6 +1,5 @@
 package com.tenniscourts.config.persistence;
 
-import com.tenniscourts.audit.CustomAuditEntityListener;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
