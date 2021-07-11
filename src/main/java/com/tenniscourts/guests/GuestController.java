@@ -30,7 +30,7 @@ public class GuestController extends BaseRestController {
 	}
 
 	@PostMapping(value = "/v1/guest/{guestId}/retrieve")
-	public ResponseEntity<Object> retrieveGuestById(@PathVariable Long guestId) {
+	public ResponseEntity<GuestDTO> retrieveGuestById(@PathVariable Long guestId) {
 		return ResponseEntity.ok(guestService.retrieveGuestById(guestId));
 	}
 }
