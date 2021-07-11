@@ -15,7 +15,7 @@ public class ScheduleService {
 
 	private final ScheduleRepository scheduleRepository;
 
-	private ModelMapper mapper = new ModelMapper();
+	private final ModelMapper mapper = new ModelMapper();
 
 	public ScheduleDTO addSchedule(Long tennisCourtId, CreateScheduleRequestDTO createScheduleRequestDTO) {
 		// TODO: implement addSchedule

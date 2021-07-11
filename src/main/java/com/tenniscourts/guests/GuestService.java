@@ -16,7 +16,7 @@ public class GuestService {
 
 	private final GuestRepository guestRepository;
 
-	private ModelMapper mapper = new ModelMapper();
+	private final ModelMapper mapper = new ModelMapper();
 
 	public GuestDTO create(GuestDTO guestDTO) {
 
