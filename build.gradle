@@ -30,6 +30,7 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-jersey')
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-web-services')
+    compile "org.modelmapper:modelmapper:2.4.4"
     runtime('com.h2database:h2')
     compileOnly('org.projectlombok:lombok')
     annotationProcessor("org.projectlombok:lombok")
@@ -40,6 +41,4 @@ dependencies {
     compile group: 'com.h2database', name: 'h2', version: '1.4.197'
     compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
-    implementation group: 'org.mapstruct', name: 'mapstruct-jdk8', version: '1.2.0.Final'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.2.0.Final'
 }
