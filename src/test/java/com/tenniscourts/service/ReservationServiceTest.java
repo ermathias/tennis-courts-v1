@@ -2,9 +2,11 @@ package com.tenniscourts.service;
 
 import com.tenniscourts.dto.CreateReservationRequestDTO;
 import com.tenniscourts.dto.ReservationDTO;
+import com.tenniscourts.dto.ScheduleDTO;
 import com.tenniscourts.mapper.ReservationMapper;
 import com.tenniscourts.model.Guest;
 import com.tenniscourts.model.Reservation;
+import com.tenniscourts.model.ReservationStatus;
 import com.tenniscourts.model.Schedule;
 import com.tenniscourts.repository.ReservationRepository;
 import com.tenniscourts.service.ReservationService;
@@ -24,6 +26,8 @@ import org.springframework.test.context.ContextConfiguration;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -74,25 +78,7 @@ public class ReservationServiceTest {
         createReservationRequestDTO.setGuestId(1L);
         createReservationRequestDTO.setScheduleId(1L);
 
-        Reservation reservation = new Reservation();
-        Guest guest = new Guest();
-        guest.setName("John");
-        reservation.setGuest(guest);
-        reservation.setValue(new BigDecimal(45));
-        Schedule schedule = new Schedule();
-        schedule.setStartDateTime(LocalDateTime.now().plusDays(1));
-        schedule.setEndDateTime(LocalDateTime.now().plusDays(2));
-        reservation.setSchedule(schedule);
-
-        ReservationDTO reservationDTOMock = new ReservationDTO();
-        reservationDTOMock.setValue(new BigDecimal(45));
-
-        when(reservationMapper.map(Mockito.any(CreateReservationRequestDTO.class))).thenReturn(reservation);
-        when(reservationMapper.map(Mockito.any(Reservation.class))).thenReturn(reservationDTOMock);
-
-        when(reservationRepository.save(Mockito.any(Reservation.class)))
-                .thenAnswer(i -> i.getArguments()[0]);
-
+        bookReservationMock();
 
         ReservationDTO reservationDTO = reservationService.bookReservation(createReservationRequestDTO);
 
@@ -105,9 +91,36 @@ public class ReservationServiceTest {
     @Test
     public void cancelReservationTest() {
 
+        cancelReservationMock();
+
+        ReservationDTO reservationDTO = reservationService.cancelReservation(1L);
+
+        Assert.assertEquals(reservationDTO.getValue(), new BigDecimal(45));
+
+
+    }
+
+    private void bookReservationMock(){
+        Reservation reservation = new Reservation();
+        Guest guest = new Guest();
+        guest.setName("John");
+        reservation.setGuest(guest);
+        reservation.setValue(new BigDecimal(45));
+        Schedule schedule = new Schedule();
+        schedule.setStartDateTime(LocalDateTime.now().plusDays(1));
+        schedule.setEndDateTime(LocalDateTime.now().plusDays(2));
+        reservation.setSchedule(schedule);
         ReservationDTO reservationDTOMock = new ReservationDTO();
         reservationDTOMock.setValue(new BigDecimal(45));
+        when(reservationMapper.map(Mockito.any(CreateReservationRequestDTO.class))).thenReturn(reservation);
+        when(reservationMapper.map(Mockito.any(Reservation.class))).thenReturn(reservationDTOMock);
+        when(reservationRepository.save(Mockito.any(Reservation.class)))
+                .thenAnswer(i -> i.getArguments()[0]);
+    }
 
+    private void cancelReservationMock(){
+        ReservationDTO reservationDTOMock = new ReservationDTO();
+        reservationDTOMock.setValue(new BigDecimal(45));
         Optional<Reservation> reservation = Optional.of(new Reservation());
         reservation.get().setId(1L);
         Schedule schedule = new Schedule();
@@ -115,16 +128,38 @@ public class ReservationServiceTest {
         schedule.setId(1L);
         reservation.get().setSchedule(schedule);
         reservation.get().setValue(new BigDecimal("45"));
+        Guest guest = new Guest();
+        guest.setName("John");
+        guest.setId(1L);
+        reservation.get().setGuest(guest);
         when(reservationRepository.findById(any())).thenReturn(reservation);
-
         when(reservationRepository.save(any())).thenReturn(reservation.get());
-
         when(reservationMapper.map(Mockito.any(Reservation.class))).thenReturn(reservationDTOMock);
+    }
 
-        ReservationDTO reservationDTO = reservationService.cancelReservation(1L);
+
+    @Test
+    public void rescheduleReservationTest() {
+
+        cancelReservationMock();
+
+        List<ScheduleDTO> freeSlots = new ArrayList<>();
+
+        ScheduleDTO freeSlot = new ScheduleDTO();
+        freeSlot.setId(1L);
+        freeSlot.setStartDateTime(LocalDateTime.now().plusDays(2));
+        freeSlot.setEndDateTime(LocalDateTime.now().plusDays(2).plusHours(1));
+
+        freeSlots.add(freeSlot);
+
+
+        when(scheduleService.findFreeSlots(any())).thenReturn(freeSlots);
+
+        bookReservationMock();
+
+        ReservationDTO reservationDTO = reservationService.rescheduleReservation(1L, 1L);
 
         Assert.assertEquals(reservationDTO.getValue(), new BigDecimal(45));
-
 
     }
 

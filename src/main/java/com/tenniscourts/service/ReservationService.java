@@ -131,7 +131,7 @@ public class ReservationService {
             log.warn("Cannot reschedule to the same slot. We will pick up the next free slot");
             List<ScheduleDTO> freeSlots = scheduleService.findFreeSlots(scheduleId);
             if (freeSlots.isEmpty()){
-                throw new ReservationException("There is not free slot for the next 6 weeks");
+                throw new ReservationException("There is not free slot for the next 6 weeks.");
             } else {
                 scheduleId = freeSlots.get(0).getId();
             }
