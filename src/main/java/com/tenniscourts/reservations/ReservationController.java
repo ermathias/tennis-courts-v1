@@ -25,24 +25,24 @@ public class ReservationController extends BaseRestController {
         return ResponseEntity.created(locationByEntity(reservationService.bookReservation(createReservationRequestDTO).getId())).build();
     }
 
-    @GetMapping(value = "/find", params = "reservationId")
+    @GetMapping(value = "/find/{reservationId}")
     @ApiOperation(value="Find a Reservation by ID")
     @ApiResponse(code = 200, message = "Reservation found")
-    public ResponseEntity<ReservationDTO> findReservation(Long reservationId) {
+    public ResponseEntity<ReservationDTO> findReservation(@PathVariable("reservationId") Long reservationId) {
         return ResponseEntity.ok(reservationService.findReservation(reservationId));
     }
 
-    @PutMapping(value = "/cancel", params = "reservationId")
+    @PutMapping(value = "/cancel/{reservationId}")
     @ApiOperation(value="Cancel a Reservation")
     @ApiResponse(code = 200, message = "Reservation cancelled")
-    public ResponseEntity<ReservationDTO> cancelReservation(Long reservationId) {
+    public ResponseEntity<ReservationDTO> cancelReservation(@PathVariable("reservationId") Long reservationId) {
         return ResponseEntity.ok(reservationService.cancelReservation(reservationId));
     }
 
-    @PutMapping(value = "/reschedule", params = {"reservationId","scheduleId"})
+    @PutMapping(value = "/reschedule/{reservationId}", params = {"scheduleId"})
     @ApiOperation(value="Reschedule a Reservation")
     @ApiResponse(code = 200, message = "Reservation cancelled")
-    public ResponseEntity<ReservationDTO> rescheduleReservation(Long reservationId, Long scheduleId) {
+    public ResponseEntity<ReservationDTO> rescheduleReservation(@PathVariable("reservationId") Long reservationId, Long scheduleId) {
         return ResponseEntity.ok(reservationService.rescheduleReservation(reservationId, scheduleId));
     }
 }
