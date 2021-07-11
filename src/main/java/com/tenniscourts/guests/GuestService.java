@@ -24,7 +24,7 @@ public class GuestService {
 
 	}
 
-	public List<GuestDTO> findGuests() {
+	public List<GuestDTO> retrieveGuests() {
 		return guestRepository.findAll().stream().map(guest -> modelmapper.map(guest, GuestDTO.class))
 				.collect(Collectors.toList());
 	}
