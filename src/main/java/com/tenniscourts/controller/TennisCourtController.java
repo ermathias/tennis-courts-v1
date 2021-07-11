@@ -45,6 +45,18 @@ public class TennisCourtController extends BaseRestController {
         return ResponseEntity.ok(tennisCourtService.findTennisCourtById(tennisCourtId));
     }
 
+
+    @ApiOperation("Cancel tennis court")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Tennis court has been cancelled successfully"),
+            @ApiResponse(code = 400, message = "Bad request. Check your input"),
+            @ApiResponse(code = 500, message = "An error has occurred in deleting a tennis court")
+    })
+    @RequestMapping(value = "/api/tennis-court/delete", method = RequestMethod.DELETE)
+    public ResponseEntity<TennisCourtDTO> cancelTennisCourtById(@RequestParam Long tennisCourtId) {
+        return ResponseEntity.ok(tennisCourtService.deleteTennisCourtById(tennisCourtId));
+    }
+
     @ApiOperation("Get tennis court with schedules")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Create tennis court"),

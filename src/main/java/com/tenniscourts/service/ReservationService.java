@@ -13,8 +13,6 @@ import com.tenniscourts.util.Consts;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -34,20 +32,17 @@ public class ReservationService {
 
     private int reservationDeposit;
 
-    private int reservationValue;
 
      public  ReservationService(final ReservationRepository reservationRepository,
                                 final ReservationMapper reservationMapper,
                                 final GuestService guestService,
                                 final ScheduleService scheduleService,
-                                final @Value("${reservation.deposit}") int reservationDeposit,
-                                final @Value("${reservation.value}") int reservationValue) {
+                                final @Value("${reservation.deposit}") int reservationDeposit) {
          this.reservationMapper = reservationMapper;
          this.reservationRepository =reservationRepository;
          this.guestService = guestService;
          this.scheduleService = scheduleService;
          this.reservationDeposit = reservationDeposit;
-         this.reservationValue = reservationValue;
      }
 
 
@@ -58,11 +53,7 @@ public class ReservationService {
 
         BigDecimal deposit = new BigDecimal(reservationDeposit);
 
-        BigDecimal value = new BigDecimal(reservationValue);
-
-        reservation.setValue(value);
-
-        reservation.setDeposit(deposit);
+        reservation.setValue(deposit);
 
         Reservation reservationSaved = reservationRepository.save(reservation);
 
@@ -148,6 +139,11 @@ public class ReservationService {
                 .build());
         newReservation.setPreviousReservation(reservationMapper.map(previousReservation));
         return newReservation;
+    }
+
+    public List<ReservationDTO> getHistoryReservation(){
+         List<Reservation> reservations = reservationRepository.getHistoryReservation(LocalDateTime.now());
+         return reservationMapper.map(reservations);
     }
 
 }

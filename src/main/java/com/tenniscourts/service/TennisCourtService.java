@@ -1,9 +1,11 @@
 package com.tenniscourts.service;
 
+import com.tenniscourts.dto.GuestDTO;
 import com.tenniscourts.dto.ScheduleDTO;
 import com.tenniscourts.dto.TennisCourtDTO;
 import com.tenniscourts.exceptions.EntityNotFoundException;
 import com.tenniscourts.mapper.TennisCourtMapper;
+import com.tenniscourts.model.Guest;
 import com.tenniscourts.model.TennisCourt;
 import com.tenniscourts.repository.TennisCourtRepository;
 import lombok.AllArgsConstructor;
@@ -30,6 +32,13 @@ public class TennisCourtService {
         return tennisCourtRepository.findById(id).map(tennisCourtMapper::map).<EntityNotFoundException>orElseThrow(() -> {
             throw new EntityNotFoundException("Tennis Court not found.");
         });
+    }
+
+
+    public TennisCourtDTO deleteTennisCourtById(Long guestId) {
+        TennisCourt tennisCourt = tennisCourtRepository.getOne(guestId);
+        this.tennisCourtRepository.delete(tennisCourt);
+        return tennisCourtMapper.map(tennisCourt);
     }
 
     public TennisCourtDTO findTennisCourtWithSchedulesById(Long tennisCourtId) {

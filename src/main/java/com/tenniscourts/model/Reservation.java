@@ -35,9 +35,6 @@ public class Reservation extends BaseEntity<Long> {
     private BigDecimal value;
 
     @Column
-    private BigDecimal deposit;
-
-    @Column
     private LocalDateTime rescheduledTime;
 
     @Column

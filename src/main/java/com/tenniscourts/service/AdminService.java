@@ -1,6 +1,7 @@
 package com.tenniscourts.service;
 
 
+import com.tenniscourts.dto.ReservationDTO;
 import com.tenniscourts.exceptions.BusinessException;
 import com.tenniscourts.model.Reservation;
 import com.tenniscourts.model.ReservationStatus;
@@ -31,6 +32,10 @@ public class AdminService {
         this.adminPoliciesDateRefund = adminPoliciesDateRefund;
     }
 
+    public List<ReservationDTO> getHistory(){
+        return reservationService.getHistoryReservation();
+    }
+
     public void closeDailyReservations(){
         LocalDateTime closingTime= LocalDateTime.now();
         LocalDateTime openingTime= LocalDateTime.now().minusHours(12);
@@ -49,14 +54,16 @@ public class AdminService {
                        (reservation,new BigDecimal(reservationDeposit),ReservationStatus.CLOSED);
            } else if (ReservationStatus.CANCELLED.equals(reservation.getReservationStatus())
            || ReservationStatus.RESCHEDULED.equals(reservation.getReservationStatus())){
-               applyPoliciesRefund(reservation);
+              BigDecimal refundValue = applyRefundPolicies(reservation);
+               reservationService.updateReservation
+                       (reservation, refundValue, reservation.getReservationStatus());
            }
 
        }
 
     }
 
-    private BigDecimal applyPoliciesRefund(Reservation reservation) {
+    private BigDecimal applyRefundPolicies(Reservation reservation) {
 
         LocalDateTime cancelledTime = reservation.getCancelledTime();
 

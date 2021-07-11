@@ -1,18 +1,17 @@
 package com.tenniscourts.service;
 
 import com.tenniscourts.dto.CreateScheduleRequestDTO;
+import com.tenniscourts.dto.GuestDTO;
 import com.tenniscourts.dto.ScheduleDTO;
 import com.tenniscourts.dto.TennisCourtDTO;
 import com.tenniscourts.exceptions.BusinessException;
 import com.tenniscourts.exceptions.EntityNotFoundException;
 import com.tenniscourts.mapper.ScheduleMapper;
-import com.tenniscourts.model.Reservation;
-import com.tenniscourts.model.ReservationStatus;
-import com.tenniscourts.model.Schedule;
-import com.tenniscourts.model.TennisCourt;
+import com.tenniscourts.model.*;
 import com.tenniscourts.repository.ScheduleRepository;
 import com.tenniscourts.util.Consts;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.query.criteria.internal.BasicPathUsageException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
@@ -143,5 +143,45 @@ public class ScheduleService {
        schedule.get().addReservation(reservation);
        scheduleRepository.saveAndFlush(schedule.get());
     }
+
+    public ScheduleDTO cancel(Long scheduleId) {
+        Schedule schedule = scheduleRepository.getOne(scheduleId);
+        List<Reservation> reservations = schedule.getReservations();
+        if (!reservations.isEmpty()){
+            throw new BusinessException
+                    ("It is not allowed to cancel a Schedule linked to a reservation");
+        }
+        this.scheduleRepository.delete(schedule);
+        return scheduleMapper.map(schedule);
+    }
+
+    public ScheduleDTO modify(ScheduleDTO scheduleDTO) {
+
+        Optional<Schedule> schedule = scheduleRepository.findById(scheduleDTO.getId());
+        ScheduleDTO result;
+
+        if (schedule.isPresent()) {
+            List<Reservation> reservations = schedule.get().getReservations();
+            if (!reservations.isEmpty()){
+              throw new BusinessException
+                      ("It is not allowed to modify a Schedule linked to a reservation");
+            }
+            log.warn("A new schedule will be created with the new input.");
+            CreateScheduleRequestDTO createScheduleRequestDTO = new CreateScheduleRequestDTO();
+            createScheduleRequestDTO.setTennisCourtId(scheduleDTO.getTennisCourtId());
+            createScheduleRequestDTO.setStartDateTime(scheduleDTO.getStartDateTime());
+            log.warn("If the slot is already booked an exception will be thrown");
+            ScheduleDTO newSchedule = addSchedule(scheduleDTO.getTennisCourtId(), createScheduleRequestDTO);
+            log.warn("If the new slot has been created the old one will be deleted");
+            cancel(scheduleDTO.getId());
+            result = newSchedule;
+
+        } else {
+            throw new EntityNotFoundException("Schedule not found.");
+        }
+        return result;
+
+    }
+
 
 }

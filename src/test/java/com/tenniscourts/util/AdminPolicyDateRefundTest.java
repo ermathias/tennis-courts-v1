@@ -1,6 +1,5 @@
 package com.tenniscourts.util;
 
-import com.tenniscourts.service.ReservationService;
 import com.tenniscourts.service.ScheduleService;
 import org.junit.Assert;
 import org.junit.Before;

@@ -58,7 +58,7 @@ public class ReservationServiceTest {
     @Before
     public void setup(){
         reservationService = new ReservationService(
-                reservationRepository,reservationMapper,guestService, scheduleService, 10, 50);
+                reservationRepository,reservationMapper,guestService, scheduleService, 10);
     }
 
     @Test
@@ -95,7 +95,7 @@ public class ReservationServiceTest {
 
         ReservationDTO reservationDTO = reservationService.cancelReservation(1L);
 
-        Assert.assertEquals(reservationDTO.getValue(), new BigDecimal(45));
+        Assert.assertEquals(reservationDTO.getValue(), new BigDecimal(10));
 
 
     }
@@ -105,13 +105,13 @@ public class ReservationServiceTest {
         Guest guest = new Guest();
         guest.setName("John");
         reservation.setGuest(guest);
-        reservation.setValue(new BigDecimal(45));
+        reservation.setValue(new BigDecimal(10));
         Schedule schedule = new Schedule();
         schedule.setStartDateTime(LocalDateTime.now().plusDays(1));
         schedule.setEndDateTime(LocalDateTime.now().plusDays(2));
         reservation.setSchedule(schedule);
         ReservationDTO reservationDTOMock = new ReservationDTO();
-        reservationDTOMock.setValue(new BigDecimal(45));
+        reservationDTOMock.setValue(new BigDecimal(10));
         when(reservationMapper.map(Mockito.any(CreateReservationRequestDTO.class))).thenReturn(reservation);
         when(reservationMapper.map(Mockito.any(Reservation.class))).thenReturn(reservationDTOMock);
         when(reservationRepository.save(Mockito.any(Reservation.class)))
@@ -120,14 +120,14 @@ public class ReservationServiceTest {
 
     private void cancelReservationMock(){
         ReservationDTO reservationDTOMock = new ReservationDTO();
-        reservationDTOMock.setValue(new BigDecimal(45));
+        reservationDTOMock.setValue(new BigDecimal(10));
         Optional<Reservation> reservation = Optional.of(new Reservation());
         reservation.get().setId(1L);
         Schedule schedule = new Schedule();
         schedule.setStartDateTime(LocalDateTime.now().plusDays(2));
         schedule.setId(1L);
         reservation.get().setSchedule(schedule);
-        reservation.get().setValue(new BigDecimal("45"));
+        reservation.get().setValue(new BigDecimal("10"));
         Guest guest = new Guest();
         guest.setName("John");
         guest.setId(1L);
@@ -159,7 +159,7 @@ public class ReservationServiceTest {
 
         ReservationDTO reservationDTO = reservationService.rescheduleReservation(1L, 1L);
 
-        Assert.assertEquals(reservationDTO.getValue(), new BigDecimal(45));
+        Assert.assertEquals(reservationDTO.getValue(), new BigDecimal(10));
 
     }
 
