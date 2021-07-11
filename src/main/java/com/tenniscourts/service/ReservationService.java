@@ -3,12 +3,10 @@ package com.tenniscourts.service;
 import com.tenniscourts.dto.CreateReservationRequestDTO;
 import com.tenniscourts.dto.ReservationDTO;
 import com.tenniscourts.dto.ScheduleDTO;
-import com.tenniscourts.exceptions.BusinessException;
 import com.tenniscourts.exceptions.EntityNotFoundException;
 import com.tenniscourts.exceptions.ReservationException;
 import com.tenniscourts.mapper.ReservationMapper;
 import com.tenniscourts.model.Reservation;
-import com.tenniscourts.model.Schedule;
 import com.tenniscourts.repository.ReservationRepository;
 import com.tenniscourts.model.ReservationStatus;
 import com.tenniscourts.util.Consts;
@@ -16,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -35,20 +34,20 @@ public class ReservationService {
 
     private int reservationDeposit;
 
-    private int reservationFee;
+    private int reservationValue;
 
      public  ReservationService(final ReservationRepository reservationRepository,
                                 final ReservationMapper reservationMapper,
                                 final GuestService guestService,
                                 final ScheduleService scheduleService,
                                 final @Value("${reservation.deposit}") int reservationDeposit,
-                                final @Value("${reservation.fee}") int reservationFee) {
+                                final @Value("${reservation.value}") int reservationValue) {
          this.reservationMapper = reservationMapper;
          this.reservationRepository =reservationRepository;
          this.guestService = guestService;
          this.scheduleService = scheduleService;
          this.reservationDeposit = reservationDeposit;
-         this.reservationFee = reservationFee;
+         this.reservationValue = reservationValue;
      }
 
 
@@ -59,11 +58,11 @@ public class ReservationService {
 
         BigDecimal deposit = new BigDecimal(reservationDeposit);
 
-        BigDecimal fee = new BigDecimal(reservationFee);
-
-        BigDecimal value = fee.add(deposit);
+        BigDecimal value = new BigDecimal(reservationValue);
 
         reservation.setValue(value);
+
+        reservation.setDeposit(deposit);
 
         Reservation reservationSaved = reservationRepository.save(reservation);
 
@@ -96,10 +95,12 @@ public class ReservationService {
         });
     }
 
-    private Reservation updateReservation(Reservation reservation, BigDecimal refundValue, ReservationStatus status) {
+    public Reservation updateReservation(Reservation reservation, BigDecimal refundValue, ReservationStatus status) {
         reservation.setReservationStatus(status);
         reservation.setValue(reservation.getValue().subtract(refundValue));
         reservation.setRefundValue(refundValue);
+        reservation.setCancelledTime(LocalDateTime.now());
+
 
         return reservationRepository.save(reservation);
     }
@@ -138,6 +139,7 @@ public class ReservationService {
         }
 
         previousReservation.setReservationStatus(ReservationStatus.RESCHEDULED);
+        previousReservation.setRescheduledTime(LocalDateTime.now());
         reservationRepository.save(previousReservation);
 
         ReservationDTO newReservation = bookReservation(CreateReservationRequestDTO.builder()
@@ -147,4 +149,5 @@ public class ReservationService {
         newReservation.setPreviousReservation(reservationMapper.map(previousReservation));
         return newReservation;
     }
+
 }

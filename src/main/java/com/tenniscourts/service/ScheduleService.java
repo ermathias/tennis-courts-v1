@@ -95,6 +95,14 @@ public class ScheduleService {
         return scheduleMapper.map(freeSchedules);
 
     }
+    public List<Reservation> getDailyReservation(LocalDateTime openingTime, LocalDateTime closingTime) {
+        List<Reservation> dailyReservation = new ArrayList<>();
+        List<Schedule> schedules = scheduleRepository.findSchedulesBetweenDates(openingTime, closingTime);
+        for (Schedule schedule : schedules){
+            dailyReservation.addAll(schedule.getReservations());
+        }
+        return dailyReservation;
+    }
 
     private boolean checkReservationIsNotReadyToPlay(List<Reservation> reservations){
         boolean isReservationNotReadyToPlay = true;

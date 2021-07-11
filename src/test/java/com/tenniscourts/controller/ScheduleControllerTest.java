@@ -3,10 +3,7 @@ package com.tenniscourts.controller;
 import com.tenniscourts.config.AbstractTest;
 import com.tenniscourts.config.WebTestConfig;
 import com.tenniscourts.dto.ScheduleDTO;
-import com.tenniscourts.service.GuestService;
-import com.tenniscourts.service.ReservationService;
-import com.tenniscourts.service.ScheduleService;
-import com.tenniscourts.service.TennisCourtService;
+import com.tenniscourts.service.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +41,10 @@ public class ScheduleControllerTest extends AbstractTest {
 
     @MockBean
     private GuestService guestService;
+
+    @MockBean
+    private AdminService adminService;
+
 
     @Test
     public void should_add_schedule() throws Exception {

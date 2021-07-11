@@ -8,12 +8,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -35,6 +33,15 @@ public class Reservation extends BaseEntity<Long> {
 
     @NotNull
     private BigDecimal value;
+
+    @Column
+    private BigDecimal deposit;
+
+    @Column
+    private LocalDateTime rescheduledTime;
+
+    @Column
+    private LocalDateTime cancelledTime;
 
     @NotNull
     private ReservationStatus reservationStatus = ReservationStatus.READY_TO_PLAY;

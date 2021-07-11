@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @SpringBootTest
 @RunWith(MockitoJUnitRunner.class)
-@ContextConfiguration(classes = ScheduleService.class)
+@ContextConfiguration(classes = TennisCourtService.class)
 public class TennisCourtServiceTest {
 
     @Mock

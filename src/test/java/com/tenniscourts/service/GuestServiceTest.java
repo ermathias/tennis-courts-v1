@@ -33,7 +33,7 @@ import static org.mockito.Mockito.when;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @SpringBootTest
 @RunWith(MockitoJUnitRunner.class)
-@ContextConfiguration(classes = ScheduleService.class)
+@ContextConfiguration(classes = GuestService.class)
 public class GuestServiceTest {
 
     @Mock

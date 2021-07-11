@@ -4,10 +4,7 @@ import com.tenniscourts.config.AbstractTest;
 import com.tenniscourts.config.WebTestConfig;
 import com.tenniscourts.dto.GuestDTO;
 import com.tenniscourts.dto.ScheduleDTO;
-import com.tenniscourts.service.GuestService;
-import com.tenniscourts.service.ReservationService;
-import com.tenniscourts.service.ScheduleService;
-import com.tenniscourts.service.TennisCourtService;
+import com.tenniscourts.service.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +39,10 @@ public class GuestControllerTest extends AbstractTest {
 
     @MockBean
     private ScheduleService scheduleService;
+
+    @MockBean
+    private AdminService adminService;
+
 
     @MockBean
     private GuestService guestService;
