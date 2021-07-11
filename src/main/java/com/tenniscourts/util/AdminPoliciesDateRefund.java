@@ -40,6 +40,6 @@ public class AdminPoliciesDateRefund {
 
 
     private BigDecimal percentage(BigDecimal base, BigDecimal pct){
-        return base.multiply(pct).divide(Consts.ONE_HUNDRED);
+        return base.multiply(pct).divide(TennisCourtHelper.ONE_HUNDRED);
     }
 }

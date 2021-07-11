@@ -2,7 +2,7 @@ package com.tenniscourts.util;
 
 import java.math.BigDecimal;
 
-public class Consts {
+public class TennisCourtHelper {
 
     public static final int ONE_DAY = 24;
 

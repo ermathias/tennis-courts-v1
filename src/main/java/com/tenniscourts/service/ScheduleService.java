@@ -1,18 +1,14 @@
 package com.tenniscourts.service;
 
 import com.tenniscourts.dto.CreateScheduleRequestDTO;
-import com.tenniscourts.dto.GuestDTO;
 import com.tenniscourts.dto.ScheduleDTO;
-import com.tenniscourts.dto.TennisCourtDTO;
 import com.tenniscourts.exceptions.BusinessException;
 import com.tenniscourts.exceptions.EntityNotFoundException;
 import com.tenniscourts.mapper.ScheduleMapper;
 import com.tenniscourts.model.*;
 import com.tenniscourts.repository.ScheduleRepository;
-import com.tenniscourts.util.Consts;
-import lombok.AllArgsConstructor;
+import com.tenniscourts.util.TennisCourtHelper;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.query.criteria.internal.BasicPathUsageException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -63,7 +59,7 @@ public class ScheduleService {
             tennisCourt.setId(tennisCourtId);
             schedule.setTennisCourt(tennisCourt);
             schedule.setStartDateTime(createScheduleRequestDTO.getStartDateTime());
-            schedule.setEndDateTime(createScheduleRequestDTO.getStartDateTime().plusHours(Consts.ONE_HOUR));
+            schedule.setEndDateTime(createScheduleRequestDTO.getStartDateTime().plusHours(TennisCourtHelper.ONE_HOUR));
             addedSchedule = scheduleMapper.map(scheduleRepository.save(schedule));
         } else {
             throw new BusinessException("Tennis Court has been already booked for this date");

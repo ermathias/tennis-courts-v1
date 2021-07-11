@@ -1,17 +1,13 @@
 package com.tenniscourts.controller;
 
 import com.tenniscourts.config.BaseRestController;
-import com.tenniscourts.dto.GuestDTO;
 import com.tenniscourts.dto.ReservationDTO;
 import com.tenniscourts.service.AdminService;
-import com.tenniscourts.service.GuestService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;

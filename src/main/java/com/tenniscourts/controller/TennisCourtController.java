@@ -2,12 +2,10 @@ package com.tenniscourts.controller;
 
 import com.tenniscourts.config.BaseRestController;
 import com.tenniscourts.dto.TennisCourtDTO;
-import com.tenniscourts.service.ScheduleService;
 import com.tenniscourts.service.TennisCourtService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

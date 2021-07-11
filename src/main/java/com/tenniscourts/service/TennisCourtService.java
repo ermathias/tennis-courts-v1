@@ -1,18 +1,13 @@
 package com.tenniscourts.service;
 
-import com.tenniscourts.dto.GuestDTO;
-import com.tenniscourts.dto.ScheduleDTO;
 import com.tenniscourts.dto.TennisCourtDTO;
 import com.tenniscourts.exceptions.EntityNotFoundException;
 import com.tenniscourts.mapper.TennisCourtMapper;
-import com.tenniscourts.model.Guest;
 import com.tenniscourts.model.TennisCourt;
 import com.tenniscourts.repository.TennisCourtRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor

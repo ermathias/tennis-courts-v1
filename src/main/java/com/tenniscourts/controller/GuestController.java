@@ -1,12 +1,8 @@
 package com.tenniscourts.controller;
 
 import com.tenniscourts.config.BaseRestController;
-import com.tenniscourts.dto.CreateReservationRequestDTO;
 import com.tenniscourts.dto.GuestDTO;
-import com.tenniscourts.dto.ReservationDTO;
-import com.tenniscourts.dto.ScheduleDTO;
 import com.tenniscourts.service.GuestService;
-import com.tenniscourts.service.ReservationService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;

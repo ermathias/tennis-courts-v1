@@ -9,7 +9,7 @@ import com.tenniscourts.mapper.ReservationMapper;
 import com.tenniscourts.model.Reservation;
 import com.tenniscourts.repository.ReservationRepository;
 import com.tenniscourts.model.ReservationStatus;
-import com.tenniscourts.util.Consts;
+import com.tenniscourts.util.TennisCourtHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -109,7 +109,7 @@ public class ReservationService {
     public BigDecimal getRefundValue(Reservation reservation) {
         long hours = ChronoUnit.HOURS.between(LocalDateTime.now(), reservation.getSchedule().getStartDateTime());
 
-        if (hours >= Consts.ONE_DAY) {
+        if (hours >= TennisCourtHelper.ONE_DAY) {
             return reservation.getValue();
         }
 
