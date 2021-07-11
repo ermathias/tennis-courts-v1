@@ -33,4 +33,9 @@ public class GuestController extends BaseRestController {
 	public ResponseEntity<GuestDTO> retrieveGuestById(@PathVariable Long guestId) {
 		return ResponseEntity.ok(guestService.retrieveGuestById(guestId));
 	}
+
+	@PostMapping(value = "/v1/guest/retrieveByName")
+	public ResponseEntity<GuestDTO> retrieveGuestByName(@RequestBody GuestDTO guest) {
+		return ResponseEntity.ok(guestService.retrieveGuestByName(guest));
+	}
 }

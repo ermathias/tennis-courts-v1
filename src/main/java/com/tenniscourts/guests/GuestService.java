@@ -45,4 +45,16 @@ public class GuestService {
 
 	}
 
+	public GuestDTO retrieveGuestByName(GuestDTO guestName) {
+
+		return guestRepository.findByName(guestName.getName()).map(guest -> {
+
+			return mapper.map(guest, GuestDTO.class);
+
+		}).orElseThrow(() -> {
+			throw new EntityNotFoundException("Guest not found.");
+		});
+
+	}
+
 }
