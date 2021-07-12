@@ -6,16 +6,16 @@ insert into tennis_court(id, name) values (null, 'Roland Garros - Court Simonne-
 insert into tennis_court(id, name) values (null, 'Roland Garros - Court Suzanne-Lenglen');
 
 insert into schedule (id, start_date_time, end_date_time, tennis_court_id)
-values (null, '2020-01-10T20:00:00.0', '2020-02-10T21:00:00.0', 1);
+values (null, '2020-01-10T08:00:00.0', '2020-01-10T20:00:00.0', 1);
 
 insert into schedule (id, start_date_time, end_date_time, tennis_court_id)
-values (null, '2020-04-10T20:00:00.0', '2020-09-10T21:00:00.0', 1);
+values (null, '2020-01-11T08:00:00.0', '2020-01-11T20:00:00.0', 1);
 
 insert into schedule (id, start_date_time, end_date_time, tennis_court_id)
-values (null, '2021-03-10T20:00:00.0', '2021-07-10T21:00:00.0', 1);
+values (null, '2020-01-12T08:00:00.0', '2020-01-12T20:00:00.0', 1);
 
 insert into schedule (id, start_date_time, end_date_time, tennis_court_id)
-values (null, '2020-02-15T20:00:00.0', '2020-03-30T21:00:00.0', 2);
+values (null, '2020-03-29T08:00:00.0', '2020-03-29T20:00:00.0', 1);
 
 insert into schedule (id, start_date_time, end_date_time, tennis_court_id)
-values (null, '2020-03-15T20:00:00.0', '2020-04-30T21:00:00.0', 3);
+values (null, '2020-06-21T08:00:00.0', '2020-06-21T20:00:00.0', 1);
