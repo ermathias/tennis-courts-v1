@@ -56,19 +56,10 @@ public class ReservationService {
 		timeSlotCheck(createReservationRequestDTO.getScheduleId(), createReservationRequestDTO.getStartDateTime(),
 				createReservationRequestDTO.getEndDateTime());
 
-		Reservation reservation = new Reservation();
-
-		reservation.setGuest(mapper.map(guestDTO, Guest.class));
-
-		reservation.setSchedule(mapper.map(scheduleDTO, Schedule.class));
-
-		reservation.setValue(createReservationRequestDTO.getValue());
-
-		reservation.setRefundValue(new BigDecimal(10.0));
-
-		reservation.setStartDateTime(createReservationRequestDTO.getStartDateTime());
-
-		reservation.setEndDateTime(createReservationRequestDTO.getEndDateTime());
+		Reservation reservation = Reservation.builder().guest(mapper.map(guestDTO, Guest.class))
+				.schedule(mapper.map(scheduleDTO, Schedule.class)).value(createReservationRequestDTO.getValue())
+				.refundValue(new BigDecimal(10.0)).startDateTime(createReservationRequestDTO.getStartDateTime())
+				.endDateTime(createReservationRequestDTO.getEndDateTime()).build();
 
 		return mapper.map(reservationRepository.save(reservation), ReservationDTO.class);
 
@@ -163,10 +154,10 @@ public class ReservationService {
 		previousReservation.setReservationStatus(ReservationStatus.RESCHEDULED);
 		reservationRepository.save(previousReservation);
 
-		ReservationDTO newReservation = bookReservation(
-				CreateReservationRequestDTO.builder().guestId(previousReservation.getGuest().getId())
-						.scheduleId(scheduleId).startDateTime(previousReservation.getStartDateTime())
-						.endDateTime(previousReservation.getEndDateTime()).value(previousReservation.getValue()).build());
+		ReservationDTO newReservation = bookReservation(CreateReservationRequestDTO.builder()
+				.guestId(previousReservation.getGuest().getId()).scheduleId(scheduleId)
+				.startDateTime(previousReservation.getStartDateTime()).endDateTime(previousReservation.getEndDateTime())
+				.value(previousReservation.getValue()).build());
 		newReservation.setPreviousReservation(mapper.map(previousReservation, ReservationDTO.class));
 		return newReservation;
 	}
