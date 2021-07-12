@@ -1,6 +1,7 @@
 package com.tenniscourts.reservations;
 
 import com.tenniscourts.config.BaseRestController;
+import com.tenniscourts.guests.GuestDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Api("Reservation")
 @AllArgsConstructor
@@ -44,5 +46,12 @@ public class ReservationController extends BaseRestController {
     @ApiResponse(code = 200, message = "Reservation cancelled")
     public ResponseEntity<ReservationDTO> rescheduleReservation(@PathVariable("reservationId") Long reservationId, Long scheduleId) {
         return ResponseEntity.ok(reservationService.rescheduleReservation(reservationId, scheduleId));
+    }
+
+    @GetMapping(value = "/history")
+    @ApiOperation(value="See history of all previous Reservations")
+    @ApiResponse(code = 200, message = "Reservation(s) found")
+    public ResponseEntity<List<ReservationDTO>> findAllReservations() {
+        return ResponseEntity.ok(reservationService.findAllReservations());
     }
 }
