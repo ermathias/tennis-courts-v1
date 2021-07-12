@@ -7,6 +7,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 
 @AllArgsConstructor
@@ -22,5 +26,12 @@ public class CreateReservationRequestDTO {
 
     @NotNull
     private Long scheduleId;
+    
+    @NotNull
+    private BigDecimal value;
+    
+    private LocalDateTime startDateTime;
+
+    private LocalDateTime endDateTime;
 
 }

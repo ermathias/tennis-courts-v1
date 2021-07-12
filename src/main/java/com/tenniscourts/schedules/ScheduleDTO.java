@@ -12,9 +12,8 @@ import java.time.LocalDateTime;
 @Setter
 public class ScheduleDTO {
 
+	@NotNull
     private Long id;
-
-    private TennisCourtDTO tennisCourt;
 
     @NotNull
     private Long tennisCourtId;
