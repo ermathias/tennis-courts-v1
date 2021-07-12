@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,6 +23,10 @@ public class ReservationDTO {
     private Long id;
 
     private ScheduleDTO schedule;
+    
+    private LocalDateTime startDateTime;
+
+    private LocalDateTime endDateTime;
 
     private String reservationStatus;
 
