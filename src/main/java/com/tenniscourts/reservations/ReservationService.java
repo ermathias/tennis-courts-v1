@@ -82,7 +82,7 @@ public class ReservationService {
 	}
 
 	public ReservationDTO cancelReservation(Long reservationId) {
-		return reservationMapper.map(this.cancel(reservationId));
+		return mapper.map(cancel(reservationId), ReservationDTO.class);
 	}
 
 	private Reservation cancel(Long reservationId) {
@@ -116,11 +116,27 @@ public class ReservationService {
 		}
 	}
 
+	public static BigDecimal percentage(BigDecimal base, BigDecimal pct) {
+		return base.multiply(pct).divide(new BigDecimal(100));
+	}
+
 	public BigDecimal getRefundValue(Reservation reservation) {
 		long hours = ChronoUnit.HOURS.between(LocalDateTime.now(), reservation.getSchedule().getStartDateTime());
 
 		if (hours >= 24) {
 			return reservation.getValue();
+		}
+
+		if (hours >= 12) {
+			return percentage(reservation.getValue(), new BigDecimal(25));
+		}
+
+		if (hours >= 2) {
+			return percentage(reservation.getValue(), new BigDecimal(50));
+		}
+
+		if (hours >= 0) {
+			return percentage(reservation.getValue(), new BigDecimal(75));
 		}
 
 		return BigDecimal.ZERO;
@@ -142,7 +158,7 @@ public class ReservationService {
 
 		ReservationDTO newReservation = bookReservation(CreateReservationRequestDTO.builder()
 				.guestId(previousReservation.getGuest().getId()).scheduleId(scheduleId).build());
-		newReservation.setPreviousReservation(reservationMapper.map(previousReservation));
+		newReservation.setPreviousReservation(mapper.map(previousReservation, ReservationDTO.class));
 		return newReservation;
 	}
 }
