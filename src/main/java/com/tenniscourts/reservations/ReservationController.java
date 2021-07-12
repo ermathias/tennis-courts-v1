@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +28,8 @@ public class ReservationController extends BaseRestController {
         return ResponseEntity.ok(reservationService.findReservations());
     }
     
-    public ResponseEntity<ReservationDTO> findReservation(Long reservationId) {
+    @GetMapping(value = "/v1/reservation/{reservationId}/retrieve")
+    public ResponseEntity<ReservationDTO> findReservation(@PathVariable Long reservationId) {
         return ResponseEntity.ok(reservationService.findReservation(reservationId));
     }
 

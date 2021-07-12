@@ -72,7 +72,11 @@ public class ReservationService {
 	}
 
 	public ReservationDTO findReservation(Long reservationId) {
-		return reservationRepository.findById(reservationId).map(reservationMapper::map).orElseThrow(() -> {
+		return reservationRepository.findById(reservationId).map(reservation -> {
+
+			return mapper.map(reservation, ReservationDTO.class);
+
+		}).orElseThrow(() -> {
 			throw new EntityNotFoundException("Reservation not found.");
 		});
 	}
