@@ -12,12 +12,17 @@ import java.time.temporal.ChronoUnit;
 @AllArgsConstructor
 public class ReservationService {
 
+    private final static BigDecimal RESERVATION_FEE = new BigDecimal(10L);
+
     private final ReservationRepository reservationRepository;
 
     private final ReservationMapper reservationMapper;
 
     public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
-        throw new UnsupportedOperationException();
+        var reservation = reservationMapper.map(createReservationRequestDTO);
+        reservation.setValue(RESERVATION_FEE);
+
+        return reservationMapper.map(reservationRepository.saveAndFlush(reservation));
     }
 
     public ReservationDTO findReservation(Long reservationId) {
@@ -66,17 +71,21 @@ public class ReservationService {
 
         if (hours >= 24) {
             return reservation.getValue();
+        } else if (hours >= 12) {
+            return reservation.getValue().multiply(new BigDecimal("0.75"));
+        } else if (hours >= 2) {
+            return reservation.getValue().multiply(new BigDecimal("0.50"));
+        } else if (hours > 0) {
+            return reservation.getValue().multiply(new BigDecimal("0.25"));
         }
 
         return BigDecimal.ZERO;
     }
 
-    /*TODO: This method actually not fully working, find a way to fix the issue when it's throwing the error:
-            "Cannot reschedule to the same slot.*/
     public ReservationDTO rescheduleReservation(Long previousReservationId, Long scheduleId) {
         Reservation previousReservation = cancel(previousReservationId);
 
-        if (scheduleId.equals(previousReservation.getSchedule().getId())) {
+        if (scheduleId.longValue() == previousReservation.getSchedule().getId().longValue()) {
             throw new IllegalArgumentException("Cannot reschedule to the same slot.");
         }
 
@@ -87,7 +96,9 @@ public class ReservationService {
                 .guestId(previousReservation.getGuest().getId())
                 .scheduleId(scheduleId)
                 .build());
+
         newReservation.setPreviousReservation(reservationMapper.map(previousReservation));
+
         return newReservation;
     }
 }
