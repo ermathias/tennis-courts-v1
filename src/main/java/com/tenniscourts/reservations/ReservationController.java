@@ -2,17 +2,31 @@ package com.tenniscourts.reservations;
 
 import com.tenniscourts.config.BaseRestController;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
 @AllArgsConstructor
 public class ReservationController extends BaseRestController {
 
     private final ReservationService reservationService;
 
-    public ResponseEntity<Void> bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
+    @PostMapping(value = "/v1/reservation/book")
+    public ResponseEntity<Void> bookReservation(@RequestBody CreateReservationRequestDTO createReservationRequestDTO) {
         return ResponseEntity.created(locationByEntity(reservationService.bookReservation(createReservationRequestDTO).getId())).build();
     }
 
+    @GetMapping(value = "/v1/reservation/retrieve")
+    public ResponseEntity<List<ReservationDTO>> findReservations() {
+        return ResponseEntity.ok(reservationService.findReservations());
+    }
+    
     public ResponseEntity<ReservationDTO> findReservation(Long reservationId) {
         return ResponseEntity.ok(reservationService.findReservation(reservationId));
     }
