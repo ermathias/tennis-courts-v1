@@ -7,6 +7,9 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.tenniscourts.exceptions.EntityNotFoundException;
+import com.tenniscourts.guests.GuestDTO;
+
 import lombok.AllArgsConstructor;
 
 @Service
@@ -28,8 +31,15 @@ public class ScheduleService {
 	}
 
 	public ScheduleDTO findSchedule(Long scheduleId) {
-		// TODO: implement
-		return null;
+
+		return scheduleRepository.findById(scheduleId).map(schedule -> {
+
+			return mapper.map(schedule, ScheduleDTO.class);
+
+		}).orElseThrow(() -> {
+			throw new EntityNotFoundException("Schedule not found.");
+		});
+		
 	}
 
 	public List<ScheduleDTO> findSchedulesByTennisCourtId(Long tennisCourtId) {

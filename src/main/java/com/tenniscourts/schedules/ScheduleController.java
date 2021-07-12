@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +28,7 @@ public class ScheduleController extends BaseRestController {
 				.build();
 	}
 
+	// TODO: implement rest and swagger
 	@PostMapping(value = "/v1/schedule/findSchedulesByDates")
 	public ResponseEntity<List<ScheduleDTO>> findSchedulesByDates(@RequestBody RangeDTO rangeDTO) {
 		return ResponseEntity
@@ -35,6 +37,7 @@ public class ScheduleController extends BaseRestController {
 	}
 
 	// TODO: implement rest and swagger
+	@GetMapping(value = "/v1/guest/{guestId}/retrieve")
 	public ResponseEntity<ScheduleDTO> findByScheduleId(Long scheduleId) {
 		return ResponseEntity.ok(scheduleService.findSchedule(scheduleId));
 	}
