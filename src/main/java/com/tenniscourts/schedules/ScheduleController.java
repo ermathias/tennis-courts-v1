@@ -23,23 +23,29 @@ public class ScheduleController extends BaseRestController {
 
 	// TODO: implement rest and swagger
 	public ResponseEntity<Void> addScheduleTennisCourt(CreateScheduleRequestDTO createScheduleRequestDTO) {
+		
 		return ResponseEntity
 				.created(locationByEntity(scheduleService
 						.addSchedule(createScheduleRequestDTO.getTennisCourtId(), createScheduleRequestDTO).getId()))
 				.build();
+		
 	}
 
 	// TODO: implement rest and swagger
 	@PostMapping(value = "/v1/schedule/findSchedulesByDates")
 	public ResponseEntity<List<ScheduleDTO>> findSchedulesByDates(@RequestBody RangeDTO rangeDTO) {
+		
 		return ResponseEntity
 				.ok(scheduleService.findSchedulesByDates(LocalDateTime.of(rangeDTO.getStartDate(), LocalTime.of(0, 0)),
 						LocalDateTime.of(rangeDTO.getEndDate(), LocalTime.of(23, 59))));
+		
 	}
 
 	// TODO: implement rest and swagger
 	@GetMapping(value = "/v1/schedule/{scheduleId}/retrieve")
 	public ResponseEntity<ScheduleDTO> findByScheduleId(@PathVariable Long scheduleId) {
+		
 		return ResponseEntity.ok(scheduleService.findSchedule(scheduleId));
+		
 	}
 }
