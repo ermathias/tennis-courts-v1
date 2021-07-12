@@ -15,7 +15,7 @@ insert into schedule (id, start_date_time, end_date_time, tennis_court_id)
 values (null, '2020-01-12T08:00:00.0', '2020-01-12T20:00:00.0', 1);
 
 insert into schedule (id, start_date_time, end_date_time, tennis_court_id)
-values (null, '2020-03-29T08:00:00.0', '2020-03-29T20:00:00.0', 1);
+values (null, '2022-03-29T08:00:00.0', '2022-03-29T20:00:00.0', 1);
 
 insert into schedule (id, start_date_time, end_date_time, tennis_court_id)
 values (null, '2020-06-21T08:00:00.0', '2020-06-21T20:00:00.0', 1);
