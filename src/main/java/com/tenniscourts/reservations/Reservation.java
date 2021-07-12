@@ -16,6 +16,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -34,6 +35,12 @@ public class Reservation extends BaseEntity<Long> {
     @ManyToOne
     @NotNull
     private Schedule schedule;
+    
+    @NotNull
+    private LocalDateTime startDateTime;
+
+    @NotNull
+    private LocalDateTime endDateTime;
 
     @NotNull
     private BigDecimal value;
