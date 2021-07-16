@@ -1,4 +1,4 @@
-package com.tenniscourts.reservations;
+package com.tenniscourts.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,5 +22,7 @@ public class CreateReservationRequestDTO {
 
     @NotNull
     private Long scheduleId;
+
+
 
 }
