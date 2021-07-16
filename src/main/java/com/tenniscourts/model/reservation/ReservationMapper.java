@@ -1,5 +1,7 @@
-package com.tenniscourts.reservations;
+package com.tenniscourts.model.reservation;
 
+import com.tenniscourts.dto.CreateReservationRequestDTO;
+import com.tenniscourts.dto.ReservationDTO;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

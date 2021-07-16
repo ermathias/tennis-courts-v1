@@ -1,12 +1,20 @@
-package com.tenniscourts.reservations;
+package com.tenniscourts.service;
 
+import com.tenniscourts.bean.ReservationStatus;
+import com.tenniscourts.dto.CreateReservationRequestDTO;
+import com.tenniscourts.dto.ReservationDTO;
 import com.tenniscourts.exceptions.EntityNotFoundException;
+import com.tenniscourts.model.reservation.Reservation;
+import com.tenniscourts.model.reservation.ReservationMapper;
+import com.tenniscourts.repository.ReservationRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -17,17 +25,32 @@ public class ReservationService {
     private final ReservationMapper reservationMapper;
 
     public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
-        throw new UnsupportedOperationException();
+        Reservation reservation = reservationMapper.map(createReservationRequestDTO);
+
+        reservation.setValue(BigDecimal.TEN);
+        Reservation savedReservation = reservationRepository.save(reservation);
+        return Reservation.toDto(savedReservation);
+    }
+
+    public List<ReservationDTO> bookReservations(List<CreateReservationRequestDTO> createReservationRequestDTOList) {
+        return createReservationRequestDTOList
+                .stream()
+                .map(this::bookReservation)
+                .collect(Collectors.toList());
     }
 
     public ReservationDTO findReservation(Long reservationId) {
-        return reservationRepository.findById(reservationId).map(reservationMapper::map).orElseThrow(() -> {
+        return reservationRepository.findById(reservationId).map(Reservation::toDto).orElseThrow(() -> {
             throw new EntityNotFoundException("Reservation not found.");
         });
     }
 
+    public List<ReservationDTO> findAll() {
+        return reservationRepository.findAll().stream().map(Reservation::toDto).collect(Collectors.toList());
+    }
+
     public ReservationDTO cancelReservation(Long reservationId) {
-        return reservationMapper.map(this.cancel(reservationId));
+        return Reservation.toDto(this.cancel(reservationId));
     }
 
     private Reservation cancel(Long reservationId) {
@@ -66,17 +89,21 @@ public class ReservationService {
 
         if (hours >= 24) {
             return reservation.getValue();
+        } else if (hours <= 2) {
+            return reservation.getValue().multiply(BigDecimal.valueOf(0.75));
+        } else if (hours <= 10) {
+            return reservation.getValue().multiply(BigDecimal.valueOf(0.5));
+        } else if (hours <= 12) {
+            return reservation.getValue().multiply(BigDecimal.valueOf(0.25));
         }
 
         return BigDecimal.ZERO;
     }
 
-    /*TODO: This method actually not fully working, find a way to fix the issue when it's throwing the error:
-            "Cannot reschedule to the same slot.*/
     public ReservationDTO rescheduleReservation(Long previousReservationId, Long scheduleId) {
         Reservation previousReservation = cancel(previousReservationId);
 
-        if (scheduleId.equals(previousReservation.getSchedule().getId())) {
+        if (scheduleId.longValue() == previousReservation.getSchedule().getId().longValue()) {
             throw new IllegalArgumentException("Cannot reschedule to the same slot.");
         }
 
@@ -87,7 +114,7 @@ public class ReservationService {
                 .guestId(previousReservation.getGuest().getId())
                 .scheduleId(scheduleId)
                 .build());
-        newReservation.setPreviousReservation(reservationMapper.map(previousReservation));
+        newReservation.setPreviousReservation(Reservation.toDto(previousReservation));
         return newReservation;
     }
 }

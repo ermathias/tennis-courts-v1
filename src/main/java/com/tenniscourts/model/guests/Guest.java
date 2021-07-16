@@ -1,4 +1,4 @@
-package com.tenniscourts.guests;
+package com.tenniscourts.model.guests;
 
 import com.tenniscourts.config.persistence.BaseEntity;
 import lombok.AllArgsConstructor;

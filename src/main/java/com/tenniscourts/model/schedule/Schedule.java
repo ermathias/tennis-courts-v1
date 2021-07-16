@@ -1,8 +1,10 @@
-package com.tenniscourts.schedules;
+package com.tenniscourts.model.schedule;
 
 import com.tenniscourts.config.persistence.BaseEntity;
-import com.tenniscourts.reservations.Reservation;
-import com.tenniscourts.tenniscourts.TennisCourt;
+import com.tenniscourts.dto.ScheduleDTO;
+import com.tenniscourts.dto.TennisCourtDTO;
+import com.tenniscourts.model.tennis.TennisCourt;
+import com.tenniscourts.model.reservation.Reservation;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -52,5 +54,15 @@ public class Schedule extends BaseEntity<Long> {
 
         reservation.setSchedule(this);
         this.reservations.add(reservation);
+    }
+
+    public static ScheduleDTO toDto(Schedule schedule) {
+        return ScheduleDTO.builder()
+                .id(schedule.getId())
+                .tennisCourt(TennisCourt.toDto(schedule.getTennisCourt()))
+                .startDateTime(schedule.getStartDateTime())
+                .endDateTime(schedule.getEndDateTime())
+                .tennisCourtId(schedule.getTennisCourt().getId())
+                .build();
     }
 }

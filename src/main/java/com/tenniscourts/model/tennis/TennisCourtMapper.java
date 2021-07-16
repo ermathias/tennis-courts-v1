@@ -1,5 +1,6 @@
-package com.tenniscourts.tenniscourts;
+package com.tenniscourts.model.tennis;
 
+import com.tenniscourts.dto.TennisCourtDTO;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 

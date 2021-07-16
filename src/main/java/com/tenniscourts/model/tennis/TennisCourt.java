@@ -1,6 +1,7 @@
-package com.tenniscourts.tenniscourts;
+package com.tenniscourts.model.tennis;
 
 import com.tenniscourts.config.persistence.BaseEntity;
+import com.tenniscourts.dto.TennisCourtDTO;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -26,4 +27,10 @@ public class TennisCourt extends BaseEntity<Long> {
     @Column
     @NotNull
     private String name;
+
+    public static TennisCourtDTO toDto(TennisCourt tennisCourt) {
+        return TennisCourtDTO.builder()
+                .name(tennisCourt.getName())
+                .build();
+    }
 }

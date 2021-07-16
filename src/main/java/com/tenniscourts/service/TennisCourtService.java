@@ -1,7 +1,9 @@
-package com.tenniscourts.tenniscourts;
+package com.tenniscourts.service;
 
+import com.tenniscourts.dto.TennisCourtDTO;
 import com.tenniscourts.exceptions.EntityNotFoundException;
-import com.tenniscourts.schedules.ScheduleService;
+import com.tenniscourts.model.tennis.TennisCourtMapper;
+import com.tenniscourts.repository.TennisCourtRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
