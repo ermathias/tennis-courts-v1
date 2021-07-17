@@ -17,11 +17,15 @@ public class ReservationService {
     private final ReservationMapper reservationMapper;
 
     public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) {
-        throw new UnsupportedOperationException();
+        final Reservation newReservation = reservationMapper.map(createReservationRequestDTO);
+        newReservation.setValue(BigDecimal.valueOf(420));
+        newReservation.setRefundValue(BigDecimal.valueOf(400));
+        reservationRepository.saveAndFlush(newReservation);
+        return reservationMapper.map(newReservation);
     }
 
     public ReservationDTO findReservation(Long reservationId) {
-        return reservationRepository.findById(reservationId).map(reservationMapper::map).orElseThrow(() -> {
+        return reservationRepository.findById(reservationId).map(reservationMapper::map).<EntityNotFoundException>orElseThrow(() -> {
             throw new EntityNotFoundException("Reservation not found.");
         });
     }
@@ -38,7 +42,7 @@ public class ReservationService {
             BigDecimal refundValue = getRefundValue(reservation);
             return this.updateReservation(reservation, refundValue, ReservationStatus.CANCELLED);
 
-        }).orElseThrow(() -> {
+        }).<EntityNotFoundException>orElseThrow(() -> {
             throw new EntityNotFoundException("Reservation not found.");
         });
     }
@@ -47,7 +51,6 @@ public class ReservationService {
         reservation.setReservationStatus(status);
         reservation.setValue(reservation.getValue().subtract(refundValue));
         reservation.setRefundValue(refundValue);
-
         return reservationRepository.save(reservation);
     }
 
@@ -81,7 +84,7 @@ public class ReservationService {
         }
 
         previousReservation.setReservationStatus(ReservationStatus.RESCHEDULED);
-        reservationRepository.save(previousReservation);
+        reservationRepository.saveAndFlush(previousReservation);
 
         ReservationDTO newReservation = bookReservation(CreateReservationRequestDTO.builder()
                 .guestId(previousReservation.getGuest().getId())
